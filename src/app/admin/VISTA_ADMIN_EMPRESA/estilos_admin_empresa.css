@@ -1,0 +1,160 @@
+.root {
+    background-color: #f1f5f9;
+    font-family: Montserrat, sans-serif;
+  
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .header {
+    height: 70px;
+    width: 100%;
+    margin-left: 0px;
+    position: relative;
+    z-index: 0;
+    /*
+    
+        [theme.breakpoints.down("sm")]: {
+          marginLeft: "70px",
+        },
+    
+      */
+  }
+  
+  .menu_lateral {
+    background-color: #4a051c;
+    width: 0px;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    overflow-y: hidden;
+    margin-top: 70px;
+  
+    opacity: 0.98;
+    transition: 0.4s;
+  }
+  
+  .content {
+    background-color: #fbfffe;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 0px;
+  
+    align-items: center;
+    position: relative;
+    z-index: 0;
+    /*
+      [theme.breakpoints.down("sm")]: {
+        marginLeft: "70px",
+      },
+      */
+  }
+  
+  .table {
+    background-color: #fff;
+    align-self: center;
+    padding: 5;
+    box-shadow: 4px 4px 10px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    margin-top: 50px;
+    width: 90%;
+  }
+  
+  .info {
+    background-color: #4a051c;
+    width: 90%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    padding-left: 20px;
+    border-radius: 5;
+    box-shadow: 2px 2px 4px 4px rgba(0, 0, 0, 0.1);
+  
+    font-family: 16;
+    font-family: Dela Gothic One, cursive;
+    color: #fff;
+  }
+  
+  .navigation_mobile {
+    background-color: #444545;
+    z-index: 3;
+    height: 0;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    opacity: 0.999;
+  
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    transition: 0.5s;
+  }
+  
+  a.nav_link {
+    color: #ccc;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-top: 5px;
+  }
+  
+  a.nav_link:hover {
+    color: #fff;
+  }
+  
+  @media (max-width: 1199.98px) {
+    .navigation_mobile {
+      height: 0;
+    }
+  }
+  
+  @media (max-width: 960px) {
+    .menu_lateral {
+      width: 0px;
+      margin-top: 70px;
+    }
+    .header {
+      margin-left: 0px;
+    }
+    .content {
+      margin-left: 0px;
+    }
+  
+    .card_container {
+      flex-direction: column;
+      height: auto;
+      width: 100%;
+      align-items: center;
+    }
+  
+    .card {
+      width: 80%;
+      margin-top: 15px;
+      margin-left: 0px;
+    }
+  
+    .navigation_mobile {
+      display: flex;
+    }
+  }
+  
+  @media (max-width: 575.98px) {
+    .menu_lateral {
+      width: 0px;
+      margin-top: 70px;
+      opacity: 0.98;
+      transition: 0.4s;
+    }
+    .header {
+      margin-left: 0px;
+    }
+    .content {
+      margin-left: 0px;
+    }
+  }

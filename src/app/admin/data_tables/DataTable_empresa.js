@@ -1,0 +1,203 @@
+import React, { useState, useEffect } from "react";
+import { Table, Typography, Button } from "antd";
+import { db } from "../../../db/firebase";
+
+import { makeStyles } from "@material-ui/core/styles";
+import { Alert } from "antd";
+import * as dayjs from "dayjs";
+
+var locale_de = require("dayjs/locale/es");
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    "& table": {
+      
+    },
+    "& thead > tr > th": {
+      background: "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)",
+      color: "black",
+      fontSize: "16",
+      fontFamily: "Dela Gothic One, cursive",
+      
+    },
+    "& thead > tr": {
+      borderWidth: "2px",
+      borderColor: "black",
+      borderStyle: "solid",
+    },
+    "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th " : {
+      background: "#282640",
+      color : "white",
+      
+   },
+   boxShadow : '4px 4px 10px 10px rgba(0,0,0,0.1)',
+   backgroundColor: "#fff",
+  },
+
+  row: {},
+}));
+
+const columns = [
+  {
+    title: "Empresa",
+    dataIndex: "empresa",
+    sorter: (a, b) => a.empresa.localeCompare(b.empresa),
+    defaultSortOrder: "ascend",
+  },
+  {
+    title: "Direccion",
+    dataIndex: "direccion",
+    key: "direccion",
+    responsive: ["sm"],
+  },
+  {
+    title: "Region",
+    dataIndex: "region",
+    key: "region",
+    responsive: ["sm"],
+  },
+  {
+    title: "Comuna",
+    dataIndex: "comuna",
+    key: "comuna",
+    responsive: ["sm"],
+  },
+];
+
+const DataTable_empresa = (props) => {
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(true);
+
+  const [size, setSize] = useState(null);
+  const [edit, setEdit] = useState(false);
+
+  const [data, setData] = useState([]);
+
+  const [rowClassname, setRowClassname] = useState("");
+
+  const [visible, setVisible] = useState(false);
+  const handleClose = () => {
+    setVisible(false);
+  };
+
+  const query = db.collection("empresa");
+  const observerEmpresa = query.onSnapshot(
+    (querySnapshot) => {
+      setSize(querySnapshot.size);
+      querySnapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+          setEdit(!edit);
+        }
+      });
+    },
+    (err) => {
+      console.log(`Encountered error: ${err}`);
+    }
+  );
+
+  const [x, setX] = useState([]);
+
+  const rowSelection = {
+    selectedRowKeys: x,
+    onChange: (selectedRowKeys, selectedRows) => {
+      setX(selectedRowKeys);
+      console.log(
+        `selectedRowKeys: ${selectedRowKeys}`,
+        "selectedRows: ",
+        selectedRows[0]
+      );
+      //setIsSelected(false)
+      setSelectedItem(selectedRows[0]);
+
+      //Wed, 31 Mar 2021 02:12:39 GMT
+      const dateString = "Wed, 31 Mar 2021 02:12:39 GMT";
+      var formatDate = dayjs(dateString).locale("es").format("DD MMM. YYYY");
+
+      console.log(formatDate);
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === "Disabled User",
+      // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
+
+  const get__empresa = async () => {
+    const camionRef = db.collection("empresa");
+    const snapshot = await camionRef.get();
+    if (snapshot.empty) {
+      console.log("No matching documents.");
+      return;
+    }
+    const empresas = [];
+    snapshot.forEach((doc) => {
+      var e = {
+        id: doc.id,
+        region: doc.data().region,
+        comuna: doc.data().comuna,
+        direccion: doc.data().direccion,
+        empresa: doc.data().empresa,
+      };
+      empresas.push(e);
+    });
+    setTimeout(function () {
+      setData(empresas);
+      setIsLoaded(false);
+    }, 1000);
+  };
+
+  const {
+    setIsSelected,
+    setSelectedItem,
+    selectedItem,
+    mensaje_accion,
+  } = props;
+
+  useEffect(() => {
+    get__empresa();
+  }, [size, edit]);
+
+  useEffect(() => {
+    console.log("!! UseEffect selectedItem === null ?");
+    if (selectedItem === null) {
+      setX([]);
+    }
+  }, [selectedItem]);
+
+  const { Text, Link } = Typography;
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <Table
+        rowKey="id"
+        rowSelection={{
+          type: "radio",
+          ...rowSelection,
+        }}
+        columns={columns}
+        dataSource={data}
+        scroll={{ x: "max-content" }}
+        size="middle"
+        pagination={{ position: ["bottomCenter"] }}
+        bordered={true}
+        className={classes.root}
+        rowClassName={classes.row}
+        loading={isLoaded}
+        onHeaderRow={(record, index) => {
+          return {
+            onClick: (e) => {
+              let tr = e.target.parentNode;
+              console.log("event", tr);
+            }
+
+          };
+        }}
+        
+      />
+    </div>
+  );
+};
+
+export default DataTable_empresa;

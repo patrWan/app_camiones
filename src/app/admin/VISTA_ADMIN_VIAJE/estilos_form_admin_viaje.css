@@ -1,0 +1,59 @@
+.Root {
+  display: flex;
+}
+
+.Form-description {
+  background-color: beige;
+  width: 33%;
+}
+
+.Form-content {
+  display: flex;
+  flex-direction: column;
+  width: 66%;
+  padding: 5px;
+}
+
+.Form-input {
+  height: 150px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  padding: 10px;
+}
+
+.Form-input-select {
+  height: 50px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+@media (max-width: 1199.98px) {
+}
+
+@media (max-width: 960px) {
+}
+
+@media (max-width: 575.98px) {
+  .Form-description {
+    display: none
+  }
+
+  .Form-content {
+    width: 100%;
+  }
+
+  .Form-input {
+    width: 100%;
+  }
+  
+  .Form-input-select {
+    width: 100%;
+    justify-content: center;
+  }
+
+
+}
