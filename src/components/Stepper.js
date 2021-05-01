@@ -335,30 +335,13 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     /**REGISTRAR VIAJE */
 
     if (selectedItem) {
-      console.log(user__id);
       var cityRef = db.collection("usuario").doc(user__id);
-      console.log("VIAJE A BORRAR => ", itemToDelete);
       cityRef
         .update({
-          viajes: fire.firestore.FieldValue.arrayRemove(itemToDelete),
+          viajes: fire.firestore.FieldValue.arrayRemove(selectedItem),
         })
         .then(() => {
-          /*
-        var identifier = selectedUser.rut.slice(-4);
-        var formatDate = dayjs()
-          .locale("es")
-          .format("DDMMYYYYhhmmss-"+identifier);
 
-        var new__viaje = {
-            id : formatDate,
-            fecha : fire.firestore.Timestamp.fromDate(new Date(date)),
-            conductor : selectedUser.nombres,
-            camion : selectedCamion.modelo+" / "+selectedCamion.marca+" / "+selectedCamion.patente,
-            origen : region+", "+comuna,
-            destino : regionDestino+", "+comunaDestino,
-            id_camion : selectedCamion.id,
-        }
-*/
           if (selectedUser) {
             var cityRef = db
               .collection("usuario")
@@ -366,27 +349,14 @@ export default function HorizontalLabelPositionBelowStepper(props) {
           } else {
             var cityRef = db.collection("usuario").doc(user__id);
           }
-          /** cambiar */
-
-          if(regionDestino !== ""){
-            selectedItem.destino = regionDestino;
-          }
           
-
           cityRef.update({
             viajes: fire.firestore.FieldValue.arrayUnion(selectedItem),
           });
 
           console.log("VIAJE Modificado => ", new__viaje);
-          /** limpiar campos */
-          setDate("");
-          setTime("");
+
           setSelectedUser(null);
-          setSelectedCamion(null);
-          setRegion("");
-          setComuna("");
-          setRegionDestino("");
-          setComunaDestino("");
 
           var men = "VIAJE EDITADO EXITOSAMENTE.";
           //setOpenModalCamion(false);
@@ -396,7 +366,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
           });
         });
 
-        setOpenModalViaje(false)
+        setOpenModalViaje(false);
     } else {
       console.log("REGISTRAR VIAJE !!");
 
@@ -457,14 +427,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
       console.log("VIAJE GENERADO => ", new__viaje);
 
       /** limpiar campos */
-      setDate("");
-      setTime("");
       setSelectedUser(null);
-      setSelectedCamion(null);
-      setRegion("");
-      setComuna("");
-      setRegionDestino("");
-      setComunaDestino("");
 
       var men = "Viaje agregado exitosamente.";
       //setOpenModalCamion(false);
@@ -473,7 +436,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         preventDuplicate: true,
       });
 
-      setOpenModalViaje(false)
+      setOpenModalViaje(false);
     }
   };
 

@@ -223,6 +223,7 @@ const DataTable_viajes_ant = (props) => {
   const [fecha, setFecha] = useState(null);
 
   const [filter_empresa, setFilterEmpresa] = useState(null);
+  const [filter_estado, setFilterEstado] = useState(null);
 
   const [empresaList, setEmpresaList] = useState([]);
 
@@ -234,30 +235,26 @@ const DataTable_viajes_ant = (props) => {
   const [conductorLabel, setConductorLabel] = useState(false);
   const [rangoLabel, setRangoLabel] = useState(false);
   const [empresaLabel, setEmpresaLabel] = useState(false);
+  const [estadoLabel, setEstadoLabel] = useState(false);
 
   function filter_general() {
     setFilterData(data);
     console.log("filtered data => ", filterData);
 
-    if (
-      conductor_id !== null &&
-      rango_fechas === null &&
-      filter_empresa === null
-    ) {
+    if (conductor_id !== null && rango_fechas === null && filter_empresa === null && filter_estado === null) {
       console.log("FILTRO POR CONDCUTOR");
+
       const filteredEvents = data.filter(
         ({ id_user }) => id_user === conductor_id
       );
+
       const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
       setFilterData(finalFilter);
+
       setConductorLabel(true);
     }
 
-    if (
-      rango_fechas !== null &&
-      conductor_id === null &&
-      filter_empresa === null
-    ) {
+    if (rango_fechas !== null && conductor_id === null && filter_empresa === null && filter_estado === null) {
       console.log("FILTRO POR RANGO DE FECHAS");
       const filteredEvents = data.filter(({ fechaSorter }) =>
         dayjs(fechaSorter).isBetween(
@@ -272,11 +269,50 @@ const DataTable_viajes_ant = (props) => {
       setFilterData(finalFilter);
     }
 
-    if (
-      rango_fechas !== null &&
-      conductor_id !== null &&
-      filter_empresa === null
-    ) {
+    if (filter_empresa !== null & rango_fechas === null && conductor_id === null && filter_estado === null) {
+
+      console.log("FILTRO EMPRESA");
+      const filteredEvents = data.filter(
+        ({ empresa_id }) => empresa_id === filter_empresa
+      );
+
+      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      setEmpresaLabel(true);
+
+      setFilterData(finalFilter);
+    }
+
+    if (filter_estado !== null  & rango_fechas === null && conductor_id === null && filter_empresa === null) {
+
+      console.log("FILTRO ESTADO");
+      const filteredEvents = data.filter(
+        ({ estado }) => estado === filter_estado
+      );
+
+      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      setEstadoLabel(true);
+      
+      setFilterData(finalFilter);
+    }
+
+    if (conductor_id !== null && filter_estado !== null && rango_fechas === null && filter_empresa === null) {
+      console.log("FILTRO CONDUCTOR Y ESTADO");
+
+      const filteredEvents = data.filter(
+        ({ estado, id_user }) =>
+          estado === filter_estado &&
+          id_user === conductor_id
+      );
+
+      setConductorLabel(true);
+      //setEstadoLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      setFilterData(finalFilter);
+    }
+
+    
+
+    if (rango_fechas !== null && conductor_id !== null && filter_empresa === null && filter_estado === null) {
       console.log("FILTRO POR CONDCUTOR Y RANGO DE FECHAS");
       const filteredEvents = data.filter(
         ({ id_user, fechaSorter }) =>
@@ -295,26 +331,10 @@ const DataTable_viajes_ant = (props) => {
       setFilterData(finalFilter);
     }
 
-    if (
-      rango_fechas === null &&
-      conductor_id === null &&
-      filter_empresa !== null
-    ) {
-      console.log("FILTRO EMPRESA");
-      const filteredEvents = data.filter(
-        ({ empresa_id }) => empresa_id === filter_empresa
-      );
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
-      setEmpresaLabel(true);
-      setFilterData(finalFilter);
-    }
+    
 
-    if (
-      rango_fechas === null &&
-      conductor_id !== null &&
-      filter_empresa !== null
-    ) {
-      console.log("FILTRO EMPRESA Y CONDUCTOR");
+    if (conductor_id !== null && filter_empresa !== null && rango_fechas === null &&   filter_estado === null) {
+      console.log("FILTRO CONDUCTOR Y EMPRESA");
       const filteredEvents = data.filter(
         ({ empresa_id, id_user }) =>
           empresa_id === filter_empresa && id_user === conductor_id
@@ -325,12 +345,8 @@ const DataTable_viajes_ant = (props) => {
       setFilterData(finalFilter);
     }
 
-    if (
-      rango_fechas !== null &&
-      conductor_id === null &&
-      filter_empresa !== null
-    ) {
-      console.log("FILTRO EMPRESA Y RANGO DE FECHAS");
+    if (rango_fechas !== null && filter_empresa !== null && conductor_id === null && filter_estado === null ) {
+      console.log("RANGO DE FECHAS Y FILTRO EMPRESA");
       const filteredEvents = data.filter(
         ({ empresa_id, fechaSorter }) =>
           empresa_id === filter_empresa &&
@@ -348,12 +364,49 @@ const DataTable_viajes_ant = (props) => {
       setFilterData(finalFilter);
     }
 
-    if (
-      rango_fechas !== null &&
-      conductor_id !== null &&
-      filter_empresa !== null
+    if (rango_fechas !== null && filter_estado !== null &&  filter_empresa === null && conductor_id === null  ) {
+      console.log("RANGO DE FECHAS Y ESTADO");
+      const filteredEvents = data.filter(
+        ({ fechaSorter, estado }) =>
+          estado === filter_estado &&
+          dayjs(fechaSorter).isBetween(
+            rango_fechas[0],
+            rango_fechas[1],
+            "month",
+            "[]"
+          )
+      );
+
+      setRangoLabel(true);
+      setEstadoLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      setFilterData(finalFilter);
+    }
+
+    if (rango_fechas !== null && conductor_id === null && filter_empresa !== null && filter_estado !== null
     ) {
-      console.log("FILTRO EMPRESA , RANGO DE FECHAS y CONDUCTOR");
+      console.log("RANGO DE FECHAS Y FILTRO EMPRESA  Y ESTADO");
+      const filteredEvents = data.filter(
+        ({ empresa_id, fechaSorter, estado }) =>
+          empresa_id === filter_empresa &&
+          estado === filter_estado &&
+          dayjs(fechaSorter).isBetween(
+            rango_fechas[0],
+            rango_fechas[1],
+            "month",
+            "[]"
+          )
+      );
+
+      setRangoLabel(true);
+      setEmpresaLabel(true);
+      setEstadoLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      setFilterData(finalFilter);
+    }
+
+    if (rango_fechas !== null && conductor_id !== null && filter_empresa !== null && filter_estado === null) {
+      console.log("CONDUCTOR Y , RANGO DE FECHAS Y FILTRO EMPRESA ");
       console.log(dayjs("30 Abril 2021 21:04 PM").isBetween(
         rango_fechas[0],
         rango_fechas[1],
@@ -379,6 +432,56 @@ const DataTable_viajes_ant = (props) => {
       setFilterData(finalFilter);
     }
 
+    if (rango_fechas !== null && conductor_id !== null && filter_empresa === null && filter_estado !== null) {
+      console.log("CONDUCTOR Y , RANGO DE FECHAS Y FILTRO ESTADO ");
+      const filteredEvents = data.filter(
+        ({ estado, fechaSorter, id_user }) =>
+          id_user === conductor_id &&
+          estado === filter_estado &&
+          dayjs(fechaSorter).isBetween(
+            rango_fechas[0],
+            rango_fechas[1],
+            "month",
+            "[]"
+          )
+      );
+
+      setRangoLabel(true);
+      setEstadoLabel(true);
+      setConductorLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      setFilterData(finalFilter);
+    }
+
+    if (
+      rango_fechas !== null &&
+      conductor_id !== null &&
+      filter_empresa !== null &&
+      filter_estado !== null
+    ) {
+      console.log("FILTRO EMPRESA Y RANGO DE FECHAS Y ESTADO Y CONDUCTOR");
+      const filteredEvents = data.filter(
+        ({ empresa_id, fechaSorter, estado, id_user }) =>
+          empresa_id === filter_empresa &&
+          estado === filter_estado &&
+          id_user === conductor_id &&
+          estado === filter_estado &&
+          dayjs(fechaSorter).isBetween(
+            rango_fechas[0],
+            rango_fechas[1],
+            "month",
+            "[]"
+          )
+      );
+
+      setRangoLabel(true);
+      setEmpresaLabel(true);
+      setConductorLabel(true);
+      setEstadoLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      setFilterData(finalFilter);
+    }
+
     /**
      * Filtro por region y comuna
      * Filtro por empresa
@@ -392,10 +495,12 @@ const DataTable_viajes_ant = (props) => {
     setRangoFechas(null);
     setFecha(null);
     setFilterEmpresa(null);
+    setFilterEstado(null);
 
     setConductorLabel(false);
     setRangoLabel(false);
     setEmpresaLabel(false);
+    setEstadoLabel(false);
 
     setFilterData(data);
   }
@@ -479,7 +584,7 @@ const DataTable_viajes_ant = (props) => {
       var selected__viaje = {
         id: selectedRows[0].id,
         fecha: selectedRows[0].fechaSorter,
-        camion: selectedRows[0].camion,
+        camion: selectedRows[0].id_camion,
         origen: selectedRows[0].origen,
         destino: selectedRows[0].empresa_id,
         id_camion: selectedRows[0].id_camion,
@@ -488,7 +593,7 @@ const DataTable_viajes_ant = (props) => {
       var delete__viaje = {
         id: selectedRows[0].id,
         fecha: selectedRows[0].fechaSorter,
-        camion: selectedRows[0].camion,
+        camion: selectedRows[0].id_camion,
         origen: selectedRows[0].origen,
         destino: selectedRows[0].empresa_id,
         id_camion: selectedRows[0].id_camion,
@@ -558,6 +663,16 @@ const DataTable_viajes_ant = (props) => {
             }
 
             var empresaRef = db.collection("empresa").doc(x.destino);
+            var camionRef = db.collection("camion").doc(x.id_camion);
+            let camion_info = '';
+            camionRef.get().then((doc) => {
+              if (doc.exists) {
+                  camion_info = doc.data().modelo+" "+doc.data().patente;
+              } else {
+                  // doc.data() will be undefined in this case
+                  console.log("No such document!");
+              }
+            });
 
             //console.log("!! 2");
             empresaRef.get().then((empresa) => {
@@ -578,7 +693,7 @@ const DataTable_viajes_ant = (props) => {
                   fechaSorter: x.fecha.toDate(),
                   fecha: formatDate,
                   conductor: doc.data().nombres,
-                  camion: x.camion,
+                  camion: camion_info ? camion_info : x.id_camion,
                   origen: x.origen,
                   destino: destino,
                   empresa_id: empresa.id,
@@ -642,6 +757,11 @@ const DataTable_viajes_ant = (props) => {
     setFilterEmpresa(val);
   }
 
+  function onSelectEstado(val) {
+    console.log("oin select estado => ", val);
+    setFilterEstado(val);
+  }
+
   function create_pdf() {
     console.log("CREAR PDF");
     setOpen(true);
@@ -700,7 +820,7 @@ const DataTable_viajes_ant = (props) => {
             <Chip
               label="No hay filtros activos"
               color="primary"
-              size="small"
+              size="medium"
               onDelete={handleDelete}
               clickable
             />
@@ -709,7 +829,7 @@ const DataTable_viajes_ant = (props) => {
             <Chip
               label="conductor"
               color="secondary"
-              size="small"
+              size="medium"
               onDelete={handleDelete}
               clickable
             />
@@ -720,7 +840,7 @@ const DataTable_viajes_ant = (props) => {
             <Chip
               label="rango de fechas"
               color="secondary"
-              size="small"
+              size="medium"
               onDelete={handleDelete}
               clickable
             />
@@ -731,9 +851,19 @@ const DataTable_viajes_ant = (props) => {
             <Chip
               label="empresa"
               color="secondary"
-              size="small"
+              size="medium"
               onDelete={handleDelete}
               clickable
+            />
+          ) : (
+            ""
+          )}
+          {estadoLabel ? (
+            <Chip
+              label="estado"
+              color="secondary"
+              size="medium"
+              onDelete={handleDelete}
             />
           ) : (
             ""
@@ -789,7 +919,25 @@ const DataTable_viajes_ant = (props) => {
                     return <Option value={x.id}>{x.empresa}</Option>;
                   })}
                 </Select>
-              </div>
+          </div>
+          <div className={classes.filter}>
+                <span className={classes.filter__title}>Por Estado :</span>
+                <Select
+                  showSearch
+                  placeholder="Seleccione Estado"
+                  optionFilterProp="children"
+                  onSelect={onSelectEstado}
+                  value={filter_estado}
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                    <Option value={true}>Completado</Option>
+                    <Option value={false}>Programado</Option>
+                </Select>
+          </div>
           
         </div>
         <div className={classes.button__container}>

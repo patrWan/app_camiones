@@ -86,7 +86,6 @@ export default function ModalCamionDos(props) {
   const ItemContent = () => {
     return (
       <Box style={{display : 'flex', width : '100%'}}>
-        <h3>FORMULARIO V2</h3>
       </Box>
     )
   }
@@ -94,7 +93,7 @@ export default function ModalCamionDos(props) {
   return (
     <div>
       <Dialog open={openModalViaje} aria-labelledby="form-dialog-title" fullWidth={true}
-        maxWidth={"xl"}>
+        maxWidth={"xl"} scroll="paper">
         <DialogTitle id="form-dialog-title" className={selectedItem ? "bg-warning" : "bg-primary"}>
           {selectedItem ? <span className="text-dark">Editar Viaje</span> : <span className="text-white">Agregar Viaje</span>}
         </DialogTitle>
@@ -138,7 +137,7 @@ export default function ModalCamionDos(props) {
           />
           */
           }
-          <FORM_VIAJES selectedItem={selectedItem}/>
+          <FORM_VIAJES selectedItem={selectedItem} user__id={user__id}/>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => {setOpenModalViaje(false); setSelectedItem(null)}} color="secondary">

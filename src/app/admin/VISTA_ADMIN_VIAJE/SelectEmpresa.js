@@ -7,61 +7,64 @@ import { Select } from "antd";
 
 const { Option } = Select;
 
+function onSelect(val) {
+  console.log("select:", val);
+}
 
+function SelectEmpresa(props) {
+  const {selectedItem, destino, setDestino} = props;
 
-function SelectCamion(props) {
-  const {selectedItem, camionId, setCamionId} = props;
-  const [camion, setCamion] = useState([]);
+  const [empresa, setEmpresa] = useState([]);
 
   function onSelect(val) {
     console.log("select:", val);
-    setCamionId(val);
+    setDestino(val);
   }
 
   useEffect(async () => {
-    console.log("RENDER SELECT CAMION");
-    const camionRef = db.collection('camion');
+    console.log("RENDER SELECT EMPRESA");
+    const camionRef = db.collection('empresa');
     const snapshot = await camionRef.get();
     if (snapshot.empty) {
         console.log('No matching documents.');
         return;
     }
-    const camiones = [];
+    const empresas = [];
     snapshot.forEach(doc => {
-        var c = {
-          id : doc.id,
-          modelo : doc.data().modelo,
-          marca : doc.data().marca,
-          patente : doc.data().patente,
-          disponible : doc.data().disponible ? "Disponible" : "En uso",
-        }
-        camiones.push(c);
+        var e = {
+            id : doc.id,
+            empresa : doc.data().empresa,
+            region : doc.data().region,
+            comuna : doc.data().comuna,
+            direccion : doc.data().direccion,
+          }
+          empresas.push(e);
     });
-    setCamion(camiones);
+    setEmpresa(empresas);
+
     if(selectedItem){
-      setCamionId(selectedItem.id_camion);
+      setDestino(selectedItem.destino);
     }
-    
   }, []);
 
   return (
       <Select
         className="Input-select"
         showSearch
-        placeholder="Seleccione camion"
+        placeholder="Seleccione empresa"
         optionFilterProp="children"
         onSelect={onSelect}
         filterOption={(input, option) =>
           option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }
         getPopupContainer={node => node.parentNode}
-        value={camionId ? camionId : null}
+        value={destino ? destino : null}
       >
-        {camion.map((x) => {
-          return <Option value={x.id} key={x.id}>{x.patente}</Option>;
+        {empresa.map((x) => {
+          return <Option value={x.id} key={x.id}>{x.empresa}</Option>;
         })}
       </Select>
   );
 }
 
-export default SelectCamion;
+export default SelectEmpresa;

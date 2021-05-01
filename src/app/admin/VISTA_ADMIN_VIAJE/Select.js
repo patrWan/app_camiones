@@ -4,12 +4,16 @@ import { Select } from "antd";
 
 const { Option } = Select;
 
-function onSelect(val) {
-  console.log("select:", val);
-}
+
 
 function SelectUsuario(props) {
+  const {conductor, setConductor, user__id, selectedItem} = props;
   const [usuario, setUsuario] = useState([]);
+
+  function onSelect(val) {
+    console.log("select:", val);
+    setConductor(val);
+  }
 
   useEffect(async () => {
     console.log("RENDER SELECT USUARIO");
@@ -18,13 +22,16 @@ function SelectUsuario(props) {
     const data = await response.json();
     console.log(data);
     setUsuario(data);
+
+    if(selectedItem){
+      setConductor(user__id);
+    }
   }, []);
 
   return (
-    <div>
       <Select
+        className="Input-select"
         showSearch
-        style={{ width: 200 }}
         placeholder="Seleccione usuario"
         optionFilterProp="children"
         onSelect={onSelect}
@@ -32,12 +39,12 @@ function SelectUsuario(props) {
           option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }
         getPopupContainer={node => node.parentNode}
+        value={conductor ? conductor : null}
       >
         {usuario.map((x) => {
           return <Option value={x.id} key={x.id}>{x.nombres}</Option>;
         })}
       </Select>
-    </div>
   );
 }
 
