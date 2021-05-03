@@ -7,12 +7,13 @@ const { Option } = Select;
 
 
 function SelectUsuario(props) {
-  const {conductor, setConductor, user__id, selectedItem} = props;
+  const {conductor, setConductor, user__id, selectedItem, setEmailName} = props;
   const [usuario, setUsuario] = useState([]);
 
-  function onSelect(val) {
-    console.log("select:", val);
+  function onSelect(val, child) {
+    console.log("select:", child.children);
     setConductor(val);
+    setEmailName(child.children);
   }
 
   useEffect(async () => {

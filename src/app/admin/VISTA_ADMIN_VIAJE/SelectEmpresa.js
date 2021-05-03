@@ -12,13 +12,15 @@ function onSelect(val) {
 }
 
 function SelectEmpresa(props) {
-  const {selectedItem, destino, setDestino} = props;
+  const {selectedItem, destino, setDestino, setEmailDestino, setEmailDireccion} = props;
 
   const [empresa, setEmpresa] = useState([]);
 
-  function onSelect(val) {
-    console.log("select:", val);
+  function onSelect(val, child) {
+    console.log("select:", child);
     setDestino(val);
+    setEmailDestino(child.children);
+    setEmailDireccion(child.direccion);
   }
 
   useEffect(async () => {
@@ -61,7 +63,7 @@ function SelectEmpresa(props) {
         value={destino ? destino : null}
       >
         {empresa.map((x) => {
-          return <Option value={x.id} key={x.id}>{x.empresa}</Option>;
+          return <Option value={x.id} key={x.id} direccion={x.region +" "+x.comuna+" "+x.direccion}>{x.empresa}</Option>;
         })}
       </Select>
   );

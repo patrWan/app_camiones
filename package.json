@@ -15,6 +15,7 @@
     "@testing-library/user-event": "^12.8.3",
     "antd": "^4.15.0",
     "dayjs": "^1.10.4",
+    "emailjs-com": "^2.6.4",
     "firebase": "^8.3.0",
     "moment": "^2.29.1",
     "notistack": "^1.0.5",

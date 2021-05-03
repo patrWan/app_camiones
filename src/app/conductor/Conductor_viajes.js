@@ -145,13 +145,13 @@ const Conductor_viajes = (props) => {
   const [proximo_viaje, setProximoViaje] = useState("");
   const [acutal_viaje, setActualViaje] = useState("");
 
-  useEffect(() => {
+  useEffect(async () => {
     let user = localStorage.getItem("user");
     var docRef = db.collection("usuario").doc(user);
 
     docRef
       .get()
-      .then((doc) => {
+      .then( async (doc) => {
         if (doc.exists) {
           //console.log("Document data:", doc.data());
           setUsuario(doc.data())
@@ -176,6 +176,39 @@ const Conductor_viajes = (props) => {
           const proximo = sorted_filtro_proximo.find(element => dayjs(element.fecha.toDate()).isAfter(dayjs()));
           const actual = doc.data().viajes.find(element => dayjs(element.fecha.toDate()).isSame(dayjs(), 'date'));
           console.log(actual);
+
+          
+          
+          
+
+          if(ultimo){
+            var ultimoRef =  db.collection("empresa").doc(ultimo.destino);
+            await ultimoRef.get().then((doc) => {if (doc.exists) {ultimo ? ultimo.destino = doc.data().empresa : console.log("nada");} else {console.log("No such document!");}
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });
+          }
+
+          if(actual){
+            var actualRef =  db.collection("empresa").doc(actual.destino);
+            await actualRef.get().then((doc) => {if (doc.exists) {actual.destino = doc.data().empresa; } else {console.log("No such document!");}
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });
+          }
+
+          if(proximo){
+            var proximoRef =  db.collection("empresa").doc(proximo.destino);
+            await proximoRef.get().then((doc) => {if (doc.exists) {proximo.destino = doc.data().empresa} else {console.log("No such document!");}
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });
+          }
+          
+          
+
+          
+
           setUltimoViaje(ultimo);
           setProximoViaje(proximo);
           setActualViaje(actual);

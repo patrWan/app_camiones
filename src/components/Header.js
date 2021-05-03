@@ -11,7 +11,7 @@ import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import BusinessRoundedIcon from "@material-ui/icons/BusinessRounded";
 
-import { Box} from "@material-ui/core";
+import { Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { db } from "../db/firebase";
 
@@ -36,8 +36,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "space-between",
     boxShadow: "4px 4px 10px 10px rgba(0,0,0,0.1)",
-    paddingLeft : 15,
-    paddingRight : 15,
+    paddingLeft: 15,
+    paddingRight: 15,
     //borderLeft: "1px #ccc solid",
     //minHeight: '100vh',
   },
@@ -92,23 +92,23 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       display: "flex",
       width: "50%",
-      height : "100%",
-      padding : 5,
+      height: "100%",
+      padding: 5,
     },
   },
 
-  icons : {
-    color : "#ccc",
-    textDecoration : "none",
-    "&:hover" :{
-      color : "#fff"
-    }
+  icons: {
+    color: "#ccc",
+    textDecoration: "none",
+    "&:hover": {
+      color: "#fff",
+    },
   },
 
-  icon_mobile :{
-    display : "none",
+  icon_mobile: {
+    display: "none",
     [theme.breakpoints.down("sm")]: {
-      display : "flex",
+      display: "flex",
       width: "50%",
       justifyContent: "flex-start",
     },
@@ -213,15 +213,14 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 
-  navigation_mobile : {
-    backgroundColor : "yellow",
+  navigation_mobile: {
+    backgroundColor: "yellow",
     zIndex: 10,
-  }
+  },
 }));
 
 const Header = (props) => {
-
-  const {openSlideMenu, openNavigationMobileMenu} = props;
+  const { openSlideMenu, openNavigationMobileMenu } = props;
 
   const [visible, setVisible] = useState(false);
 
@@ -352,20 +351,36 @@ const Header = (props) => {
 
   return (
     <div className={classes.root}>
-      <Box className={classes.__icon_mobile}>
-        <span>
-          <a href="#" className={classes.icons} onClick={openSlideMenu}>  
-            <i class="bi bi-list" style={{fontSize : 42}} ></i>
-          </a>
-        </span>
-      </Box>
-      <Box className={classes.icon_mobile}>
-        <span>
-          <a href="#" className={classes.icons} onClick={openNavigationMobileMenu}>  
-            <i class="bi bi-arrow-down-circle-fill" style={{fontSize : 42}}></i>
-          </a>
-        </span>
-      </Box>
+      {isAdmin == "true" ? (
+        <Box className={classes.__icon_mobile}>
+          <span>
+            <a href="#" className={classes.icons} onClick={openSlideMenu}>
+              <i class="bi bi-list" style={{ fontSize: 42 }}></i>
+            </a>
+          </span>
+        </Box>
+      ) : (
+        ""
+      )}
+      {isAdmin == "true" ? (
+        <Box className={classes.icon_mobile}>
+          <span>
+            <a
+              href="#"
+              className={classes.icons}
+              onClick={openNavigationMobileMenu}
+            >
+              <i
+                class="bi bi-arrow-down-circle-fill"
+                style={{ fontSize: 42 }}
+              ></i>
+            </a>
+          </span>
+        </Box>
+      ) : (
+        ""
+      )}
+
       {/** Cambiar dependiendo de los privilegios */}
       {isAdmin == "false" ? (
         <Box className={classes.top}>
@@ -416,9 +431,11 @@ const Header = (props) => {
           )}
         </Box>
       </Box>
-      <DRAWERPERFILUSUARIO visible={visible} setVisible={setVisible} usuario={usuario}/>
-
-      
+      <DRAWERPERFILUSUARIO
+        visible={visible}
+        setVisible={setVisible}
+        usuario={usuario}
+      />
     </div>
   );
 };

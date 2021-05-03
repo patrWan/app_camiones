@@ -15,6 +15,8 @@ import SELECT_EMPRESA from "./SelectEmpresa";
 
 import {db} from "../../../db/firebase";
 
+import emailjs from 'emailjs-com';
+
 import { useSnackbar } from "notistack";
 
 import "./estilos_form_admin_viaje.css";
@@ -94,6 +96,10 @@ function Form_admin_viaje(props) {
   const [camionId, setCamionId] = useState('');
   const [origen, setOrigen] = useState('');
   const [destino, setDestino] = useState('');
+
+  const [email_name, setEmailName] = useState('');
+  const [email_destino, setEmailDestino] = useState('');
+  const [email_direccion, setEmailDireccion] = useState('');
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -193,8 +199,32 @@ function Form_admin_viaje(props) {
         preventDuplicate: true,
       });
 
+      var fecha = dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:m A");
+
+      /*
+      emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', e.target, 'YOUR_USER_ID')
+      .then((result) => {
+          console.log(result.text);
+      }, (error) => {
+          console.log(error.text);
+      });
+      */
+
       //setOpenModalViaje(false);
     }
+  }
+
+  function tests(e){
+    e.preventDefault();
+
+    var fecha = dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:mm A");
+
+    emailjs.sendForm('service_3t2jqug', 'template_60oxr8w', e.target, 'user_CzJpNEaTEgmDCaNX3wWLO')
+      .then((result) => {
+        console.log(result.text);
+      }, (error) => {
+        console.log(error.text);
+    });
   }
 
   return (
@@ -217,7 +247,7 @@ function Form_admin_viaje(props) {
             </div>
             <div className="Form-input-select">
               <span className="Label">Usuario</span>
-              <SELECT_USUARIO conductor={conductor} setConductor={setConductor} user__id={user__id} selectedItem={selectedItem}/>
+              <SELECT_USUARIO conductor={conductor} setConductor={setConductor} user__id={user__id} selectedItem={selectedItem} setEmailName={setEmailName}/>
             </div>
 
             <div className="Form-input-select">
@@ -231,11 +261,20 @@ function Form_admin_viaje(props) {
 
             <div className="Form-input-select">
               <span className="Label">Empresa Destino</span>
-              <SELECT_EMPRESA selectedItem={selectedItem} destino={destino} setDestino={setDestino}/>
+              <SELECT_EMPRESA selectedItem={selectedItem} destino={destino} setDestino={setDestino} setEmailDestino={setEmailDestino} setEmailDireccion={setEmailDireccion}/>
             </div>
-
+            
             <div className="Form-input-select">
-              <button className="btn btn-primary" onClick={submit}>Agregar Viaje</button>
+              <form onSubmit={tests}> 
+                <input type="hidden" value="patricio.gonzalez.camilo@gmail.com" name="email"></input>
+                <input type="hidden" value="Nuevo Viaje Programado" name="subject"></input>
+                <input type="hidden" value={email_name} name="name"></input>
+                <input type="hidden" value={ dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:mm A")} name="fecha"></input>
+                <input type="hidden" value={email_destino} name="empresa"></input>
+                <input type="hidden" value={email_direccion} name="direccion"></input>
+                <input type="hidden" value="Para mas detalles visite trudistics.cl" name="mensaje"></input>
+                <button type="submit" className="btn btn-primary">Agregar Viaje</button>
+              </form>
             </div>
 
             

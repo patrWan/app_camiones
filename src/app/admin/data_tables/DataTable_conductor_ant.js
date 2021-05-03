@@ -48,20 +48,17 @@ const columns = [
     title: "Nombres",
     dataIndex: "nombres",
     key: "id",
-    responsive: ['sm'],
   },
   {
     title: "Apellidos",
     dataIndex: "apellidos",
     key: "id",
-    responsive: ['sm'],
     
   },
   {
-    title: "ID",
-    dataIndex: "id",
+    title: "Estado",
+    dataIndex: "estado",
     key: "id",
-    responsive: ['xl'],
   },
 ];
 
@@ -102,7 +99,7 @@ const DataTable_conductor_ant = (props) => {
       .then((res) => res.json())
       .then(
         (result) => {
-          setTimeout(function(){ setData(result);; setIsLoaded(false)}, 1000);
+          setTimeout(function(){ setData(result); setIsLoaded(false)}, 1000);
           
         },
         // Nota: es importante manejar errores aquí y no en

@@ -130,9 +130,6 @@ const Side_menu = (props) => {
         <Box></Box>
         <Box></Box>
         <Box>
-          <Typography variant="body1" component="h2" gutterBottom>
-            info extra
-          </Typography>
         </Box>
       </Box>
     </div>

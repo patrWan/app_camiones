@@ -134,13 +134,11 @@ const columns = [
     title: "Conductor",
     dataIndex: "conductor",
     key: "conductor",
-    responsive: ["md"],
   },
   {
     title: "Camion",
     dataIndex: "camion",
     key: "camion",
-    responsive: ["sm"],
   },
   /*
   {
@@ -164,13 +162,11 @@ const columns = [
     title: "Empresa",
     dataIndex: "direccion",
     key: "direccion",
-    responsive: ["sm"],
   },
   {
     title: "Estado",
     key: "estado",
     render: (text, record) => <StatusTag status={record.estado} />,
-    responsive: ["sm"],
   },
 ];
 
@@ -624,7 +620,7 @@ const DataTable_viajes_ant = (props) => {
 
 
 
-  const get__viajes = () => {
+  const get__viajes = async () => {
     let item__list = [];
     let data_camiones__list = [];
     let conductor_list = [];
@@ -646,7 +642,7 @@ const DataTable_viajes_ant = (props) => {
           };
           conductor_list.push(conductor_item);
 
-          doc.data().viajes.forEach((x) => {
+          doc.data().viajes.forEach(async (x) => {
             //console.log("!! 1");
             var formatDate = dayjs(x.fecha.toDate())
               .locale("es")
@@ -663,9 +659,10 @@ const DataTable_viajes_ant = (props) => {
             }
 
             var empresaRef = db.collection("empresa").doc(x.destino);
-            var camionRef = db.collection("camion").doc(x.id_camion);
+            var camionRef =  db.collection("camion").doc(x.id_camion);
             let camion_info = '';
-            camionRef.get().then((doc) => {
+
+            await camionRef.get().then((doc) => {
               if (doc.exists) {
                   camion_info = doc.data().modelo+" "+doc.data().patente;
               } else {
@@ -674,19 +671,29 @@ const DataTable_viajes_ant = (props) => {
               }
             });
 
-            //console.log("!! 2");
-            empresaRef.get().then((empresa) => {
-              if (empresa.exists) {
+            let empresa_info = '';
+            let destino = '';
+            let idEmpresa = '';
+            await empresaRef.get().then((doc) => {
+              if (doc.exists) {
+                  idEmpresa = doc.id;
+                  empresa_info = doc.data().empresa;
+                  destino =
+                  doc.data().region +
+                  ", " +
+                  doc.data().comuna +
+                  ", " +
+                  doc.data().direccion;
+              } else {
+                  // doc.data() will be undefined in this case
+                  console.log("No such document!");
+              }
+            });
+
                 item = {};
                 //console.log("!! 3");
 
-                let destino =
-                  empresa.data().region +
-                  ", " +
-                  empresa.data().comuna +
-                  ", " +
-                  empresa.data().direccion;
-                let empresa_name = empresa.data().empresa;
+                
 
                 item = {
                   id: x.id,
@@ -696,12 +703,12 @@ const DataTable_viajes_ant = (props) => {
                   camion: camion_info ? camion_info : x.id_camion,
                   origen: x.origen,
                   destino: destino,
-                  empresa_id: empresa.id,
+                  empresa_id: idEmpresa ? idEmpresa : x.destino,
                   estado: estado,
                   id_user: doc.id,
                   id_camion: x.id_camion,
                   fecha_camion: formatDate2,
-                  direccion: empresa_name,
+                  direccion: empresa_info ? empresa_info : "Empresa eliminada...",
                 };
 
                 data_camiones = {
@@ -713,11 +720,6 @@ const DataTable_viajes_ant = (props) => {
 
                 item__list.push(item);
                 data_camiones__list.push(data_camiones);
-              } else {
-                // doc.data() will be undefined in this case
-                console.log("No such document!");
-              }
-            });
 
             //console.log(doc.data().viajes.length);
           });
