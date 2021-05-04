@@ -49,23 +49,32 @@ const columns = [
     title: "Direccion",
     dataIndex: "direccion",
     key: "direccion",
-    responsive: ["sm"],
   },
   {
     title: "Region",
     dataIndex: "region",
     key: "region",
-    responsive: ["sm"],
   },
   {
     title: "Comuna",
     dataIndex: "comuna",
     key: "comuna",
-    responsive: ["sm"],
   },
 ];
 
 const DataTable_empresa = (props) => {
+
+  const {
+    setIsSelected,
+    setSelectedItem,
+    selectedItem,
+    mensaje_accion,
+
+    selectRows,
+    setSelectRows,
+    openSlideMenu
+  } = props;
+
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(true);
 
@@ -99,14 +108,11 @@ const DataTable_empresa = (props) => {
   const [x, setX] = useState([]);
 
   const rowSelection = {
-    selectedRowKeys: x,
+    selectedRowKeys: selectRows,
     onChange: (selectedRowKeys, selectedRows) => {
-      setX(selectedRowKeys);
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows[0]
-      );
+      setSelectRows(selectedRowKeys);
+      openSlideMenu();
+
       //setIsSelected(false)
       setSelectedItem(selectedRows[0]);
 
@@ -147,12 +153,7 @@ const DataTable_empresa = (props) => {
     }, 1000);
   };
 
-  const {
-    setIsSelected,
-    setSelectedItem,
-    selectedItem,
-    mensaje_accion,
-  } = props;
+  
 
   useEffect(() => {
     get__empresa();

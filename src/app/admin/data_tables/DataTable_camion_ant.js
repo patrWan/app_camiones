@@ -3,37 +3,33 @@ import { Table, Typography, Button } from "antd";
 import { db } from "../../../db/firebase";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Alert } from 'antd';
-import * as dayjs from 'dayjs'
+import { Alert } from "antd";
+import * as dayjs from "dayjs";
 
-var locale_de = require('dayjs/locale/es')
+var locale_de = require("dayjs/locale/es");
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    "& table": {
-      
-    },
+    "& table": {},
     "& thead > tr > th": {
       background: "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)",
       color: "black",
       fontSize: "16",
       fontFamily: "Dela Gothic One, cursive",
-      
     },
     "& thead > tr": {
       borderWidth: "2px",
       borderColor: "black",
       borderStyle: "solid",
     },
-    "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th " : {
+    "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th ": {
       background: "#282640",
-      color : "white",
-      
-   },
-   boxShadow : '4px 4px 10px 10px rgba(0,0,0,0.1)',
-   backgroundColor: "#ff",
-   borderRadius : '16px 16px 0 0',
+      color: "white",
+    },
+    boxShadow: "4px 4px 10px 10px rgba(0,0,0,0.1)",
+    backgroundColor: "#ff",
+    borderRadius: "16px 16px 0 0",
   },
 }));
 
@@ -43,27 +39,32 @@ const columns = [
     dataIndex: "modelo",
     render: (text) => <a>{text}</a>,
     sorter: (a, b) => a.modelo.localeCompare(b.modelo),
-    defaultSortOrder: 'ascend',
+    defaultSortOrder: "ascend",
   },
   {
     title: "Marca",
     dataIndex: "marca",
     key: "marca",
-    responsive: ['sm'],
   },
   {
     title: "Patente",
     dataIndex: "patente",
     key: "patente",
-    responsive: ['sm'],
-    
   },
 ];
 
-
-
-
 const DataTable_camion_ant = (props) => {
+  const {
+    setIsSelected,
+    setSelectedItem,
+    selectedItem,
+    mensaje_accion,
+
+    selectRows,
+    setSelectRows,
+    openSlideMenu,
+  } = props;
+
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(true);
 
@@ -72,7 +73,7 @@ const DataTable_camion_ant = (props) => {
 
   const [data, setData] = useState([]);
 
-  const [rowClassname, setRowClassname] = useState('');
+  const [rowClassname, setRowClassname] = useState("");
 
   const [visible, setVisible] = useState(false);
   const handleClose = () => {
@@ -83,10 +84,9 @@ const DataTable_camion_ant = (props) => {
   const observerCamion = query.onSnapshot(
     (querySnapshot) => {
       setSize(querySnapshot.size);
-      querySnapshot.docChanges().forEach(change => {
-        if (change.type === 'modified') {
-          setEdit(!edit)
-          
+      querySnapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+          setEdit(!edit);
         }
       });
     },
@@ -97,28 +97,24 @@ const DataTable_camion_ant = (props) => {
 
   const [x, setX] = useState([]);
 
-  
-
   const rowSelection = {
-    selectedRowKeys : x,
+    selectedRowKeys: selectRows,
     onChange: (selectedRowKeys, selectedRows) => {
-      setX(selectedRowKeys)
+      setSelectRows(selectedRowKeys);
+      openSlideMenu();
       console.log(
         `selectedRowKeys: ${selectedRowKeys}`,
         "selectedRows: ",
         selectedRows[0]
       );
       //setIsSelected(false)
-      setSelectedItem(selectedRows[0])
+      setSelectedItem(selectedRows[0]);
 
-     
       //Wed, 31 Mar 2021 02:12:39 GMT
       const dateString = "Wed, 31 Mar 2021 02:12:39 GMT";
-      var formatDate = dayjs(dateString).locale('es').format("DD MMM. YYYY")
-      
+      var formatDate = dayjs(dateString).locale("es").format("DD MMM. YYYY");
+
       console.log(formatDate);
-
-
     },
     getCheckboxProps: (record) => ({
       disabled: record.name === "Disabled User",
@@ -128,43 +124,40 @@ const DataTable_camion_ant = (props) => {
   };
 
   const get__camion = async () => {
-    const camionRef = db.collection('camion');
+    const camionRef = db.collection("camion");
     const snapshot = await camionRef.get();
     if (snapshot.empty) {
-        console.log('No matching documents.');
-        return;
+      console.log("No matching documents.");
+      return;
     }
     const camiones = [];
-    snapshot.forEach(doc => {
-        var c = {
-          id : doc.id,
-          modelo : doc.data().modelo,
-          marca : doc.data().marca,
-          patente : doc.data().patente,
-          disponible : doc.data().disponible ? "Disponible" : "En uso",
-        }
-        camiones.push(c);
+    snapshot.forEach((doc) => {
+      var c = {
+        id: doc.id,
+        modelo: doc.data().modelo,
+        marca: doc.data().marca,
+        patente: doc.data().patente,
+        disponible: doc.data().disponible ? "Disponible" : "En uso",
+      };
+      camiones.push(c);
     });
-    setTimeout(function(){ setData(camiones); setIsLoaded(false)}, 1000);
-    
-
-  }
-
-  const {setIsSelected, setSelectedItem, selectedItem, mensaje_accion} = props;
+    setTimeout(function () {
+      setData(camiones);
+      setIsLoaded(false);
+    }, 1000);
+  };
 
   useEffect(() => {
     get__camion();
   }, [size, edit]);
 
   useEffect(() => {
-    console.log("!! UseEffect selectedItem === null ?")
-    if(selectedItem === null){
+    console.log("!! UseEffect selectedItem === null ?");
+    if (selectedItem === null) {
       setX([]);
     }
-    
   }, [selectedItem]);
 
-  
   const { Text, Link } = Typography;
   const classes = useStyles();
 
@@ -178,15 +171,13 @@ const DataTable_camion_ant = (props) => {
         }}
         columns={columns}
         dataSource={data}
-        scroll={{ x: 'max-content' }}
+        scroll={{ x: "max-content" }}
         size="small"
-
-        pagination={{ position: ['bottom', 'left'] }}
-        bordered ={true}
+        pagination={{ position: ["bottom", "left"] }}
+        bordered={true}
         className={classes.root}
         rowClassName={rowClassname}
         loading={isLoaded}
-        
       />
     </div>
   );

@@ -58,6 +58,8 @@ const Admin_viajes = () => {
 
   const [conductor, setConductor] = useState("");
 
+  const[selectRows, setSelectRows]  = useState([]);
+
   let history = useHistory();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -142,6 +144,8 @@ const Admin_viajes = () => {
     menu_lateral.current.style.width = "0";
     content.current.style.marginLeft = "0";
     header.current.style.marginLeft = "0";
+
+    setSelectRows([]);
   };
 
   const openNavigationMobileMenu = () => {
@@ -221,6 +225,10 @@ const Admin_viajes = () => {
 
             setConductor={setConductor}
             setDireccion={setDireccion}
+
+            selectRows = {selectRows} /**!!!!!! */
+            setSelectRows={setSelectRows}
+            openSlideMenu={openSlideMenu}
           />
         </div>
         <DRAWER_SETTINGS visible ={visible} setVisible={setVisible}/>

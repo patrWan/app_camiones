@@ -36,18 +36,14 @@ import "./estilos_admin_empresa.css";
 
 const Admin_empresas = () => {
    /** hook drawer admin */
-   const [visible, setVisible] = useState(false);
-
+  const [visible, setVisible] = useState(false);
   const [open, setOpen] = useState(false);
-
   const [selectedItem, setSelectedItem] = useState(null);
- 
   const [isSelected, setIsSelected] = useState(true);
-
-  /**  */
   const [openModalEmpresa, setOpenModalEmpresa] = useState(null);
-
   const [mensaje_accion, setMensajeAccion] = useState([]);
+
+  const[selectRows, setSelectRows]  = useState([]);
 
   let history = useHistory();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -115,6 +111,7 @@ const Admin_empresas = () => {
     menu_lateral.current.style.width = "0";
     content.current.style.marginLeft = "0";
     header.current.style.marginLeft = "0";
+    setSelectRows([]);
   };
 
   const openNavigationMobileMenu = () => {
@@ -185,6 +182,10 @@ const Admin_empresas = () => {
             setIsSelected={setIsSelected}
             selectedItem={selectedItem}
             mensaje_accion = {mensaje_accion}
+            
+            selectRows = {selectRows} /**!!!!!! */
+            setSelectRows={setSelectRows}
+            openSlideMenu={openSlideMenu}
           />
         </div>
         <DRAWER_SETTINGS visible ={visible} setVisible={setVisible}/>

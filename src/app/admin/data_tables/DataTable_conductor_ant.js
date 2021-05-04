@@ -4,36 +4,32 @@ import { db } from "../../../db/firebase";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import * as dayjs from 'dayjs'
+import * as dayjs from "dayjs";
 
-var locale_de = require('dayjs/locale/es')
+var locale_de = require("dayjs/locale/es");
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    "& table": {
-      
-    },
+    "& table": {},
     "& thead > tr > th": {
       background: "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)",
       color: "black",
       fontSize: "16",
       fontFamily: "Dela Gothic One, cursive",
-      
     },
     "& thead > tr": {
       borderWidth: "2px",
       borderColor: "black",
       borderStyle: "solid",
     },
-    "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th " : {
+    "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th ": {
       background: "#282640",
-      color : "white",
-      
-   },
-   boxShadow : '4px 4px 10px 10px rgba(0,0,0,0.1)',
-   backgroundColor: "#ff",
-   borderRadius : '16px 16px 0 0',
+      color: "white",
+    },
+    boxShadow: "4px 4px 10px 10px rgba(0,0,0,0.1)",
+    backgroundColor: "#ff",
+    borderRadius: "16px 16px 0 0",
   },
 }));
 
@@ -53,7 +49,6 @@ const columns = [
     title: "Apellidos",
     dataIndex: "apellidos",
     key: "id",
-    
   },
   {
     title: "Estado",
@@ -62,10 +57,18 @@ const columns = [
   },
 ];
 
-
-
-
 const DataTable_conductor_ant = (props) => {
+  const {
+    setIsSelected,
+    setSelectedUser,
+    selectedUser,
+    setSelectedItem,
+
+    selectRows,
+    setSelectRows,
+    openSlideMenu,
+  } = props;
+
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(true);
 
@@ -78,10 +81,9 @@ const DataTable_conductor_ant = (props) => {
   const observerUsuario = query.onSnapshot(
     (querySnapshot) => {
       setSize(querySnapshot.size);
-      querySnapshot.docChanges().forEach(change => {
-        if (change.type === 'modified') {
-          setEdit(!edit)
-          
+      querySnapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+          setEdit(!edit);
         }
       });
     },
@@ -99,8 +101,10 @@ const DataTable_conductor_ant = (props) => {
       .then((res) => res.json())
       .then(
         (result) => {
-          setTimeout(function(){ setData(result); setIsLoaded(false)}, 1000);
-          
+          setTimeout(function () {
+            setData(result);
+            setIsLoaded(false);
+          }, 1000);
         },
         // Nota: es importante manejar errores aquí y no en
         // un bloque catch() para que no interceptemos errores
@@ -111,30 +115,27 @@ const DataTable_conductor_ant = (props) => {
       );
   };
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [x, setX] = useState([]);
   const rowSelection = {
-    selectedRowKeys : x,
+    selectedRowKeys: selectRows,
     onChange: (selectedRowKeys, selectedRows) => {
-      setSelectedRowKeys([selectedRows])
-      setX(selectedRowKeys)
+      setSelectedRowKeys([selectedRows]);
+      setSelectRows(selectedRowKeys);
+      openSlideMenu();
       console.log(
         `selectedRowKeys: ${selectedRowKeys}`,
         "selectedRows: ",
         selectedRows[0]
       );
-      
+
       //setIsSelected(false)
       setSelectedUser(selectedRows[0]);
       setSelectedItem(selectedRows[0]);
 
-     
       //Wed, 31 Mar 2021 02:12:39 GMT
       const dateString = "Wed, 31 Mar 2021 02:12:39 GMT";
-      var formatDate = dayjs(dateString).locale('es').format("DD MMM. YYYY")
-      
+      var formatDate = dayjs(dateString).locale("es").format("DD MMM. YYYY");
+
       console.log(formatDate);
-
-
     },
     getCheckboxProps: (record) => ({
       disabled: record.name === "Disabled User",
@@ -144,10 +145,10 @@ const DataTable_conductor_ant = (props) => {
   };
 
   useEffect(() => {
+    console.log("<----RENDER TABLA USUARIOS---->");
     get__usuario();
   }, [size, edit]);
 
-  const {setIsSelected, setSelectedUser, selectedUser, setSelectedItem} = props;
   const { Text, Link } = Typography;
   const classes = useStyles();
   return (
@@ -160,11 +161,10 @@ const DataTable_conductor_ant = (props) => {
         }}
         columns={columns}
         dataSource={data}
-        scroll={{ x: 'max-content' }}
+        scroll={{ x: "max-content" }}
         size="small"
-
-        pagination={{ position: ['bottom', 'left'] }}
-        bordered ={true}
+        pagination={{ position: ["bottom", "left"] }}
+        bordered={true}
         className={classes.root}
         loading={isLoaded}
       />

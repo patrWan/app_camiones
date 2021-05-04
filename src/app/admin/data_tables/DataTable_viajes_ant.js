@@ -183,6 +183,10 @@ const DataTable_viajes_ant = (props) => {
     setItemToDelete,
     setConductor,
     setDireccion,
+
+    selectRows,
+    setSelectRows,
+    openSlideMenu
   } = props;
 
   const { RangePicker } = DatePicker;
@@ -573,9 +577,10 @@ const DataTable_viajes_ant = (props) => {
   );
 
   const rowSelection = {
-    selectedRowKeys: x,
+    selectedRowKeys: selectRows,
     onChange: (selectedRowKeys, selectedRows) => {
-      setX(selectedRowKeys);
+      setSelectRows(selectedRowKeys);
+      openSlideMenu();
 
       var selected__viaje = {
         id: selectedRows[0].id,

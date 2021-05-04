@@ -138,22 +138,19 @@ const FormConductor = (props) => {
 
   const file = useRef();
 
-  const uploadPhoto = (email) => {
-    var metadata = {
-      contentType: "image/jpeg",
-    };
-    var storageRef = storage.ref();
-    var pathName = "avatars/example.profilePhoto";
-    var avatarRef = storageRef.child(pathName);
+  const uploadPhoto = async () => {
+    console.log("ON CHANGE FOTO");
+    const file_img = file.current.files[0];
+    //setPhotoUrl(file_name);
 
-    avatarRef
-      .put(file.current.files[0], metadata)
-      .then(function (snapshot) {
-        avatarRef.getDownloadURL().then((x) => {
-          setPhotoUrl(x);
-        });
-        console.log("Uploaded a blob or file!");
-      });
+    if(file_img){
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoUrl(reader.result);
+      }
+      await reader.readAsDataURL(file_img);
+      
+    }
   };
 
   const edit__user = async (edit_user) => {
@@ -245,8 +242,7 @@ const FormConductor = (props) => {
         .put(file.current.files[0], metadata)
         .then(function (snapshot) {
           avatarRef.getDownloadURL().then((x) => {
-            setPhotoUrl(x);
-
+            //setPhotoUrl(x);
             var new_user = {
               id: selectedUser.id,
               email: data.email,
@@ -254,7 +250,7 @@ const FormConductor = (props) => {
               apellidos: data.apellidos,
               rut: data.rut,
               telefono: data.telefono,
-              photoUrl: x,
+              photoUrl: photoUrl ? x : selectedUser.photoURL,
               //domicilio : data.domicilio
             };
 
@@ -311,13 +307,7 @@ const FormConductor = (props) => {
               <Box className={classes.avatar}>
                 <Avatar
                   alt="user_avatar"
-                  src={
-                    photoUrl
-                      ? photoUrl
-                      : selectedUser
-                      ? selectedUser.photoURL
-                      : null
-                  }
+                  src={photoUrl ? photoUrl : selectedUser.photoURL}
                   variant="square"
                   className={classes.avatar}
                 />
@@ -426,25 +416,6 @@ const FormConductor = (props) => {
                 />
                 {errors.telefono && errors.telefono.type === "required" && (
                   <FormErrorMessage>'Telefono' es requerido.</FormErrorMessage>
-                )}
-              </Box>
-              <Box
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "100%",
-                }}
-              >
-                <TextField
-                  name="domicilio"
-                  id="id_domicilio"
-                  label="Domicilio"
-                  className={classes.input__domicilio}
-                  inputRef={register({ required: true })}
-                  defaultValue={selectedUser ? selectedUser.domicilio : ""}
-                />
-                {errors.domicilio && errors.domicilio.type === "required" && (
-                  <FormErrorMessage>'Domicilio' es requerido.</FormErrorMessage>
                 )}
               </Box>
             </Box>

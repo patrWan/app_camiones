@@ -39,6 +39,8 @@ const Admin_conductores = () => {
   /**  */
   const [openModalConductor, setOpenModalConductor] = useState(null);
 
+  const[selectRows, setSelectRows]  = useState([]);
+
   let history = useHistory();
 
   const ADMIN_CONDUCTOR_ITEMS = [
@@ -97,6 +99,8 @@ const Admin_conductores = () => {
     menu_lateral.current.style.width = "0";
     content.current.style.marginLeft = "0";
     header.current.style.marginLeft = "0";
+
+    setSelectRows([]);
   };
 
   const openNavigationMobileMenu = () => {
@@ -158,7 +162,7 @@ const Admin_conductores = () => {
       </div>
 
       <div className="content" ref={content}>
-      <div className="info">CAMIONES</div>
+      <div className="info">USUARIOS</div>
         <div className="table">
           {/*<TABLA_CONDUCTOR fun={fun} setIsSelected={setIsSelected} />*/}
           <TABLA_CONDUCTOR_ANT 
@@ -166,6 +170,10 @@ const Admin_conductores = () => {
             setIsSelected={setIsSelected} 
             selectedUser={selectedUser}
             setSelectedItem={setSelectedItem}
+
+            selectRows = {selectRows} /**!!!!!! */
+            setSelectRows={setSelectRows}
+            openSlideMenu={openSlideMenu}
           />
         </div>
       </div>

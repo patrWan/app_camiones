@@ -46,6 +46,8 @@ const Admin_conductores = () => {
 
   const [mensaje_accion, setMensajeAccion] = useState([]);
 
+  const[selectRows, setSelectRows]  = useState([]);
+
   let history = useHistory();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -111,6 +113,8 @@ const Admin_conductores = () => {
     menu_lateral.current.style.width = "0";
     content.current.style.marginLeft = "0";
     header.current.style.marginLeft = "0";
+
+    setSelectRows([]);
   };
 
   const openNavigationMobileMenu = () => {
@@ -180,6 +184,10 @@ const Admin_conductores = () => {
             setIsSelected={setIsSelected}
             selectedItem={selectedItem}
             mensaje_accion={mensaje_accion}
+
+            selectRows = {selectRows} /**!!!!!! */
+            setSelectRows={setSelectRows}
+            openSlideMenu={openSlideMenu}
           />
         </div>
         <DRAWER_SETTINGS visible ={visible} setVisible={setVisible}/>
