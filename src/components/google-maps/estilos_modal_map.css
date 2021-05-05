@@ -1,0 +1,50 @@
+.Modal-header {
+    background-color: #1d3557;
+    color: #f1faee;
+}
+
+.Modal-actions {
+    background-color: #f1faee;
+}
+
+.Modal-title {
+    font-size: 18px;
+    color: #f1faee;
+}
+
+.Map-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f1faee;
+}
+
+.Search-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.Input-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.Input-search {
+    width: 80%;
+    font-size: 18px;
+}
+
+.List-text {
+    font-size: 18px;
+}
+
+.List-item:hover {
+    background-color: #ccc;
+    cursor: pointer;
+    
+}

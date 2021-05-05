@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Table, Typography, Button } from "antd";
 import { db } from "../../../db/firebase";
 
+import MAP_ONLYVIEW from "../../../components/google-maps/Modal-map-onlyView";
+
 import { makeStyles } from "@material-ui/core/styles";
 import { Alert } from "antd";
 import * as dayjs from "dayjs";
@@ -38,30 +40,6 @@ const useStyles = makeStyles((theme) => ({
   row: {},
 }));
 
-const columns = [
-  {
-    title: "Empresa",
-    dataIndex: "empresa",
-    sorter: (a, b) => a.empresa.localeCompare(b.empresa),
-    defaultSortOrder: "ascend",
-  },
-  {
-    title: "Direccion",
-    dataIndex: "direccion",
-    key: "direccion",
-  },
-  {
-    title: "Region",
-    dataIndex: "region",
-    key: "region",
-  },
-  {
-    title: "Comuna",
-    dataIndex: "comuna",
-    key: "comuna",
-  },
-];
-
 const DataTable_empresa = (props) => {
 
   const {
@@ -86,6 +64,47 @@ const DataTable_empresa = (props) => {
   const [rowClassname, setRowClassname] = useState("");
 
   const [visible, setVisible] = useState(false);
+
+  const [empresa_cor, setEmpresaCor] = useState({});
+  const [openModalMap, setOpenModalMap] = useState(false);
+
+  async function ver_empresa_map(empresa){
+    console.log("Ver empresa", empresa);
+    // abrir modal
+    //entregar lat y lng
+
+    await setEmpresaCor({lat : empresa.latitud, lng :empresa.longitud });
+
+    console.log(empresa_cor);
+
+    setOpenModalMap(true);
+  }
+
+  const columns = [
+    {
+      title: "Empresa",
+      dataIndex: "empresa",
+      key : "empresa",
+      render: (text, empresa) => <a style={{color : "#0096c7"}} onClick={() => ver_empresa_map(empresa)}>{text}</a>,
+      sorter: (a, b) => a.empresa.localeCompare(b.empresa),
+      defaultSortOrder: "ascend",
+    },
+    {
+      title: "Direccion",
+      dataIndex: "direccion",
+      key: "direccion",
+    },
+    {
+      title: "Region",
+      dataIndex: "region",
+      key: "region",
+    },
+    {
+      title: "Comuna",
+      dataIndex: "comuna",
+      key: "comuna",
+    },
+  ];
   const handleClose = () => {
     setVisible(false);
   };
@@ -120,7 +139,7 @@ const DataTable_empresa = (props) => {
       const dateString = "Wed, 31 Mar 2021 02:12:39 GMT";
       var formatDate = dayjs(dateString).locale("es").format("DD MMM. YYYY");
 
-      console.log(formatDate);
+      console.log(selectedRows[0]);
     },
     getCheckboxProps: (record) => ({
       disabled: record.name === "Disabled User",
@@ -144,6 +163,8 @@ const DataTable_empresa = (props) => {
         comuna: doc.data().comuna,
         direccion: doc.data().direccion,
         empresa: doc.data().empresa,
+        latitud : doc.data().latitud ? doc.data().latitud : "",
+        longitud : doc.data().longitud ?doc.data().longitud : "" ,
       };
       empresas.push(e);
     });
@@ -171,6 +192,7 @@ const DataTable_empresa = (props) => {
 
   return (
     <div className={classes.root}>
+      <MAP_ONLYVIEW openModalMap={openModalMap} setOpenModalMap={setOpenModalMap} empresa_cor={empresa_cor}/>
       <Table
         rowKey="id"
         rowSelection={{
