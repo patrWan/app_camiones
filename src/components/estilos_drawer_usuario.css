@@ -1,0 +1,13 @@
+.Wrapper-image-perfil {
+    display: flex;
+    justify-content: center;
+}
+.Image-perfil {
+    height: 100px;
+    width: 100px;
+}
+
+.Title {
+    font-size: 14px;
+    font-weight: bold;
+}

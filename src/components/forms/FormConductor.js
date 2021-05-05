@@ -1,5 +1,12 @@
 import React, { useRef, useState } from "react";
-import { TextField, Box, Button, Avatar } from "@material-ui/core";
+import {
+  TextField,
+  Box,
+  Button,
+  Avatar,
+  Backdrop,
+  CircularProgress,
+} from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { storage } from "../../db/firebase";
@@ -8,6 +15,8 @@ import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 
 import FormErrorMessage from "../FormErrorMessage";
+
+import emailjs from "emailjs-com";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -120,13 +129,20 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
+
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
 
 const FormConductor = (props) => {
   const { register, handleSubmit, errors } = useForm();
-  const { enqueueSnackbar, /*closeSnackbar*/ } = useSnackbar();
+  const { enqueueSnackbar /*closeSnackbar*/ } = useSnackbar();
 
   const { selectedUser, setOpenModalConductor } = props;
+
+  const [loading, setLoading] = useState(false);
 
   const classes = useStyles();
 
@@ -143,13 +159,12 @@ const FormConductor = (props) => {
     const file_img = file.current.files[0];
     //setPhotoUrl(file_name);
 
-    if(file_img){
+    if (file_img) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPhotoUrl(reader.result);
-      }
+      };
       await reader.readAsDataURL(file_img);
-      
     }
   };
 
@@ -170,8 +185,8 @@ const FormConductor = (props) => {
       .then((response) => {
         /** !!!!! ESTA SEGURO DE LOS CAMBIOS REALIZADOS? -> DTOS DEL USUARIO */
 
-        setOpenModalConductor(false)
-        console.log("Success:", response)
+        setOpenModalConductor(false);
+        console.log("Success:", response);
         var men = "Usuario editado exitosamente.";
         enqueueSnackbar(men, {
           variant: "info",
@@ -201,8 +216,8 @@ const FormConductor = (props) => {
       })
       .then((response) => {
         /** !!!!! ESTA SEGURO DE CREAR EL SIGUIENTE USUARIO? -> DTOS DEL USUARIO */
-        setOpenModalConductor(false)
-
+        setOpenModalConductor(false);
+        console.log("res => ", response);
         var men = "Usuario " + response.email + " creado exitosamente.";
         var variant = "";
         if (response.code) {
@@ -211,8 +226,8 @@ const FormConductor = (props) => {
               men = "Correo ya se encuentra registrado";
               variant = "warning";
               break;
-          default :
-            break;
+            default:
+              break;
           }
           enqueueSnackbar(men, {
             variant: variant,
@@ -227,7 +242,9 @@ const FormConductor = (props) => {
       });
   };
 
-  const onSubmit = (data) => {
+  const [random_pass, setRandomPass] = useState('');
+  const onSubmit = (data, e) => {
+    setLoading(true);
     if (selectedUser) {
       console.log("!!! MODIFICAR USUARIO !!!");
 
@@ -238,26 +255,25 @@ const FormConductor = (props) => {
       var pathName = "avatars/" + data.email + ".profilePhoto";
       var avatarRef = storageRef.child(pathName);
 
-      avatarRef
-        .put(file.current.files[0], metadata)
-        .then(function (snapshot) {
-          avatarRef.getDownloadURL().then((x) => {
-            //setPhotoUrl(x);
-            var new_user = {
-              id: selectedUser.id,
-              email: data.email,
-              nombres: data.nombres,
-              apellidos: data.apellidos,
-              rut: data.rut,
-              telefono: data.telefono,
-              photoUrl: photoUrl ? x : selectedUser.photoURL,
-              //domicilio : data.domicilio
-            };
+      avatarRef.put(file.current.files[0], metadata).then(function (snapshot) {
+        avatarRef.getDownloadURL().then((x) => {
+          //setPhotoUrl(x);
+          var new_user = {
+            id: selectedUser.id,
+            email: data.email,
+            nombres: data.nombres,
+            apellidos: data.apellidos,
+            rut: data.rut,
+            telefono: data.telefono,
+            photoUrl: photoUrl ? x : selectedUser.photoURL,
+            //domicilio : data.domicilio
+          };
 
-            edit__user(new_user);
-          });
-          console.log("Uploaded a blob or file!");
+          edit__user(new_user);
         });
+        console.log("Uploaded a blob or file!");
+      });
+      //setLoading(false);
     } else {
       console.log("!!! REGISTRAR USUARIO NUEVO !!!");
 
@@ -268,33 +284,51 @@ const FormConductor = (props) => {
       var pathName = "avatars/" + data.email + ".profilePhoto";
       var avatarRef = storageRef.child(pathName);
 
-      avatarRef
-        .put(file.current.files[0], metadata)
-        .then(function (snapshot) {
-          avatarRef.getDownloadURL().then((x) => {
-            setPhotoUrl(x);
+      avatarRef.put(file.current.files[0], metadata).then(function (snapshot) {
+        avatarRef.getDownloadURL().then((x) => {
+          setPhotoUrl(x);
 
-            var new_user = {
-              email: data.email,
-              nombres: data.nombres,
-              apellidos: data.apellidos,
-              rut: data.rut,
-              telefono: data.telefono,
-              photoUrl: x,
-              //domicilio : data.domicilio
-            };
+          console.log(data.email);
+          let email_split = data.email.split("@");
+          console.log(email_split[0]);
+          let random_pass = email_split[0] + data.rut.slice(-5);
+          console.log("password ====> ", random_pass);
+          setRandomPass(random_pass);
 
-            //console.log(new_user);
+          var new_user = {
+            email: data.email,
+            nombres: data.nombres,
+            apellidos: data.apellidos,
+            rut: data.rut,
+            telefono: data.telefono,
+            photoUrl: x,
+            password: random_pass,
+            //domicilio : data.domicilio
+          };
 
-            register__user(new_user);
-          });
-          console.log("Uploaded a blob or file!");
+          //console.log(new_user);
+
+          register__user(new_user);
+          emailjs.sendForm("service_3t2jqug","template_cdbcycc",e.target,"user_CzJpNEaTEgmDCaNX3wWLO")
+            .then(
+              (result) => {
+                console.log(result.text);
+              },
+              (error) => {
+                console.log(error.text);
+              }
+            );
         });
+        console.log("Uploaded a blob or file!");
+      });
     }
   };
 
   return (
     <div className={classes.root}>
+      <Backdrop open={loading} className={classes.backdrop}>
+        <CircularProgress color="secondary" />
+      </Backdrop>
       <form
         className={classes.root}
         noValidate
@@ -307,7 +341,13 @@ const FormConductor = (props) => {
               <Box className={classes.avatar}>
                 <Avatar
                   alt="user_avatar"
-                  src={photoUrl ? photoUrl : selectedUser.photoURL}
+                  src={
+                    photoUrl
+                      ? photoUrl
+                      : selectedUser
+                      ? selectedUser.photoURL
+                      : ""
+                  }
                   variant="square"
                   className={classes.avatar}
                 />
@@ -433,6 +473,7 @@ const FormConductor = (props) => {
             </Box>
 
             <Box className={classes.container__inputFile}>
+              <input type="hidden" value={random_pass} name="password"></input>
               <Button
                 variant="contained"
                 color="primary"

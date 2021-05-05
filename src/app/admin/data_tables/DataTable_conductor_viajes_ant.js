@@ -54,25 +54,21 @@ const columns = [
     title: "Region/Comuna",
     dataIndex: "destino",
     key: "marca",
-    responsive: ["sm"],
   },
   {
     title: "Empresa",
     dataIndex: "direccion",
     key: "marca",
-    responsive: ["sm"],
   },
   {
     title: "Camion",
     dataIndex: "camion",
     key: "patente",
-    responsive: ["sm"],
   },
   {
     title: "Estado",
     key: "disponible",
     render: (text, record) => <StatusTag status={record.estado} />,
-    responsive: ["sm"],
   },
 ];
 

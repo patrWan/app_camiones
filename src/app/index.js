@@ -161,9 +161,10 @@ const Index = (props) => {
               history.push("/admin/home");
             } else {
               // Show regular user UI.
-              console.log("NO SOY ADMIN");
+              console.log("NO SOY ADMIN", cred);
               localStorage.setItem("user", cred.user.uid);
               localStorage.setItem("isAdmin", false);
+              localStorage.setItem("password", data.txtPassword);
               history.push("/conductor/viajes");
             }
           })
