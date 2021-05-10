@@ -46,8 +46,9 @@ export const cerrar__sesion = () => {
     .signOut()
     .then(() => {
       console.log("!!! Sesión Cerrada");
-      localStorage.removeItem('user')
-      localStorage.removeItem("isAdmin")
+      localStorage.removeItem('user');
+      localStorage.removeItem("isAdmin");
+      localStorage.removeItem('password');
     })
     .catch((error) => {
       console.log(error);

@@ -63,7 +63,7 @@ function SelectEmpresa(props) {
         value={destino ? destino : null}
       >
         {empresa.map((x) => {
-          return <Option value={x.id} key={x.id} direccion={x.region +" "+x.comuna+" "+x.direccion}>{x.empresa}</Option>;
+          return <Option value={x.id} key={x.id} direccion={x.direccion}>{x.empresa}</Option>;
         })}
       </Select>
   );

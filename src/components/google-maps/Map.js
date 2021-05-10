@@ -56,12 +56,12 @@ function Map(props) {
 const WrappedMap = withScriptjs(withGoogleMap(Map));
 
 export default function GMap(props){
-    const {setEmpresaMarker, empresaMarker} = props;
+    const {setEmpresaMarker, empresaMarker , setDireccion} = props;
     const [markerSearch, setMarkerSearch] = useState({lat: -23.5325518, lng :-70.399952});
     return (
         <div style={{width : "90vw" , height : "100vh"}}>
             <div className="Search-wrapper">
-                <Search setMarkerSearch={setMarkerSearch} setEmpresaMarker={setEmpresaMarker}/>
+                <Search setMarkerSearch={setMarkerSearch} setEmpresaMarker={setEmpresaMarker} setDireccion={setDireccion}/>
             </div>
             
             <WrappedMap 
@@ -78,7 +78,7 @@ export default function GMap(props){
 }
 
 function Search(props){
-    const {setMarkerSearch, setEmpresaMarker} = props;
+    const {setMarkerSearch, setEmpresaMarker, setDireccion} = props;
     const {ready, value, suggestions: {status, data}, setValue, clearSuggestions} = usePlacesAutocomplete({
         requestOptions: {
             location: {lat: () =>  -23.5325518, lng :() => -70.399952},
@@ -89,12 +89,15 @@ function Search(props){
       const handleInput = (e) => {
         // Update the keyword of the input element
         setValue(e.target.value);
+        console.log(e.target.value);
       };
     
       const handleSelect = ({ description }) => () => {
         // When user selects a place, we can replace the keyword without request data from API
         // by setting the second parameter to "false"
         setValue(description, false);
+        console.log(description);
+        setDireccion(description);
         clearSuggestions();
     
         // Get latitude and longitude via utility functions

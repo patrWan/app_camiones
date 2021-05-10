@@ -95,14 +95,15 @@ const DataTable_empresa = (props) => {
       key: "direccion",
     },
     {
-      title: "Region",
-      dataIndex: "region",
-      key: "region",
+      title: "Telefono",
+      dataIndex: "telefono",
+      key: "telefono",
     },
     {
-      title: "Comuna",
-      dataIndex: "comuna",
-      key: "comuna",
+      title: "Acción",
+      dataIndex: "accion",
+      key: "accion",
+      render: () => <button className="btn btn-info">Ver en el mapa</button>,
     },
   ];
   const handleClose = () => {
@@ -139,7 +140,7 @@ const DataTable_empresa = (props) => {
       const dateString = "Wed, 31 Mar 2021 02:12:39 GMT";
       var formatDate = dayjs(dateString).locale("es").format("DD MMM. YYYY");
 
-      console.log(selectedRows[0]);
+      console.log(selectedRows[0].direccion);
     },
     getCheckboxProps: (record) => ({
       disabled: record.name === "Disabled User",
@@ -159,10 +160,9 @@ const DataTable_empresa = (props) => {
     snapshot.forEach((doc) => {
       var e = {
         id: doc.id,
-        region: doc.data().region,
-        comuna: doc.data().comuna,
         direccion: doc.data().direccion,
         empresa: doc.data().empresa,
+        telefono : doc.data().telefono,
         latitud : doc.data().latitud ? doc.data().latitud : "",
         longitud : doc.data().longitud ?doc.data().longitud : "" ,
       };

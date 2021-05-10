@@ -7,13 +7,14 @@ const { Option } = Select;
 
 
 function SelectUsuario(props) {
-  const {conductor, setConductor, user__id, selectedItem, setEmailName} = props;
+  const {conductor, setConductor, user__id, selectedItem, setEmailName, setEmailCorreo} = props;
   const [usuario, setUsuario] = useState([]);
 
   function onSelect(val, child) {
-    console.log("select:", child.children);
+    console.log("select:", child.email);
     setConductor(val);
     setEmailName(child.children);
+    setEmailCorreo(child.email);
   }
 
   useEffect(async () => {
@@ -43,7 +44,7 @@ function SelectUsuario(props) {
         value={conductor ? conductor : null}
       >
         {usuario.map((x) => {
-          return <Option value={x.id} key={x.id}>{x.nombres}</Option>;
+          return <Option value={x.id} key={x.id} email={x.email}>{x.nombres}</Option>;
         })}
       </Select>
   );

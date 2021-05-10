@@ -100,10 +100,13 @@ function Form_admin_viaje(props) {
   const [email_name, setEmailName] = useState('');
   const [email_destino, setEmailDestino] = useState('');
   const [email_direccion, setEmailDireccion] = useState('');
+  const [email_correo, setEmailCorreo] = useState('');
+
 
   const { enqueueSnackbar } = useSnackbar();
 
-  function submit(){
+  function submit(e){
+    e.preventDefault();
     console.log("fecha y hora => ",fecha_hora);
     console.log("conductor => ",conductor);
     console.log("camion => ", camionId);
@@ -211,6 +214,13 @@ function Form_admin_viaje(props) {
       */
 
       //setOpenModalViaje(false);
+
+      emailjs.sendForm('service_3t2jqug', 'template_60oxr8w', e.target, 'user_CzJpNEaTEgmDCaNX3wWLO')
+      .then((result) => {
+        console.log(result.text);
+      }, (error) => {
+        console.log(error.text);
+    });
     }
   }
 
@@ -247,7 +257,7 @@ function Form_admin_viaje(props) {
             </div>
             <div className="Form-input-select">
               <span className="Label">Usuario</span>
-              <SELECT_USUARIO conductor={conductor} setConductor={setConductor} user__id={user__id} selectedItem={selectedItem} setEmailName={setEmailName}/>
+              <SELECT_USUARIO conductor={conductor} setConductor={setConductor} user__id={user__id} selectedItem={selectedItem} setEmailName={setEmailName} setEmailCorreo={setEmailCorreo}/>
             </div>
 
             <div className="Form-input-select">
@@ -265,8 +275,8 @@ function Form_admin_viaje(props) {
             </div>
             
             <div className="Form-input-select">
-              <form onSubmit={tests}> 
-                <input type="hidden" value="patricio.gonzalez.camilo@gmail.com" name="email"></input>
+              <form onSubmit={submit}> 
+                <input type="hidden" value={email_correo} name="email"></input>
                 <input type="hidden" value="Nuevo Viaje Programado" name="subject"></input>
                 <input type="hidden" value={email_name} name="name"></input>
                 <input type="hidden" value={ dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:mm A")} name="fecha"></input>

@@ -399,7 +399,7 @@ const Header = (props) => {
           {/** Cambiar dependiendo del usuario que inició sesión */}
           <Avatar
             alt="user_avatar"
-            src="/avatar_test.jpg"
+            src={usuario ? usuario.photoURL : ""}
             className={classes.avatar}
           />
           <span className={classes.username}>
@@ -411,7 +411,6 @@ const Header = (props) => {
           ) : (
             <div>
               <Button
-                className={classes.username}
                 aria-controls="simple-menu"
                 aria-haspopup="true"
                 onClick={handleClick}

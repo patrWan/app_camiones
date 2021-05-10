@@ -210,6 +210,7 @@ const Admin_empresas = () => {
           setOpenAlert={setOpen}
           title={"¿Quieres borrar esta empresa?"}
           description={"Esta acción borrará permanentemente los datos de esta empresa."}
+          men={selectedItem ? selectedItem.empresa : null}
           action={delete__empresa}
           selectedItem={selectedItem}
           setSelectedItem={setSelectedItem}

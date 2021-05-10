@@ -144,7 +144,7 @@ export default function FullScreenDialog(props) {
         </View>
           {data.map(x => {
               return (
-              <View style={styles.row}>
+              <View style={styles.row} key={x.fecha}>
                   <View style={styles.cell}>
                       <Text style={styles.text}>{x.fecha}</Text>
                   </View>

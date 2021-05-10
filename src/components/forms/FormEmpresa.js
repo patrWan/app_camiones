@@ -21,8 +21,8 @@ const useStyles = makeStyles((theme) => ({
 
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
     alignItems: "center",
+    width : "100%",
   },
 
   inputs: {
@@ -48,15 +48,16 @@ const FormEmpresa = (props) => {
   const [selectedRegion, setSelectedRegion] = useState('');
   const [selectedComuna, setSelectedComuna] = useState('');
 
+  const [direccion, setDireccion] = useState('');
+
   const classes = useStyles();
 
   const register__empresa = async (new_empresa) => {
     console.log(empresaMarker);
     const res = await db.collection("empresa").add({
-      region: nombreRegion,
-      comuna: nombreComuna,
       direccion: new_empresa.direccion,
       empresa: new_empresa.empresa,
+      telefono : new_empresa.telefono,
       latitud : empresaMarker ? empresaMarker.lat : "",
       longitud : empresaMarker ? empresaMarker.lng : "",
     });
@@ -69,10 +70,9 @@ const FormEmpresa = (props) => {
 
     // Set the 'capital' field of the city
     const res = await camionRef.update({
-      region: nombreRegion ? nombreRegion : selectedItem.region,
-      comuna: nombreComuna ? nombreComuna : selectedItem.comuna ,
       direccion: data.direccion,
       empresa: data.empresa,
+      telefono : data.telefono,
       latitud : empresaMarker ? empresaMarker.lat : selectedItem.latitud,
       longitud : empresaMarker ? empresaMarker.lng : selectedItem.longitud,
     });
@@ -126,7 +126,7 @@ const FormEmpresa = (props) => {
   useEffect(async () => {
 
     if(selectedItem){
-
+      await setDireccion(selectedItem.direccion);
       setSelectedRegion(selectedItem.region);
       setSelectedComuna(selectedItem.comuna);
 
@@ -141,64 +141,41 @@ const FormEmpresa = (props) => {
   return (
     <div className={classes.root}>
       <form onSubmit={handleSubmit(onSubmit)} className={classes.root}>
-        <Select
-            className={classes.inputs}
-          showSearch
-          style={{ width: 200 }}
-          placeholder="Seleccione Región"
-          optionFilterProp="children"
-          onChange={onChange}
-          filterOption={(input, option) =>
-            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-          }
-          getPopupContainer={node => node.parentNode}
-          value = {selectedRegion ? selectedRegion : null}
-        >
-            {regiones.map(x => {
-                return <Option  value={x.numero} key={x.region}>{x.region}</Option>
-            })}
-        </Select>
-
-        <Select
-            className={classes.inputs}
-          showSearch
-          style={{ width: 200 }}
-          placeholder="Seleccione Comuna"
-          optionFilterProp="children"
-          onChange={onChangeComuna}
-          filterOption={(input, option) =>
-            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-          }
-          getPopupContainer={node => node.parentNode}
-          value = {selectedComuna ? selectedComuna : null}
-        >
-            {comunas.map(x => {
-                return <Option value={x} key={x}>{x}</Option>
-            })}
-        </Select>
-        
+        <button type="button" onClick={handleMap}>Mapa</button>
         <TextField
-          id="standard-basic"
+          id="direccion"
           name="direccion"
-          label="Direccion"
+          label="Dirección"
           inputRef={register({ required: true })}
           className={classes.inputs}
-          defaultValue={selectedItem ? selectedItem.direccion : ""}
+          value={direccion}
+          disabled
+          onClick = {handleMap }
+          fullWidth
         />
         <TextField
-          id="standard-basic"
+          id="empresa"
           name="empresa"
           label="Empresa"
           inputRef={register({ required: true })}
           className={classes.inputs}
           defaultValue={selectedItem ? selectedItem.empresa : ""}
+          fullWidth
+        />
+        <TextField
+          id="telefono"
+          name="telefono"
+          label="Telefono"
+          inputRef={register({ required: true })}
+          className={classes.inputs}
+          defaultValue={selectedItem ? selectedItem.telefono : ""}
+          fullWidth
         />
         <button type="submit" className={selectedItem ? "btn btn-outline-warning" : "btn btn-outline-primary"}>
           <span>{selectedItem ? "Editar Empresa" : "Registrar Empresa"}</span>
         </button>
-        <button type="button" onClick={handleMap}>Mapa</button>
       </form>
-      <ModalMap openModalMap={openModalMap} setOpenModalMap={setOpenModalMap} setEmpresaMarker={setEmpresaMarker} empresaMarker={empresaMarker}/>
+      <ModalMap openModalMap={openModalMap} setOpenModalMap={setOpenModalMap} setEmpresaMarker={setEmpresaMarker} empresaMarker={empresaMarker} setDireccion={setDireccion}/>
     </div>
   );
 };

@@ -14,7 +14,7 @@ const DrawerPerfilUsuario = (props) => {
 
   const [newPass, setNewPass] = useState("");
   const [actualPass, setActualPass] = useState("");
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(true);
 
   const [errorPass, setErrorPass] = useState(false);
   const [succefulPass, setSuccesfulPass] = useState(false);
@@ -36,8 +36,26 @@ const DrawerPerfilUsuario = (props) => {
   };
 
   const passListener = (e) => {
-    setNewPass(e.target.value);
-    console.log("change pass => ", newPass);
+    let verify = e.target.value;
+
+    setNewPass(verify);
+
+    console.log("change new pass => ", verify);
+
+    console.log(verify.length);
+
+    if(verify.length > 7){
+      if(/[A-Z]/.test(verify) && /[a-z]/.test(verify)){
+        setDisabled(false);
+      }else{
+        setDisabled(true);
+      }
+      
+    }else{
+      setDisabled(true);
+    }
+    
+   
   };
 
   const changePassword = () => {
@@ -89,7 +107,7 @@ const DrawerPerfilUsuario = (props) => {
         onClose={onClose}
         visible={visible}
         key={"left"}
-        width={400}
+        width={300}
       >
         <p className="Title">Mis Datos</p>
 
@@ -133,12 +151,12 @@ const DrawerPerfilUsuario = (props) => {
               placeholder="Contraseña actual"
               aria-label="Contraseña"
               aria-describedby="basic-addon1"
-              onKeyUp={(e) => passActual(e)}
+              onChange={(e) => passActual(e)}
               minLength="6"
             />
           </div>
-          <span id="passwordHelpInline" class="form-text">
-            Nueva contraseña:
+          <span id="passwordHelpInline" className="form-text">
+            Nueva contraseña: (debe ser mayor a 7 caracteres y con una mayuscula al menos)
           </span>
           <div className="input-group mb-1 mx-auto">
 
@@ -151,7 +169,7 @@ const DrawerPerfilUsuario = (props) => {
               placeholder="Contraseña nueva"
               aria-label="Contraseña"
               aria-describedby="basic-addon1"
-              onKeyUp={(e) => passListener(e)}
+              onKeyUp ={(e) => passListener(e)}
               minLength="6"
             />
           </div>

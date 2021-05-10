@@ -12,7 +12,7 @@ import "./estilos_modal_map.css";
 
 export default function ModalMap(props) {
 
-  const {openModalMap, setOpenModalMap, setEmpresaMarker, empresaMarker } = props;
+  const {openModalMap, setOpenModalMap, setEmpresaMarker, empresaMarker, setDireccion } = props;
   
   return (
     <div>
@@ -30,7 +30,7 @@ export default function ModalMap(props) {
             Descripción de las acciones
           </DialogContentText>
 
-          <Map setEmpresaMarker={setEmpresaMarker} empresaMarker={empresaMarker}/>
+          <Map setEmpresaMarker={setEmpresaMarker} empresaMarker={empresaMarker} setDireccion={setDireccion}/>
 
         </DialogContent>
         <DialogActions className="Modal-actions">

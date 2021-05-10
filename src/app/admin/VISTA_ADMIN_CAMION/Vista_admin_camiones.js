@@ -213,6 +213,7 @@ const Admin_conductores = () => {
             "Esta acción borrará permanentemente los datos del camion."
           }
           action={delete__camion}
+          men={selectedItem ? selectedItem.patente : null}
           selectedItem={selectedItem}
           setSelectedItem={setSelectedItem}
         ></ConfirmAlert>

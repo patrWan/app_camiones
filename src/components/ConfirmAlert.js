@@ -26,6 +26,7 @@ export default function ConfirmAlert(props) {
     setOpenAlert,
     selectedItem,
     setSelectedItem,
+    men,
   } = props;
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -44,7 +45,7 @@ export default function ConfirmAlert(props) {
       <DialogContent>
         
         <Alert
-          message="ID : "
+          message={<div><strong>{men}</strong> (Esta acción no se puede revertir.)</div>}
           description={<DialogContentText id="alert-dialog-slide-description" color="secondary">{description}</DialogContentText>}
           type="error"
         />

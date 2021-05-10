@@ -143,8 +143,9 @@ const Index = (props) => {
   const onSubmit = (data) => {
     console.log("onSubmit");
     console.log(data.txtCorreo);
-
+    console.log(data.txtPassword);
     iniciar__sesion(data.txtCorreo, data.txtPassword)
+   
       .then((cred) => {
         localStorage.removeItem("isAdmin");
         localStorage.removeItem("user");
@@ -158,6 +159,7 @@ const Index = (props) => {
               console.log("SOY ADMIN");
               localStorage.setItem("user", cred.user.uid);
               localStorage.setItem("isAdmin", true);
+              localStorage.setItem("password", data.txtPassword);
               history.push("/admin/home");
             } else {
               // Show regular user UI.

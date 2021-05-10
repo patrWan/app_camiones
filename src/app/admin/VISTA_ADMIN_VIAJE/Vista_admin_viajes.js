@@ -260,6 +260,7 @@ const Admin_viajes = () => {
           action={delete__viaje}
           selectedItem={selectedItem}
           setSelectedItem={setSelectedItem}
+          men={selectedItem ? selectedItem.direccion : null}
         />
       </div>
     </div>

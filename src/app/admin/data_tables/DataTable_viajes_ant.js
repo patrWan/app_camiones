@@ -683,12 +683,7 @@ const DataTable_viajes_ant = (props) => {
               if (doc.exists) {
                   idEmpresa = doc.id;
                   empresa_info = doc.data().empresa;
-                  destino =
-                  doc.data().region +
-                  ", " +
-                  doc.data().comuna +
-                  ", " +
-                  doc.data().direccion;
+                  destino = doc.data().direccion;
               } else {
                   // doc.data() will be undefined in this case
                   console.log("No such document!");
