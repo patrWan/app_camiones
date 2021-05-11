@@ -246,7 +246,7 @@ const FormConductor = (props) => {
   const onSubmit = (data, e) => {
     setLoading(true);
     if (selectedUser) {
-      console.log("!!! MODIFICAR USUARIO !!!");
+      console.log("!!! MODIFICAR USUARIO !!! ", data);
 
       var metadata = {
         contentType: "image/jpeg",
@@ -266,6 +266,7 @@ const FormConductor = (props) => {
             rut: data.rut,
             telefono: data.telefono,
             photoUrl: photoUrl ? x : selectedUser.photoURL,
+            estado : data.estado,
             //domicilio : data.domicilio
           };
 
@@ -275,7 +276,7 @@ const FormConductor = (props) => {
       });
       //setLoading(false);
     } else {
-      console.log("!!! REGISTRAR USUARIO NUEVO !!!");
+      console.log("!!! REGISTRAR USUARIO NUEVO !!! ", data);
 
       var metadata = {
         contentType: "image/jpeg",
@@ -303,12 +304,14 @@ const FormConductor = (props) => {
             telefono: data.telefono,
             photoUrl: x,
             password: random_pass,
+            estado : data.estado,
             //domicilio : data.domicilio
           };
 
           //console.log(new_user);
 
           register__user(new_user);
+          /*
           emailjs.sendForm("service_3t2jqug","template_cdbcycc",e.target,"user_CzJpNEaTEgmDCaNX3wWLO")
             .then(
               (result) => {
@@ -318,6 +321,7 @@ const FormConductor = (props) => {
                 console.log(error.text);
               }
             );
+            */
         });
         console.log("Uploaded a blob or file!");
       });
@@ -470,6 +474,10 @@ const FormConductor = (props) => {
                   uploadPhoto();
                 }}
               />
+              <select name="estado" ref={register({ required: true })} defaultValue={selectedUser ? selectedUser.estado : null}>
+                <option value="false">Activo</option>
+                <option value="true">Inactivo</option>
+              </select>
             </Box>
 
             <Box className={classes.container__inputFile}>

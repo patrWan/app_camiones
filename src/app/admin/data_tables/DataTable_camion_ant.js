@@ -37,9 +37,8 @@ const columns = [
   {
     title: "Modelo",
     dataIndex: "modelo",
-    render: (text) => <a>{text}</a>,
+    render: (text) => <strong className="">{text}</strong>,
     sorter: (a, b) => a.modelo.localeCompare(b.modelo),
-    defaultSortOrder: "ascend",
   },
   {
     title: "Marca",
@@ -50,6 +49,13 @@ const columns = [
     title: "Patente",
     dataIndex: "patente",
     key: "patente",
+  },
+  {
+    title: "Estado",
+    dataIndex: "estado",
+    key: "estado",
+    render: (estado) =>
+      estado === "true" ? (<strong style={{ color: "red" }}>Inactivo</strong>) : (<strong className="text-primary">Activo</strong>),
   },
 ];
 
@@ -138,11 +144,13 @@ const DataTable_camion_ant = (props) => {
         marca: doc.data().marca,
         patente: doc.data().patente,
         disponible: doc.data().disponible ? "Disponible" : "En uso",
+        estado : doc.data().estado,
       };
       camiones.push(c);
     });
     setTimeout(function () {
-      setData(camiones);
+      const filteredEvents = camiones.sort((a, b) => a.estado.localeCompare(b.estado) || a.modelo.localeCompare(b.modelo)) 
+      setData(filteredEvents);
       setIsLoaded(false);
     }, 1000);
   };

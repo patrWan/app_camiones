@@ -644,6 +644,8 @@ const DataTable_viajes_ant = (props) => {
           conductor_item = {
             id: doc.id,
             nombres: doc.data().nombres,
+            apellidos : doc.data().apellidos,
+            disabled : doc.data().disabled,
           };
           conductor_list.push(conductor_item);
 
@@ -699,7 +701,7 @@ const DataTable_viajes_ant = (props) => {
                   id: x.id,
                   fechaSorter: x.fecha.toDate(),
                   fecha: formatDate,
-                  conductor: doc.data().nombres,
+                  conductor: doc.data().nombres + " " + doc.data().apellidos,
                   camion: camion_info ? camion_info : x.id_camion,
                   origen: x.origen,
                   destino: destino,
@@ -731,7 +733,10 @@ const DataTable_viajes_ant = (props) => {
           const finalFilter = item__list.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
           setFilterData(finalFilter);
           setFilterState(item__list);
-          setConductoresList(conductor_list);
+          const filteredEvents = conductor_list.filter(
+            ({ disabled }) => disabled !== "true"
+          );
+          setConductoresList(filteredEvents);
         }, 500);
       });
     //console.log("conductores list =>",conductores_list)
@@ -887,7 +892,7 @@ const DataTable_viajes_ant = (props) => {
               }
             >
               {conductores_list.map((x) => {
-                return <Option value={x.id}>{x.nombres}</Option>;
+                return <Option value={x.id}>{x.nombres +" "+x.apellidos}</Option>;
               })}
             </Select>
           </div>

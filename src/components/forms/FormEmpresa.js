@@ -54,8 +54,9 @@ const FormEmpresa = (props) => {
 
   const register__empresa = async (new_empresa) => {
     console.log(empresaMarker);
+    console.log(new_empresa);
     const res = await db.collection("empresa").add({
-      direccion: new_empresa.direccion,
+      direccion: direccion,
       empresa: new_empresa.empresa,
       telefono : new_empresa.telefono,
       latitud : empresaMarker ? empresaMarker.lat : "",
@@ -70,7 +71,7 @@ const FormEmpresa = (props) => {
 
     // Set the 'capital' field of the city
     const res = await camionRef.update({
-      direccion: data.direccion,
+      direccion: direccion,
       empresa: data.empresa,
       telefono : data.telefono,
       latitud : empresaMarker ? empresaMarker.lat : selectedItem.latitud,

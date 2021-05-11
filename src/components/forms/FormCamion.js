@@ -35,6 +35,7 @@ const FormConductor = (props) => {
       modelo: new_camion.modelo,
       marca: new_camion.marca,
       patente: new_camion.patente,
+      estado : new_camion.estado,
     });
 
     console.log("Added document with ID: ", res.id);
@@ -48,26 +49,25 @@ const FormConductor = (props) => {
       modelo: data.modelo,
       marca: data.marca,
       patente: data.patente,
+      estado : data.estado,
     });
   };
-
- 
 
   const onSubmit = (data) => {
     console.log(data);
     if (selectedItem) {
-      var men = "Camion ID: " +selectedItem.id+ " editado exitosamente.";
+      var men = "Camion ID: " + selectedItem.id + " editado exitosamente.";
       edit__camion(data);
       setOpenModalCamion(false);
       setSelectedItem(null);
-      
+
       enqueueSnackbar(men, {
         variant: "info",
         preventDuplicate: true,
       });
     } else {
       register__camion(data);
-      var men = "Camion PATENTE: " +data.patente+ " creado exitosamente.";
+      var men = "Camion PATENTE: " + data.patente + " creado exitosamente.";
       setOpenModalCamion(false);
       enqueueSnackbar(men, {
         variant: "success",
@@ -103,6 +103,14 @@ const FormConductor = (props) => {
           className={classes.inputs}
           defaultValue={selectedItem ? selectedItem.patente : ""}
         />
+        <select
+          name="estado"
+          ref={register({ required: true })}
+          defaultValue={selectedItem ? selectedItem.estado : null}
+        >
+          <option value="false">Activo</option>
+          <option value="true">Inactivo</option>
+        </select>
         <Button type="submit" color="primary">
           {selectedItem ? "Editar Camión" : "Registrar Camión"}
         </Button>

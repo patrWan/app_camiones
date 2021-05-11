@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Table, Radio, Divider, Typography, Button } from "antd";
+import { Table, Typography, Select } from "antd";
 import { db } from "../../../db/firebase";
-
 import { makeStyles } from "@material-ui/core/styles";
 
 import * as dayjs from "dayjs";
@@ -23,13 +22,66 @@ const useStyles = makeStyles((theme) => ({
       borderColor: "black",
       borderStyle: "solid",
     },
-    "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th ": {
-      background: "#282640",
-      color: "white",
-    },
+    "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th ":
+      {
+        background: "#282640",
+        color: "white",
+      },
     boxShadow: "4px 4px 10px 10px rgba(0,0,0,0.1)",
     backgroundColor: "#ff",
     borderRadius: "16px 16px 0 0",
+  },
+
+  filter__container: {
+    display: "flex",
+    marginTop: 10,
+    justifyContent: "center",
+    padding: 10,
+
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+  },
+
+  filter: {
+    display: "flex",
+    flexDirection: "column",
+    marginRight: 20,
+    [theme.breakpoints.down("sm")]: {
+      marginBottom: "10px",
+      marginRight: 0,
+    },
+  },
+
+  button__container: {
+    display: "flex",
+    marginTop: 10,
+    marginBottom: 10,
+    justifyContent: "center",
+
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      alignItems: "center",
+    },
+  },
+
+  button: {
+    width: "20%",
+    marginRight: 10,
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      alignItems: "center",
+      width: "80%",
+      marginRight: 0,
+    },
+  },
+
+  buscador: {
+    width: "40%",
+    padding: 5,
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
   },
 }));
 
@@ -37,7 +89,7 @@ const columns = [
   {
     title: "Correo",
     dataIndex: "email",
-    render: (text) => <a>{text}</a>,
+    render: (text) => <strong className="">{text}</strong>,
     sorter: (a, b) => a.email.localeCompare(b.email),
   },
   {
@@ -53,7 +105,9 @@ const columns = [
   {
     title: "Estado",
     dataIndex: "estado",
-    key: "id",
+    key: "estado",
+    render: (estado) =>
+      estado === "true" ? (<strong style={{ color: "red" }}>Inactivo</strong>) : (<strong className="text-primary">Activo</strong>),
   },
 ];
 
@@ -67,7 +121,10 @@ const DataTable_conductor_ant = (props) => {
     selectRows,
     setSelectRows,
     openSlideMenu,
+    functionBuscar,
   } = props;
+
+  const { Option } = Select;
 
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(true);
@@ -76,6 +133,11 @@ const DataTable_conductor_ant = (props) => {
   const [edit, setEdit] = useState(false);
 
   const [data, setData] = useState([]);
+  const [filterData, setFilterData] = useState([]);
+
+  const [filter_estado, setFilterEstado] = useState(null);
+  const [filter_correo, setFilterCorreo] = useState(null);
+  const [filter_nombres, setFilterNombres] = useState("");
 
   const query = db.collection("usuario");
   const observerUsuario = query.onSnapshot(
@@ -101,8 +163,13 @@ const DataTable_conductor_ant = (props) => {
       .then((res) => res.json())
       .then(
         (result) => {
+          console.log(result);
           setTimeout(function () {
+            const filteredEvents = result.sort((a, b) => a.estado.localeCompare(b.estado))
+
             setData(result);
+            setFilterData(filteredEvents);
+
             setIsLoaded(false);
           }, 1000);
         },
@@ -114,6 +181,7 @@ const DataTable_conductor_ant = (props) => {
         }
       );
   };
+
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const rowSelection = {
     selectedRowKeys: selectRows,
@@ -144,15 +212,73 @@ const DataTable_conductor_ant = (props) => {
     }),
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     console.log("<----RENDER TABLA USUARIOS---->");
-    get__usuario();
+    await get__usuario();
   }, [size, edit]);
 
   const { Text, Link } = Typography;
   const classes = useStyles();
+
+  function onSelectEstado(val) {
+    console.log("on select estado => ", val);
+    setFilterEstado(val);
+  }
+
+  function onSelectCorreo(val) {
+    console.log("on select correo => ", val);
+    setFilterCorreo(val);
+  }
+
+  function onChangeNombre(val) {
+    console.log("on change nombre => ", val.target.value);
+
+    setFilterNombres(val.target.value);
+
+    const filteredEvents = data.filter(({ nombres, email, rut }) =>
+      nombres.toLowerCase().includes(val.target.value.toLowerCase()) ||
+      email.toLowerCase().includes(val.target.value.toLowerCase())
+    );
+    
+    setFilterData(filteredEvents);
+  }
+
+  function filter_general() {
+    console.log("filter general");
+    if (filter_estado !== null && filter_correo === null) {
+      const filteredEvents = data.filter(
+        ({ estado }) => estado === filter_estado
+      );
+      setFilterData(filteredEvents);
+    }
+
+    if (filter_estado === null && filter_correo !== null) {
+      const filteredEvents = data.filter(
+        ({ email }) => email === filter_correo
+      );
+      setFilterData(filteredEvents);
+    }
+
+    if (filter_estado !== null && filter_correo !== null) {
+      const filteredEvents = data.filter(
+        ({ estado, email }) =>
+          estado === filter_estado && email === filter_correo
+      );
+      setFilterData(filteredEvents);
+    }
+  }
+
+  function limpiar_filtros() {
+    setFilterData(data);
+
+    setFilterCorreo(null);
+    setFilterEstado(null);
+    setFilterNombres("");
+  }
+
   return (
     <div className={classes.root}>
+
       <Table
         rowKey="id"
         rowSelection={{
@@ -160,13 +286,24 @@ const DataTable_conductor_ant = (props) => {
           ...rowSelection,
         }}
         columns={columns}
-        dataSource={data}
+        dataSource={filterData}
         scroll={{ x: "max-content" }}
         size="small"
         pagination={{ position: ["bottom", "left"] }}
         bordered={true}
         className={classes.root}
         loading={isLoaded}
+        title={() => (
+          <div>
+            <input
+              type="text"
+              placeholder="Busqueda por Nombre o Correo..."
+              onChange={(e) => onChangeNombre(e)}
+              value={filter_nombres}
+              className={classes.buscador}
+            />
+          </div>
+        )}
       />
     </div>
   );
