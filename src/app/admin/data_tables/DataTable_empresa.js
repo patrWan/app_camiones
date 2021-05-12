@@ -68,26 +68,15 @@ const DataTable_empresa = (props) => {
   const [empresa_cor, setEmpresaCor] = useState({});
   const [openModalMap, setOpenModalMap] = useState(false);
 
-  async function ver_empresa_map(empresa){
-    console.log("Ver empresa", empresa);
-    // abrir modal
-    //entregar lat y lng
-
-    await setEmpresaCor({lat : empresa.latitud, lng :empresa.longitud });
-
-    console.log(empresa_cor);
-
-    setOpenModalMap(true);
-  }
+  
 
   const columns = [
     {
       title: "Empresa",
       dataIndex: "empresa",
       key : "empresa",
-      render: (text, empresa) => <a style={{color : "#0096c7"}} onClick={() => ver_empresa_map(empresa)}>{text}</a>,
+      render: (text, empresa) => <strong  onClick={() => ver_empresa_map(empresa)}>{text}</strong>,
       sorter: (a, b) => a.empresa.localeCompare(b.empresa),
-      defaultSortOrder: "ascend",
     },
     {
       title: "Direccion",
@@ -100,12 +89,31 @@ const DataTable_empresa = (props) => {
       key: "telefono",
     },
     {
+      title: "Estado",
+      dataIndex: "estado",
+      key: "estado",
+      render: (estado) =>
+      estado === "true" ? (<strong style={{ color: "red" }}>Inactivo</strong>) : (<strong className="text-primary">Activo</strong>),
+    },
+    {
       title: "Acción",
       dataIndex: "accion",
       key: "accion",
-      render: () => <button className="btn btn-info">Ver en el mapa</button>,
+      render: (text, empresa) => <button className="btn btn-primary" onClick={() => ver_empresa_map(empresa)}>Ver en el Mapa</button>,
     },
   ];
+
+  async function ver_empresa_map(empresa){
+    console.log("Ver empresa", empresa);
+    // abrir modal
+    //entregar lat y lng
+
+    await setEmpresaCor({lat : empresa.latitud, lng :empresa.longitud });
+
+    console.log(empresa_cor);
+
+    setOpenModalMap(true);
+  }
   const handleClose = () => {
     setVisible(false);
   };
@@ -165,11 +173,13 @@ const DataTable_empresa = (props) => {
         telefono : doc.data().telefono,
         latitud : doc.data().latitud ? doc.data().latitud : "",
         longitud : doc.data().longitud ?doc.data().longitud : "" ,
+        estado : doc.data().estado,
       };
       empresas.push(e);
     });
     setTimeout(function () {
-      setData(empresas);
+      const filteredEvents = empresas.sort((a, b) => a.estado.localeCompare(b.estado) || a.empresa.localeCompare(b.empresa)) 
+      setData(filteredEvents);
       setIsLoaded(false);
     }, 1000);
   };

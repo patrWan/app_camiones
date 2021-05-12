@@ -205,6 +205,9 @@ const DataTable_viajes_ant = (props) => {
   const [rowClassname, setRowClassname] = useState("");
 
   const [visible, setVisible] = useState(true);
+
+  const [removeFilter, setRemoveFilter] = useState(false);
+
   const handleClose = () => {
     setVisible(false);
   };
@@ -238,6 +241,7 @@ const DataTable_viajes_ant = (props) => {
   const [estadoLabel, setEstadoLabel] = useState(false);
 
   function filter_general() {
+    console.log("APLICANDO FILTRO ...");
     setFilterData(data);
     console.log("filtered data => ", filterData);
 
@@ -812,9 +816,33 @@ const DataTable_viajes_ant = (props) => {
     }
   }, [selectedItem]);
 
-  useEffect(() => {}, []);
+  useEffect(async () => {
+    
+    if(removeFilter === true){
+      console.log("USE EFFECT REMOVE");
+      
+
+      filter_general();
+
+      
+    }
+    setRemoveFilter(false);
+
+    console.log(removeFilter);
+
+  }, [removeFilter]);
 
   const classes = useStyles();
+
+   function onDeleteConductor(){
+    console.log("Remover filtro conductor");
+    setConductorLabel(null);
+    setConductorId(null);
+    setRemoveFilter(true);
+    
+    
+    
+  }
 
   return (
     <div className={classes.root}>
@@ -837,7 +865,7 @@ const DataTable_viajes_ant = (props) => {
               label="conductor"
               color="secondary"
               size="medium"
-              onDelete={handleDelete}
+              onDelete={onDeleteConductor}
               clickable
             />
           ) : (

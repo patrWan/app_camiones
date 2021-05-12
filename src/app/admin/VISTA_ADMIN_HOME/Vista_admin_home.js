@@ -59,6 +59,7 @@ const Admin_home = (props) => {
   const [data, setData] = useState([]);
   const [dataViajes, setDataViajes] = useState([]);
   const [dataUsuarios, setDataUsuarios] = useState([]);
+  const [dataEmpresas, setDataEmpresas] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const get__usuario = () => {
@@ -152,10 +153,36 @@ const Admin_home = (props) => {
       });
   };
 
+  const get__empresas = async () => {
+    const camionRef = db.collection("empresa");
+    const snapshot = await camionRef.get();
+    if (snapshot.empty) {
+      console.log("No matching documents.");
+      return;
+    }
+    const empresas = [];
+    snapshot.forEach((doc) => {
+      var e = {
+        id: doc.id,
+        modelo: doc.data().modelo,
+        marca: doc.data().marca,
+        patente: doc.data().patente,
+        disponible: doc.data().disponible ? "Disponible" : "En uso",
+      };
+      empresas.push(e);
+    });
+    setTimeout(function () {
+      setDataEmpresas(empresas);
+      setIsLoaded(true);
+    }, 1000);
+  };
+  
+
   useEffect(() => {
     get__camion();
     get__viajes();
     get__usuario();
+    get__empresas();
   }, []);
 
   const openSlideMenu = () => {
@@ -278,7 +305,7 @@ const Admin_home = (props) => {
           <div className="card">
             <div className="card_info">
               {isLoaded ? (
-                <span className="card_title">{0}</span>
+                <span className="card_title">{dataEmpresas.length}</span>
               ) : (
                 "cargando..."
               )}

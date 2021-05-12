@@ -61,6 +61,7 @@ const FormEmpresa = (props) => {
       telefono : new_empresa.telefono,
       latitud : empresaMarker ? empresaMarker.lat : "",
       longitud : empresaMarker ? empresaMarker.lng : "",
+      estado : new_empresa.estado,
     });
 
     console.log("Added document with ID: ", res.id);
@@ -76,6 +77,7 @@ const FormEmpresa = (props) => {
       telefono : data.telefono,
       latitud : empresaMarker ? empresaMarker.lat : selectedItem.latitud,
       longitud : empresaMarker ? empresaMarker.lng : selectedItem.longitud,
+      estado : data.estado,
     });
   };
 
@@ -172,6 +174,15 @@ const FormEmpresa = (props) => {
           defaultValue={selectedItem ? selectedItem.telefono : ""}
           fullWidth
         />
+        <select
+          name="estado"
+          ref={register({ required: true })}
+          defaultValue={selectedItem ? selectedItem.estado : null}
+        >
+          <option value="false">Activo</option>
+          <option value="true">Inactivo</option>
+        </select>
+
         <button type="submit" className={selectedItem ? "btn btn-outline-warning" : "btn btn-outline-primary"}>
           <span>{selectedItem ? "Editar Empresa" : "Registrar Empresa"}</span>
         </button>

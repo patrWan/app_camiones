@@ -21,7 +21,7 @@ function SelectCamion(props) {
   useEffect(async () => {
     console.log("RENDER SELECT CAMION");
     const camionRef = db.collection('camion');
-    const snapshot = await camionRef.get();
+    const snapshot = await camionRef.where("estado", "!=", "true").get();
     if (snapshot.empty) {
         console.log('No matching documents.');
         return;

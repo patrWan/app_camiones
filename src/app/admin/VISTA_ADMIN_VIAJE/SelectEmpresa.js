@@ -26,7 +26,7 @@ function SelectEmpresa(props) {
   useEffect(async () => {
     console.log("RENDER SELECT EMPRESA");
     const camionRef = db.collection('empresa');
-    const snapshot = await camionRef.get();
+    const snapshot = await camionRef.where("estado", "!=", "true").get();
     if (snapshot.empty) {
         console.log('No matching documents.');
         return;
