@@ -33,6 +33,8 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import "./estilos_conductor_viajes.css";
 
+import {CARDS_ADMIN_BG_COLOR, CARDS_ADMIN_TEXT_COLOR, DATATABLE_BG_COLOR} from "../../variables";
+
 const Conductor_viajes = (props) => {
   const [visible, setVisible] = useState(false);
   const [usuario, setUsuario] = useState(null);
@@ -219,7 +221,7 @@ const Conductor_viajes = (props) => {
 
       <div className="content" ref={content}>
         <div className="card-container">
-          <div className="card">
+          <div className="card" style={{backgroundColor : CARDS_ADMIN_BG_COLOR}}>
           <div style={{padding : 10}}>
               <span className="card-title">Ultimo viaje: </span>
               <span className="card-fecha">
@@ -246,7 +248,7 @@ const Conductor_viajes = (props) => {
             </div>
           </div>
           {acutal_viaje ? (
-            <div className="card">
+            <div className="card" style={{backgroundColor : CARDS_ADMIN_BG_COLOR}}>
               <div style={{padding : 10}}>
                 <span className="card-title">Su viaje de hoy es: </span>
                 <span className="card-fecha">
@@ -273,7 +275,7 @@ const Conductor_viajes = (props) => {
               </div>
             </div>
           ) : (
-            <div className="card">
+            <div className="card" style={{backgroundColor : CARDS_ADMIN_BG_COLOR}}>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <span className="card-fecha">
                   No tiene viajes programados para el día de hoy.
@@ -285,7 +287,7 @@ const Conductor_viajes = (props) => {
             </div>
           )}
 
-          <div className="card">
+          <div className="card" style={{backgroundColor : CARDS_ADMIN_BG_COLOR}}>
             <div style={{padding : 10}}>
               <span className="card-title">Proximo viaje </span>
               <span className="card-fecha">

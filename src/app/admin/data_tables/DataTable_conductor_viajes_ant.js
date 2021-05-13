@@ -9,7 +9,7 @@ import { DateFilter } from "../../../components/DateFilter";
 import { StatusTag } from "../../../components/StatusTag";
 
 import MAP_ONLYVIEW from "../../../components/google-maps/Modal-map-onlyView";
-
+import {DATATABLE_BG_COLOR, DATATABLE_TEXT_COLOR} from "../../../variables";
 import * as dayjs from "dayjs";
 
 var locale_de = require("dayjs/locale/es");
@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
       borderStyle: "solid",
     },
     "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th " : {
-      background: "#282640",
-      color : "white",
+      background: DATATABLE_BG_COLOR,
+      color : DATATABLE_TEXT_COLOR,
       
    },
    boxShadow : '4px 4px 10px 10px rgba(0,0,0,0.1)',
