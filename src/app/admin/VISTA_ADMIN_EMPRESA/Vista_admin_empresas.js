@@ -195,12 +195,13 @@ const Admin_empresas = () => {
           openModalEmpresa={openModalEmpresa}
           setOpenModalEmpresa={setOpenModalEmpresa}
           setSelectedItem={setSelectedItem}
-          
+          closeSlideMenu={closeSlideMenu}
         >
           <FormEmpresa
             selectedItem={selectedItem}
             setOpenModalEmpresa={setOpenModalEmpresa}
             setSelectedItem={setSelectedItem}
+            closeSlideMenu={closeSlideMenu}
           />
         </ModalEmpresa>
 

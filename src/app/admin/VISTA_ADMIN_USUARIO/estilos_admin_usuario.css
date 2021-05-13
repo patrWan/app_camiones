@@ -1,5 +1,5 @@
 .root {
-    background-color: #f1f5f9;
+    background-color: #EBF2FA;
     font-family: Montserrat, sans-serif;
   
     display: flex;
@@ -36,7 +36,7 @@
   }
   
   .content {
-    background-color: #fbfffe;
+    background-color: #EBF2FA;
     display: flex;
     flex-direction: column;
     width: 100%;

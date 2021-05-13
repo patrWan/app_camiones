@@ -196,7 +196,7 @@ const DataTable_viajes_ant = (props) => {
     {
       title: "Fecha",
       dataIndex: "fecha",
-      render: (text) => <a>{text}</a>,
+      render: (text) => <strong>{text}</strong>,
   
       sorter: (a, b) =>
         dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? 1 : -1,
@@ -335,7 +335,7 @@ const DataTable_viajes_ant = (props) => {
       );
 
       setConductorLabel(true);
-      //setEstadoLabel(true);
+      setEstadoLabel(true);
       const finalFilter = filteredEvents.sort((a, b) =>
         dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
       );

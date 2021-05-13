@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FormEmpresa = (props) => {
-  const { selectedItem, setSelectedItem, setOpenModalEmpresa } = props;
+  const { selectedItem, setSelectedItem, setOpenModalEmpresa, closeSlideMenu } = props;
 
   const { register, handleSubmit, errors } = useForm();
   const { enqueueSnackbar /*closeSnackbar*/ } = useSnackbar();
@@ -65,6 +65,7 @@ const FormEmpresa = (props) => {
     });
 
     console.log("Added document with ID: ", res.id);
+    closeSlideMenu();
   };
 
   const edit__empresa = async (data) => {
@@ -79,6 +80,8 @@ const FormEmpresa = (props) => {
       longitud : empresaMarker ? empresaMarker.lng : selectedItem.longitud,
       estado : data.estado,
     });
+
+    closeSlideMenu();
   };
 
   function onChange(value) {

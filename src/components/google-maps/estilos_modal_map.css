@@ -4,7 +4,7 @@
 }
 
 .Modal-actions {
-    background-color: #f1faee;
+    background-color: #EBF2FA;
 }
 
 .Modal-title {
@@ -17,7 +17,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #f1faee;
+    background-color: #EBF2FA;
 }
 
 .Search-wrapper {

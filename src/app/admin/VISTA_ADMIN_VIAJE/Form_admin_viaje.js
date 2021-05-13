@@ -89,7 +89,7 @@ const DatePicker = (props) => {
 };
 
 function Form_admin_viaje(props) {
-  const { selectedItem, user__id, closeSlideMenu } = props;
+  const { selectedItem, user__id, closeSlideMenu, setOpenModalViaje } = props;
 
   const [fecha_hora, setFechaHora] = useState('');
   const [conductor, setConductor] = useState('');
@@ -162,6 +162,7 @@ function Form_admin_viaje(props) {
       }
 
       closeSlideMenu();
+      setOpenModalViaje(false);
       //setOpenModalViaje(false);
     } else {
       console.log("REGISTRAR VIAJE !!");
@@ -198,7 +199,7 @@ function Form_admin_viaje(props) {
             console.log(error.text);
           });
         }
-        
+        setOpenModalViaje(false);
         closeSlideMenu();
       }else{
         setError(true);

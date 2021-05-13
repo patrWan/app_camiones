@@ -16,6 +16,7 @@ export default function ModalCamionDos(props) {
     setOpenModalEmpresa,
     selectedItem,
     setSelectedItem,
+    closeSlideMenu,
   } = props;
 
   return (
@@ -44,7 +45,7 @@ export default function ModalCamionDos(props) {
           <Button
             onClick={() => {
               setOpenModalEmpresa(false);
-
+              closeSlideMenu();
               setTimeout(() => {
                 setSelectedItem(null);
               }, 500);

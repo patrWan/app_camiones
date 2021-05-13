@@ -141,7 +141,7 @@ export default function ModalCamionDos(props) {
             setOpenModalViaje={setOpenModalViaje}
           />
           */}
-          <FORM_VIAJES selectedItem={selectedItem} user__id={user__id} closeSlideMenu={closeSlideMenu}/>
+          <FORM_VIAJES selectedItem={selectedItem} user__id={user__id} closeSlideMenu={closeSlideMenu} setOpenModalViaje={setOpenModalViaje}/>
         </DialogContent>
         <DialogActions>
           <Button
