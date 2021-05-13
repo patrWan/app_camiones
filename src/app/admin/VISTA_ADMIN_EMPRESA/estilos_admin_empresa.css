@@ -10,8 +10,9 @@
     height: 70px;
     width: 100%;
     margin-left: 0px;
-    position: relative;
-    z-index: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
     /*
     
         [theme.breakpoints.down("sm")]: {
@@ -22,7 +23,6 @@
   }
   
   .menu_lateral {
-    background-color: #4a051c;
     width: 0px;
     height: 100%;
     position: fixed;

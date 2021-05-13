@@ -19,6 +19,7 @@ import { cerrar__sesion } from "../../../db/auth";
 
 /** Estilos */
 import "./estilos_admin_home.css";
+import {CARDS_ADMIN_BG_COLOR, CARDS_ADMIN_TEXT_COLOR } from "../../../variables";
 
 /** Libreria para manipulación de fechas */
 import * as dayjs from "dayjs";
@@ -28,6 +29,7 @@ dayjs.extend(weekOfYear);
 const Admin_home = (props) => {
   /** hook drawer admin */
   const [visible, setVisible] = useState(false);
+  const [usuario, setUsuario] = useState(null);
 
   let history = useHistory();
 
@@ -185,6 +187,27 @@ const Admin_home = (props) => {
     get__empresas();
   }, []);
 
+  useEffect(() => {
+    let user = localStorage.getItem("user");
+    console.log("usuario => ", user);
+    var docRef = db.collection("usuario").doc(user);
+
+    docRef
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          //console.log("Document data:", doc.data());
+          setUsuario(doc.data());
+        } else {
+          // doc.data() will be undefined in this case
+          //console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  }, []);
+
   const openSlideMenu = () => {
     menu_lateral.current.style.width = "240px";
   };
@@ -255,7 +278,7 @@ const Admin_home = (props) => {
 
       <div className="content" ref={content}>
         <div className="card_container">
-          <div className="card">
+          <div className="card" style={{backgroundColor : CARDS_ADMIN_BG_COLOR}}>
             <div className="card_info">
               {isLoaded ? (
                 <span className={"card_title"}>{dataUsuarios.length}</span>
@@ -270,7 +293,7 @@ const Admin_home = (props) => {
             </div>
           </div>
 
-          <div className="card">
+          <div className="card" style={{backgroundColor : CARDS_ADMIN_BG_COLOR}}>
             <div className="card_info">
               {isLoaded ? (
                 <span className="card_title">{dataViajes.length}</span>
@@ -286,7 +309,7 @@ const Admin_home = (props) => {
           </div>
         </div>
         <div className="card_container">
-          <div className="card">
+          <div className="card" style={{backgroundColor : CARDS_ADMIN_BG_COLOR}}>
             <div className="card_info">
               {isLoaded ? (
                 <span className="card_title">{data.length}</span>
@@ -302,7 +325,7 @@ const Admin_home = (props) => {
             </div>
           </div>
 
-          <div className="card">
+          <div className="card" style={{backgroundColor : CARDS_ADMIN_BG_COLOR}}>
             <div className="card_info">
               {isLoaded ? (
                 <span className="card_title">{dataEmpresas.length}</span>

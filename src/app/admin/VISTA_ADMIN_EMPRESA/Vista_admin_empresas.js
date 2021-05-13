@@ -33,6 +33,7 @@ import { db } from "../../../db/firebase";
 import { useSnackbar } from "notistack";
 
 import "./estilos_admin_empresa.css";
+import {INFO_BG_COLOR, INFO_TEXT_COLOR} from "../../../variables";
 
 const Admin_empresas = () => {
    /** hook drawer admin */
@@ -172,9 +173,7 @@ const Admin_empresas = () => {
 
       <div className="content" ref={content}>
         
-        <div className="info">
-          EMPRESAS
-        </div>
+      <div className="info" style={{backgroundColor : INFO_BG_COLOR}}> <span style={{color : INFO_TEXT_COLOR}}>EMPRESAS</span></div>
         <div className="table">
           {/** Tabla camiones */}
           <TABLA_EMPRESA

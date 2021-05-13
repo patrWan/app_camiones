@@ -31,6 +31,7 @@ import { db, fire } from "../../../db/firebase";
 import { useSnackbar } from "notistack";
 
 import "./estilos_admin_viaje.css";
+import {INFO_BG_COLOR, INFO_TEXT_COLOR} from "../../../variables";
 
 const Admin_viajes = () => {
 
@@ -208,7 +209,7 @@ const Admin_viajes = () => {
       
 
       <div className="content" ref={content}>
-      <div className="info">VIAJES</div>
+      <div className="info" style={{backgroundColor : INFO_BG_COLOR}}> <span style={{color : INFO_TEXT_COLOR}}>VIAJES</span></div>
       <div className="table">
 
           <TABLA_VIAJE_ANT

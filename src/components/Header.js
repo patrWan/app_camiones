@@ -22,12 +22,12 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { cerrar__sesion } from "../db/auth";
 import { useHistory } from "react-router-dom";
 
-import DRAWERPERFILUSUARIO from "../components/DrawerPerfilUsuario";
+import {HEADER_BG_COLOR} from "../variables";
 
 const useStyles = makeStyles((theme) => ({
   /**         4A051C       */
   root: {
-    background: "#4A051C", //"#363457"
+    background: HEADER_BG_COLOR, //"#363457"
     height: "100%",
     width: "100%",
 
@@ -38,6 +38,8 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "4px 4px 10px 10px rgba(0,0,0,0.1)",
     paddingLeft: 15,
     paddingRight: 15,
+    position : "sticky",
+    top : 0
     //borderLeft: "1px #ccc solid",
     //minHeight: '100vh',
   },
@@ -360,7 +362,13 @@ const Header = (props) => {
           </span>
         </Box>
       ) : (
-        ""
+        <Box className={classes.__icon_mobile}>
+          <span>
+            <a href="#" className={classes.icons} onClick={openSlideMenu}>
+              <i class="bi bi-list" style={{ fontSize: 42 }}></i>
+            </a>
+          </span>
+        </Box>
       )}
       {isAdmin == "true" ? (
         <Box className={classes.icon_mobile}>
@@ -382,16 +390,6 @@ const Header = (props) => {
       )}
 
       {/** Cambiar dependiendo de los privilegios */}
-      {isAdmin == "false" ? (
-        <Box className={classes.top}>
-          <img src="/logo_3.png" className={classes.logo}></img>
-          <Box>
-            <span className={classes.title}>INKA SPA</span>
-          </Box>
-        </Box>
-      ) : (
-        ""
-      )}
 
       {links(isAdmin)}
       <Box className={classes.cnt_avatar}>
@@ -406,35 +404,10 @@ const Header = (props) => {
             {usuario ? usuario.nombres.toUpperCase() : ""}
           </span>
 
-          {isAdmin == "true" ? (
-            ""
-          ) : (
-            <div>
-              <Button
-                aria-controls="simple-menu"
-                aria-haspopup="true"
-                onClick={handleClick}
-              >
-                <ExpandMoreIcon />
-              </Button>
-              <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-              >
-                <MenuItem onClick={handleClose}>Mi Perfil</MenuItem>
-                <MenuItem onClick={handleSignOut}>Cerrar Sesión</MenuItem>
-              </Menu>
-            </div>
-          )}
+         
         </Box>
       </Box>
-      <DRAWERPERFILUSUARIO
-        visible={visible}
-        setVisible={setVisible}
-        usuario={usuario}
-      />
+      
     </div>
   );
 };

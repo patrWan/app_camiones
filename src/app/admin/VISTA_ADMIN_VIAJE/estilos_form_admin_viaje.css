@@ -48,11 +48,20 @@
   margin-right: 20px;
 }
 
+.Form-checkbox{
+  margin-left: 10px;
+}
+
 .Label {
   font-size: 14px;
   color: #0000008A;
   font-weight: bold;
   margin-left: 3px;
+}
+
+.Error-label {
+  font-size: 12px;
+  margin-left: 10px;
 }
 
 @media (max-width: 1199.98px) {

@@ -5,7 +5,7 @@ import { db } from "../../../db/firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import { Alert } from "antd";
 import * as dayjs from "dayjs";
-
+import {DATATABLE_BG_COLOR, DATATABLE_TEXT_COLOR} from "../../../variables";
 var locale_de = require("dayjs/locale/es");
 
 const useStyles = makeStyles((theme) => ({
@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
       borderStyle: "solid",
     },
     "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th ": {
-      background: "#282640",
-      color: "white",
+      background: DATATABLE_BG_COLOR,
+      color: DATATABLE_TEXT_COLOR,
     },
     boxShadow: "4px 4px 10px 10px rgba(0,0,0,0.1)",
     backgroundColor: "#ff",

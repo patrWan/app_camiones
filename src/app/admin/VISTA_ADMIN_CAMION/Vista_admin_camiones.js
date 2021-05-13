@@ -11,6 +11,7 @@ import TABLA_CAMION_ANT from "../data_tables/DataTable_camion_ant";
 import { NavLink, useHistory } from "react-router-dom";
 
 import { MenuTest } from "../../../components/items/Menu_items";
+
 import { cerrar__sesion } from "../../../db/auth";
 
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -28,6 +29,8 @@ import FormCamion from "../../../components/forms/FormCamion";
 import { db } from "../../../db/firebase";
 
 import { useSnackbar } from "notistack";
+
+import {INFO_BG_COLOR, INFO_TEXT_COLOR} from "../../../variables";
 
 import "./estilos_admin_camion.css";
 
@@ -175,7 +178,7 @@ const Admin_conductores = () => {
       </div>
 
       <div className="content" ref={content}>
-        <div className="info">CAMIONES</div>
+      <div className="info" style={{backgroundColor : INFO_BG_COLOR}}> <span style={{color : INFO_TEXT_COLOR}}>CAMIONES</span></div>
 
         <div className="table">
           {/** Tabla camiones */}

@@ -24,6 +24,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import "./estilos_admin_usuario.css"
+import {INFO_BG_COLOR, INFO_TEXT_COLOR} from "../../../variables";
 
 const Admin_conductores = () => {
  /** hook drawer admin */
@@ -162,7 +163,7 @@ const Admin_conductores = () => {
       </div>
 
       <div className="content" ref={content}>
-      <div className="info">USUARIOS</div>
+      <div className="info" style={{backgroundColor : INFO_BG_COLOR}}> <span style={{color : INFO_TEXT_COLOR}}>USUARIOS</span></div>
         <div className="table">
           {/*<TABLA_CONDUCTOR fun={fun} setIsSelected={setIsSelected} />*/}
           <TABLA_CONDUCTOR_ANT 

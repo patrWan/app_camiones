@@ -1,14 +1,13 @@
 import React from "react";
-
 import { Box, Divider } from "@material-ui/core";
-
-import Typography from "@material-ui/core/Typography";
-
 import { makeStyles } from "@material-ui/core/styles";
+
+import {MENU_LATERAL_BG_COLOR} from "../variables";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    //backgroundImage: "linear-gradient(to right, #434343 0%, black 100%)",
+    backgroundColor: MENU_LATERAL_BG_COLOR,
 
     //display : 'flex',
     //flex : 'wrap',
@@ -38,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
     marginTop: 0,
     [theme.breakpoints.down("sm")]: {
-      marginTop: 5,
+      //marginTop: 5,
       flexDirection: "column",
     },
   },

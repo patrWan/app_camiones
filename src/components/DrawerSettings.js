@@ -118,7 +118,7 @@ const DrawerSettings = (props) => {
             @
           </span>
           <input
-            type="text"
+            type="password"
             class="form-control"
             placeholder="Contraseña actual"
             aria-label="Contraseña"
@@ -132,7 +132,7 @@ const DrawerSettings = (props) => {
             @
           </span>
           <input
-            type="text"
+            type="password"
             class="form-control"
             placeholder="Contraseña nueva"
             aria-label="Contraseña"

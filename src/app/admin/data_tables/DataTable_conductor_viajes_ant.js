@@ -349,8 +349,6 @@ const DataTable_conductor_viajes_ant = (props) => {
 
   return (
     <div className={classes.root}>
-      <StatusFilter filterBy={handleFilter} />
-      <DateFilter filterBy={handleDateFilter} />
       <MAP_ONLYVIEW openModalMap={openModalMap} setOpenModalMap={setOpenModalMap} empresa_cor={empresa_cor}/>
       <Table
         rowKey="id"

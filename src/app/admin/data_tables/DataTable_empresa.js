@@ -3,7 +3,7 @@ import { Table, Typography, Button } from "antd";
 import { db } from "../../../db/firebase";
 
 import MAP_ONLYVIEW from "../../../components/google-maps/Modal-map-onlyView";
-
+import {DATATABLE_BG_COLOR, DATATABLE_TEXT_COLOR} from "../../../variables";
 import { makeStyles } from "@material-ui/core/styles";
 import { Alert } from "antd";
 import * as dayjs from "dayjs";
@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme) => ({
       borderStyle: "solid",
     },
     "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th " : {
-      background: "#282640",
-      color : "white",
+      background: DATATABLE_BG_COLOR,
+      color : DATATABLE_TEXT_COLOR,
       
    },
    boxShadow : '4px 4px 10px 10px rgba(0,0,0,0.1)',

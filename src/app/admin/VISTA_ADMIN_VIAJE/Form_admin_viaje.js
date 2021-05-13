@@ -102,9 +102,15 @@ function Form_admin_viaje(props) {
   const [email_direccion, setEmailDireccion] = useState('');
   const [email_correo, setEmailCorreo] = useState('');
 
+  const [error, setError] = useState(false);
+  const [notificar, setNotificar] = useState(true);
+
 
   const { enqueueSnackbar } = useSnackbar();
-
+  function isChecked(e){
+    console.log(e.target.checked);
+    setNotificar(e.target.checked);
+  }
   function submit(e){
     e.preventDefault();
     console.log("fecha y hora => ",fecha_hora);
@@ -145,6 +151,16 @@ function Form_admin_viaje(props) {
           preventDuplicate: true,
         });
       });
+
+      if(notificar === true){
+        emailjs.sendForm('service_3t2jqug', 'template_60oxr8w', e.target, 'user_CzJpNEaTEgmDCaNX3wWLO')
+        .then((result) => {
+          console.log(result.text);
+        }, (error) => {
+          console.log(error.text);
+        });
+      }
+
       closeSlideMenu();
       //setOpenModalViaje(false);
     } else {
@@ -159,69 +175,34 @@ function Form_admin_viaje(props) {
         id_camion: camionId,
       };
 
-      var cityRef = db.collection("usuario").doc(conductor);
+      if(new__viaje.fecha !== '' && new__viaje.camion !== '' && new__viaje.origen !== '' && new__viaje.destino !== '' && new__viaje.id_camion !== ''){
+        var cityRef = db.collection("usuario").doc(conductor);
 
-      cityRef.update({viajes: fire.firestore.FieldValue.arrayUnion(new__viaje)}).then(() => {
-/*
-        var camionRef = db.collection("camion").doc(camionId);
-
-        camionRef.update({disponible: false,}).then(() => {
-          console.log("Document successfully updated!");
-        })
-        .catch((error) => {
-          // The document probably doesn't exist.
-          console.error("Error updating document: ", error);
+        cityRef.update({viajes: fire.firestore.FieldValue.arrayUnion(new__viaje)}).then(() => {});
+  
+        console.log("VIAJE GENERADO => ", new__viaje);
+  
+        var men = "Viaje agregado exitosamente.";
+  
+        enqueueSnackbar(men, {
+          variant: "success",
+          preventDuplicate: true,
         });
-*/
-      });
-
-      /*
-        var fechaDisp = dayjs(date).locale("es").format("DD MMMM YYYY");
-
-        let disp = {
-          id: formatDate,
-          fecha: fechaDisp,
-        };
-
-        var camionRef = db.collection("camion").doc(selectedCamion.id);
-
-        camionRef.update({
-          disp: fire.firestore.FieldValue.arrayUnion(disp),
-        });
-      */
-
-      console.log("VIAJE GENERADO => ", new__viaje);
-
-      /** limpiar campos */
-      //setSelectedUser(null);
-
-      var men = "Viaje agregado exitosamente.";
-      //setOpenModalCamion(false);
-      enqueueSnackbar(men, {
-        variant: "success",
-        preventDuplicate: true,
-      });
-
-      var fecha = dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:m A");
-
-      /*
-      emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', e.target, 'YOUR_USER_ID')
-      .then((result) => {
-          console.log(result.text);
-      }, (error) => {
-          console.log(error.text);
-      });
-      */
-
-      //setOpenModalViaje(false);
-
-      emailjs.sendForm('service_3t2jqug', 'template_60oxr8w', e.target, 'user_CzJpNEaTEgmDCaNX3wWLO')
-      .then((result) => {
-        console.log(result.text);
-      }, (error) => {
-        console.log(error.text);
-    });
-    closeSlideMenu();
+  
+        //setOpenModalViaje(false);
+        if(notificar === true){
+          emailjs.sendForm('service_3t2jqug', 'template_60oxr8w', e.target, 'user_CzJpNEaTEgmDCaNX3wWLO')
+          .then((result) => {
+            console.log(result.text);
+          }, (error) => {
+            console.log(error.text);
+          });
+        }
+        
+        closeSlideMenu();
+      }else{
+        setError(true);
+      }
     }
   }
 
@@ -239,26 +220,26 @@ function Form_admin_viaje(props) {
   }
 
   return (
-    /**
-     * fecha y hora
-     * condcutor
-     * camion -> id_camion
-     * origen
-     * destino
-     *
-     */
     <div className="Root">
         <div className="Form-description">
-            <span>Descripción</span>
+              {error ? 
+                <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Error</strong> Todos los campos deben ser llenados.
+                </div> 
+              : 
+                null
+              }
         </div>
 
         <div className="Form-content">
+              
             <div className="Form-input">
               <DatePicker selectedItem={selectedItem} setFechaHora={setFechaHora}/>
             </div>
             <div className="Form-input-select">
               <span className="Label">Usuario</span>
               <SELECT_USUARIO conductor={conductor} setConductor={setConductor} user__id={user__id} selectedItem={selectedItem} setEmailName={setEmailName} setEmailCorreo={setEmailCorreo}/>
+              
             </div>
 
             <div className="Form-input-select">
@@ -274,17 +255,21 @@ function Form_admin_viaje(props) {
               <span className="Label">Empresa Destino</span>
               <SELECT_EMPRESA selectedItem={selectedItem} destino={destino} setDestino={setDestino} setEmailDestino={setEmailDestino} setEmailDireccion={setEmailDireccion}/>
             </div>
-            
+            <div className="Form-checkbox">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1" onChange={(e) => isChecked(e)} checked={notificar}/>
+              <label class="form-check-label" for="exampleCheck1">Notificar por correo</label>
+            </div>
             <div className="Form-input-select">
               <form onSubmit={submit}> 
-                <input type="hidden" value={email_correo} name="email"></input>
-                <input type="hidden" value="Nuevo Viaje Programado" name="subject"></input>
-                <input type="hidden" value={email_name} name="name"></input>
-                <input type="hidden" value={ dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:mm A")} name="fecha"></input>
-                <input type="hidden" value={email_destino} name="empresa"></input>
-                <input type="hidden" value={email_direccion} name="direccion"></input>
-                <input type="hidden" value="Para mas detalles visite trudistics.cl" name="mensaje"></input>
-                <button type="submit" className="btn btn-primary">Agregar Viaje</button>
+                <input type="hidden" value={email_correo} name="email" required></input>
+                <input type="hidden" value={selectedItem ? "Viaje Modificado o Reprogramado" : "Nuevo Viaje Programado"}  name="subject" required></input>
+                <input type="hidden" value={email_name} name="name" required></input>
+                <input type="hidden" value={ dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:mm A")} name="fecha" required></input>
+                <input type="hidden" value={email_destino} name="empresa" required></input>
+                <input type="hidden" value={email_direccion} name="direccion" required></input>
+                <input type="hidden" value="Para mas detalles visite trudistics.cl" name="mensaje" required></input>
+                <button type="submit" className={selectedItem ? "btn btn-warning" : "btn btn-primary"} required>{selectedItem ? "Modificar Viaje" : "Agregar Viaje"}</button>
+                
               </form>
             </div>
 

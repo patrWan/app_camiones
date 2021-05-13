@@ -21,7 +21,7 @@ function SelectCamion(props) {
   useEffect(async () => {
     console.log("RENDER SELECT CAMION");
     const camionRef = db.collection('camion');
-    const snapshot = await camionRef.where("estado", "!=", "true").get();
+    const snapshot = await camionRef.get();
     if (snapshot.empty) {
         console.log('No matching documents.');
         return;
@@ -34,6 +34,7 @@ function SelectCamion(props) {
           marca : doc.data().marca,
           patente : doc.data().patente,
           disponible : doc.data().disponible ? "Disponible" : "En uso",
+          estado : doc.data().estado
         }
         camiones.push(c);
     });
@@ -58,7 +59,7 @@ function SelectCamion(props) {
         value={camionId ? camionId : null}
       >
         {camion.map((x) => {
-          return <Option value={x.id} key={x.id}>{x.patente}</Option>;
+          return <Option value={x.id} key={x.id} hidden={x.estado === "true" ?true:false}>{x.patente}</Option>;
         })}
       </Select>
   );

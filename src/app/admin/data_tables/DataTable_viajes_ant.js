@@ -18,7 +18,7 @@ import { StatusFilter } from "../../../components/StatusFilter";
 import { DateFilter } from "../../../components/DateFilter";
 
 import MAP_ONLYVIEW from "../../../components/google-maps/Modal-map-onlyView";
-
+import {DATATABLE_BG_COLOR, DATATABLE_TEXT_COLOR} from "../../../variables";
 import "moment/locale/es";
 import locale from "antd/es/date-picker/locale/es_ES";
 
@@ -43,8 +43,8 @@ const useStyles = makeStyles((theme) => ({
     },
     "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th ":
       {
-        background: "#282640",
-        color: "white",
+        background: DATATABLE_BG_COLOR,
+        color: DATATABLE_TEXT_COLOR,
       },
     boxShadow: "4px 4px 10px 10px rgba(0,0,0,0.1)",
     backgroundColor: "#ff",
@@ -523,6 +523,29 @@ const DataTable_viajes_ant = (props) => {
       );
 
       setRangoLabel(true);
+      setEstadoLabel(true);
+      setConductorLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
+      rango_fechas === null &&
+      conductor_id !== null &&
+      filter_empresa !== null &&
+      filter_estado !== null
+    ) {
+      console.log("CONDUCTOR Y , EMPRESA Y FILTRO ESTADO ");
+      const filteredEvents = data.filter(
+        ({ empresa_id, estado, id_user }) =>
+          id_user === conductor_id &&
+          estado === filter_estado &&
+          empresa_id === filter_empresa
+      );
+
+      setEmpresaLabel(true);
       setEstadoLabel(true);
       setConductorLabel(true);
       const finalFilter = filteredEvents.sort((a, b) =>
@@ -1017,7 +1040,7 @@ const DataTable_viajes_ant = (props) => {
             >
               {conductores_list.map((x) => {
                 return (
-                  <Option value={x.id}>{x.nombres + " " + x.apellidos}</Option>
+                  <Option value={x.id} key={x.id}>{x.nombres + " " + x.apellidos}</Option>
                 );
               })}
             </Select>
@@ -1047,7 +1070,7 @@ const DataTable_viajes_ant = (props) => {
               }
             >
               {empresaList.map((x) => {
-                return <Option value={x.id}>{x.empresa}</Option>;
+                return <Option value={x.id} key={x.id}>{x.empresa}</Option>;
               })}
             </Select>
           </div>
@@ -1063,20 +1086,20 @@ const DataTable_viajes_ant = (props) => {
                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
-              <Option value={true}>Completado</Option>
-              <Option value={false}>Programado</Option>
+              <Option value={true} key="1">Completado</Option>
+              <Option value={false} key="2">Programado</Option>
             </Select>
           </div>
         </div>
         <div className={classes.button__container}>
           <button onClick={filter_general} className={classes.button}>
-            <i class="bi bi-filter"></i> Filtrar
+            <i className="bi bi-filter"></i> Filtrar
           </button>
           <button onClick={clear_filter} className={classes.button}>
             Limpiar Filtros
           </button>
           <button onClick={create_pdf} className={classes.button}>
-            <i class="bi bi-file-earmark-plus-fill"></i> Generar PDF
+            <i className="bi bi-file-earmark-plus-fill"></i> Generar PDF
           </button>
         </div>
       </div>

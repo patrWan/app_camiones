@@ -3,6 +3,8 @@ import { Table, Typography, Select } from "antd";
 import { db } from "../../../db/firebase";
 import { makeStyles } from "@material-ui/core/styles";
 
+import {DATATABLE_BG_COLOR, DATATABLE_TEXT_COLOR} from "../../../variables";
+
 import * as dayjs from "dayjs";
 
 var locale_de = require("dayjs/locale/es");
@@ -12,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     "& table": {},
     "& thead > tr > th": {
-      background: "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)",
+      backgroundColor: DATATABLE_BG_COLOR,
       color: "black",
       fontSize: "16",
       fontFamily: "Dela Gothic One, cursive",
@@ -24,8 +26,8 @@ const useStyles = makeStyles((theme) => ({
     },
     "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th ":
       {
-        background: "#282640",
-        color: "white",
+        background: DATATABLE_BG_COLOR,
+        color: DATATABLE_TEXT_COLOR,
       },
     boxShadow: "4px 4px 10px 10px rgba(0,0,0,0.1)",
     backgroundColor: "#ff",
@@ -107,7 +109,7 @@ const columns = [
     dataIndex: "estado",
     key: "estado",
     render: (estado) =>
-      estado === "true" ? (<strong style={{ color: "red" }}>Inactivo</strong>) : (<strong className="text-primary">Activo</strong>),
+      estado === "true" ? (<strong className="text-danger">Inactivo</strong>) : (<strong className="text-success">Activo</strong>),
   },
 ];
 
