@@ -9,7 +9,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 
 export default function ModalCamionDos(props) {
 
-  const { title, description, children, openModalCamion, setOpenModalCamion,setSelectedItem, selectedItem } = props;
+  const { title, description, children, openModalCamion, setOpenModalCamion,setSelectedItem, selectedItem, closeSlideMenu } = props;
   
   return (
     <div>
@@ -27,7 +27,7 @@ export default function ModalCamionDos(props) {
           {children}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => {setOpenModalCamion(false); setSelectedItem(null) }} color="secondary">
+          <Button onClick={() => {setOpenModalCamion(false); setSelectedItem(null);closeSlideMenu(); }} color="secondary">
             Cerrar
           </Button>
         </DialogActions>

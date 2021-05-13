@@ -26,7 +26,7 @@ const FormConductor = (props) => {
   const { register, handleSubmit, errors } = useForm();
   const { enqueueSnackbar /*closeSnackbar*/ } = useSnackbar();
 
-  const { selectedItem, setSelectedItem, setOpenModalCamion } = props;
+  const { selectedItem, setSelectedItem, setOpenModalCamion, closeSlideMenu } = props;
 
   const classes = useStyles();
 
@@ -39,6 +39,7 @@ const FormConductor = (props) => {
     });
 
     console.log("Added document with ID: ", res.id);
+    closeSlideMenu();
   };
 
   const edit__camion = async (data) => {
@@ -51,6 +52,8 @@ const FormConductor = (props) => {
       patente: data.patente,
       estado : data.estado,
     });
+
+    closeSlideMenu();
   };
 
   const onSubmit = (data) => {

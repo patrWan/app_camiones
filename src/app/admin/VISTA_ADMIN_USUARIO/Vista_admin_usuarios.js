@@ -190,8 +190,9 @@ const Admin_conductores = () => {
         setOpenModalConductor={setOpenModalConductor}
         selectedUser={selectedUser}
         selectedItem={selectedItem}
+        closeSlideMenu={closeSlideMenu}
       >
-        <FormConductor selectedUser={selectedUser} setOpenModalConductor={setOpenModalConductor}/>
+        <FormConductor selectedUser={selectedUser} setOpenModalConductor={setOpenModalConductor} closeSlideMenu={closeSlideMenu}/>
       </ModalConductor>
     </div>
   );

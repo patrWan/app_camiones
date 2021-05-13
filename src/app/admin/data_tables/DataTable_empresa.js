@@ -114,6 +114,7 @@ const DataTable_empresa = (props) => {
 
     setOpenModalMap(true);
   }
+  
   const handleClose = () => {
     setVisible(false);
   };

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import "antd/dist/antd.css";
 import { Select } from "antd";
 
+import {db} from "../../../db/firebase";
+
 const { Option } = Select;
 
 
@@ -19,15 +21,27 @@ function SelectUsuario(props) {
 
   useEffect(async () => {
     console.log("RENDER SELECT USUARIO");
+    let lista =[];
+    /*
     const url = "http://localhost:4000/api/admin/";
     const response = await fetch(url);
     const data = await response.json();
     console.log(data);
     setUsuario(data);
+    */
+    await db.collection("usuario")
+      .where("email", "!=", "administrador@trudistic.cl")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach(x => {
+          lista.push(x.data());
+        })
+        const filteredEvents = lista.filter(({ disabled }) => disabled !== "true");
+        
+        setUsuario(filteredEvents);
 
-    if(selectedItem){
-      setConductor(user__id);
-    }
+      });
+
   }, []);
 
   return (
@@ -44,7 +58,7 @@ function SelectUsuario(props) {
         value={conductor ? conductor : null}
       >
         {usuario.map((x) => {
-          return <Option value={x.id} key={x.id} email={x.email}>{x.nombres}</Option>;
+          return <Option value={x.id} key={x.email} email={x.email}>{x.nombres}</Option>;
         })}
       </Select>
   );

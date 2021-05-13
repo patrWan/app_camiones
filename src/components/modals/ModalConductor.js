@@ -36,6 +36,8 @@ export default function FullScreenDialog(props) {
     selectedItem,
     //setSelectedUser,
     //title
+
+    closeSlideMenu
   } = props;
 
   return (
@@ -55,7 +57,7 @@ export default function FullScreenDialog(props) {
           {children}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenModalConductor(false)} color="primary">
+          <Button onClick={() => {setOpenModalConductor(false); closeSlideMenu()}} color="primary">
             Cerrar
           </Button>
         </DialogActions>

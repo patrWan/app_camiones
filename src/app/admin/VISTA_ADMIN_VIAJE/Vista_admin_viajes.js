@@ -247,6 +247,7 @@ const Admin_viajes = () => {
 
           direccion={direccion}
           setDireccion={setDireccion}
+          closeSlideMenu={closeSlideMenu}
 
           
           

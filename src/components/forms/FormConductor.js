@@ -140,7 +140,7 @@ const FormConductor = (props) => {
   const { register, handleSubmit, errors } = useForm();
   const { enqueueSnackbar /*closeSnackbar*/ } = useSnackbar();
 
-  const { selectedUser, setOpenModalConductor } = props;
+  const { selectedUser, setOpenModalConductor, closeSlideMenu } = props;
 
   const [loading, setLoading] = useState(false);
 
@@ -184,7 +184,7 @@ const FormConductor = (props) => {
       .catch((error) => console.error("Error:", error))
       .then((response) => {
         /** !!!!! ESTA SEGURO DE LOS CAMBIOS REALIZADOS? -> DTOS DEL USUARIO */
-
+        closeSlideMenu();
         setOpenModalConductor(false);
         console.log("Success:", response);
         var men = "Usuario editado exitosamente.";
@@ -216,6 +216,7 @@ const FormConductor = (props) => {
       })
       .then((response) => {
         /** !!!!! ESTA SEGURO DE CREAR EL SIGUIENTE USUARIO? -> DTOS DEL USUARIO */
+        closeSlideMenu();
         setOpenModalConductor(false);
         console.log("res => ", response);
         var men = "Usuario " + response.email + " creado exitosamente.";

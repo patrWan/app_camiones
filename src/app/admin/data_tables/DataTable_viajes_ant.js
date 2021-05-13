@@ -17,6 +17,8 @@ import { StatusTag } from "../../../components/StatusTag";
 import { StatusFilter } from "../../../components/StatusFilter";
 import { DateFilter } from "../../../components/DateFilter";
 
+import MAP_ONLYVIEW from "../../../components/google-maps/Modal-map-onlyView";
+
 import "moment/locale/es";
 import locale from "antd/es/date-picker/locale/es_ES";
 
@@ -27,48 +29,44 @@ dayjs.extend(isBetween);
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    "& table": {
-      
-    },
+    "& table": {},
     "& thead > tr > th": {
       background: "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)",
       color: "black",
       fontSize: "16",
       fontFamily: "Dela Gothic One, cursive",
-      
     },
     "& thead > tr": {
       borderWidth: "2px",
       borderColor: "black",
       borderStyle: "solid",
     },
-    "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th " : {
-      background: "#282640",
-      color : "white",
-      
-   },
-   boxShadow : '4px 4px 10px 10px rgba(0,0,0,0.1)',
-   backgroundColor: "#ff",
-   borderRadius : '16px 16px 0 0',
+    "& .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th ":
+      {
+        background: "#282640",
+        color: "white",
+      },
+    boxShadow: "4px 4px 10px 10px rgba(0,0,0,0.1)",
+    backgroundColor: "#ff",
+    borderRadius: "16px 16px 0 0",
   },
 
   filter__section: {
     display: "flex",
     flexDirection: "column",
     height: "20%",
-    backgroundColor : "#1D1D34",
-    borderRadius : '16px 16px 0 0',
-    padding : 5,
+    backgroundColor: "#1D1D34",
+    borderRadius: "16px 16px 0 0",
+    padding: 5,
   },
 
   label__container: {},
 
   filter__container: {
-    
     display: "flex",
     marginTop: 10,
-    justifyContent : "center",
-    padding : 10,
+    justifyContent: "center",
+    padding: 10,
 
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
@@ -79,96 +77,47 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     marginTop: 10,
     marginBottom: 10,
-    justifyContent : "center",
+    justifyContent: "center",
 
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
-      alignItems : "center",
+      alignItems: "center",
     },
   },
 
-  button : {
-    width : "20%",
-    marginRight : 10,
+  button: {
+    width: "20%",
+    marginRight: 10,
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
-      alignItems : "center",
-      width : "80%",
-      marginRight : 0,
+      alignItems: "center",
+      width: "80%",
+      marginRight: 0,
     },
   },
 
   filter: {
     display: "flex",
-    flexDirection : "column",
-    marginRight : 20,
+    flexDirection: "column",
+    marginRight: 20,
     [theme.breakpoints.down("sm")]: {
       marginBottom: "10px",
-      marginRight : 0,
+      marginRight: 0,
     },
   },
 
   filter__title: {
-    color : '#fff',
-    fontSize : 16,
+    color: "#fff",
+    fontSize: 16,
     marginRight: 5,
-    fontWeight : "600",
+    fontWeight: "600",
     [theme.breakpoints.down("sm")]: {
       display: "none",
     },
   },
 }));
 
-const columns = [
-  {
-    title: "Fecha",
-    dataIndex: "fecha",
-    render: (text) => <a>{text}</a>,
 
-    sorter: (a, b) =>
-      dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? 1 : -1,
-      defaultSortOrder: "descend",
-  },
-
-  {
-    title: "Conductor",
-    dataIndex: "conductor",
-    key: "conductor",
-  },
-  {
-    title: "Camion",
-    dataIndex: "camion",
-    key: "camion",
-  },
-  /*
-  {
-    title: "Origen",
-    dataIndex: "origen",
-    key: "origen",
-    responsive: ["sm"],
-    sorter: (a, b) => a.origen.localeCompare(b.origen),
-    defaultSortOrder: "ascend",
-  },
-  */
- /*
-  {
-    title: "Destino",
-    dataIndex: "destino",
-    key: "destino",
-    responsive: ["sm"],
-  },
-  */
-  {
-    title: "Empresa",
-    dataIndex: "direccion",
-    key: "direccion",
-  },
-  {
-    title: "Estado",
-    key: "estado",
-    render: (text, record) => <StatusTag status={record.estado} />,
-  },
-];
 
 const DataTable_viajes_ant = (props) => {
   const {
@@ -186,7 +135,7 @@ const DataTable_viajes_ant = (props) => {
 
     selectRows,
     setSelectRows,
-    openSlideMenu
+    openSlideMenu,
   } = props;
 
   const { RangePicker } = DatePicker;
@@ -240,25 +189,86 @@ const DataTable_viajes_ant = (props) => {
   const [empresaLabel, setEmpresaLabel] = useState(false);
   const [estadoLabel, setEstadoLabel] = useState(false);
 
+  const [empresa_cor, setEmpresaCor] = useState({});
+  const [openModalMap, setOpenModalMap] = useState(false);
+
+  const columns = [
+    {
+      title: "Fecha",
+      dataIndex: "fecha",
+      render: (text) => <a>{text}</a>,
+  
+      sorter: (a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? 1 : -1,
+      defaultSortOrder: "descend",
+    },
+  
+    {
+      title: "Conductor",
+      dataIndex: "conductor",
+      key: "conductor",
+    },
+    {
+      title: "Camion",
+      dataIndex: "camion",
+      key: "camion",
+    },
+    {
+      title: "Empresa",
+      dataIndex: "direccion",
+      key: "direccion",
+      render: (text, empresa) => <a className="text-primary" onClick={() => ver_empresa_map(empresa.empresa_latitud, empresa.empresa_longitud)}><strong>{text}</strong></a>,
+    },
+    {
+      title: "Estado",
+      key: "estado",
+      render: (text, record) => <StatusTag status={record.estado} />,
+    },
+  ];
+
+  async function ver_empresa_map(lat, lon){
+    console.log("Ver empresa", empresa);
+    // abrir modal
+    //entregar lat y lng
+
+    await setEmpresaCor({lat : lat, lng : lon  });
+
+    console.log(empresa_cor);
+
+    setOpenModalMap(true);
+  }
+
   function filter_general() {
     console.log("APLICANDO FILTRO ...");
     setFilterData(data);
     console.log("filtered data => ", filterData);
 
-    if (conductor_id !== null && rango_fechas === null && filter_empresa === null && filter_estado === null) {
+    if (
+      conductor_id !== null &&
+      rango_fechas === null &&
+      filter_empresa === null &&
+      filter_estado === null
+    ) {
       console.log("FILTRO POR CONDCUTOR");
 
       const filteredEvents = data.filter(
         ({ id_user }) => id_user === conductor_id
       );
 
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setFilterData(finalFilter);
 
       setConductorLabel(true);
     }
 
-    if (rango_fechas !== null && conductor_id === null && filter_empresa === null && filter_estado === null) {
+    if (
+      rango_fechas !== null &&
+      conductor_id === null &&
+      filter_empresa === null &&
+      filter_estado === null
+    ) {
       console.log("FILTRO POR RANGO DE FECHAS");
       const filteredEvents = data.filter(({ fechaSorter }) =>
         dayjs(fechaSorter).isBetween(
@@ -269,54 +279,75 @@ const DataTable_viajes_ant = (props) => {
         )
       );
       setRangoLabel(true);
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setFilterData(finalFilter);
     }
 
-    if (filter_empresa !== null & rango_fechas === null && conductor_id === null && filter_estado === null) {
-
+    if (
+      (filter_empresa !== null) & (rango_fechas === null) &&
+      conductor_id === null &&
+      filter_estado === null
+    ) {
       console.log("FILTRO EMPRESA");
       const filteredEvents = data.filter(
         ({ empresa_id }) => empresa_id === filter_empresa
       );
 
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setEmpresaLabel(true);
 
       setFilterData(finalFilter);
     }
 
-    if (filter_estado !== null  & rango_fechas === null && conductor_id === null && filter_empresa === null) {
-
+    if (
+      (filter_estado !== null) & (rango_fechas === null) &&
+      conductor_id === null &&
+      filter_empresa === null
+    ) {
       console.log("FILTRO ESTADO");
       const filteredEvents = data.filter(
         ({ estado }) => estado === filter_estado
       );
 
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setEstadoLabel(true);
-      
+
       setFilterData(finalFilter);
     }
 
-    if (conductor_id !== null && filter_estado !== null && rango_fechas === null && filter_empresa === null) {
+    if (
+      conductor_id !== null &&
+      filter_estado !== null &&
+      rango_fechas === null &&
+      filter_empresa === null
+    ) {
       console.log("FILTRO CONDUCTOR Y ESTADO");
 
       const filteredEvents = data.filter(
         ({ estado, id_user }) =>
-          estado === filter_estado &&
-          id_user === conductor_id
+          estado === filter_estado && id_user === conductor_id
       );
 
       setConductorLabel(true);
       //setEstadoLabel(true);
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setFilterData(finalFilter);
     }
 
-    
-
-    if (rango_fechas !== null && conductor_id !== null && filter_empresa === null && filter_estado === null) {
+    if (
+      rango_fechas !== null &&
+      conductor_id !== null &&
+      filter_empresa === null &&
+      filter_estado === null
+    ) {
       console.log("FILTRO POR CONDCUTOR Y RANGO DE FECHAS");
       const filteredEvents = data.filter(
         ({ id_user, fechaSorter }) =>
@@ -328,16 +359,21 @@ const DataTable_viajes_ant = (props) => {
             "[]"
           )
       );
-            
+
       setRangoLabel(true);
       setConductorLabel(true);
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setFilterData(finalFilter);
     }
 
-    
-
-    if (conductor_id !== null && filter_empresa !== null && rango_fechas === null &&   filter_estado === null) {
+    if (
+      conductor_id !== null &&
+      filter_empresa !== null &&
+      rango_fechas === null &&
+      filter_estado === null
+    ) {
       console.log("FILTRO CONDUCTOR Y EMPRESA");
       const filteredEvents = data.filter(
         ({ empresa_id, id_user }) =>
@@ -345,11 +381,18 @@ const DataTable_viajes_ant = (props) => {
       );
       setEmpresaLabel(true);
       setConductorLabel(true);
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setFilterData(finalFilter);
     }
 
-    if (rango_fechas !== null && filter_empresa !== null && conductor_id === null && filter_estado === null ) {
+    if (
+      rango_fechas !== null &&
+      filter_empresa !== null &&
+      conductor_id === null &&
+      filter_estado === null
+    ) {
       console.log("RANGO DE FECHAS Y FILTRO EMPRESA");
       const filteredEvents = data.filter(
         ({ empresa_id, fechaSorter }) =>
@@ -364,11 +407,18 @@ const DataTable_viajes_ant = (props) => {
 
       setRangoLabel(true);
       setEmpresaLabel(true);
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setFilterData(finalFilter);
     }
 
-    if (rango_fechas !== null && filter_estado !== null &&  filter_empresa === null && conductor_id === null  ) {
+    if (
+      rango_fechas !== null &&
+      filter_estado !== null &&
+      filter_empresa === null &&
+      conductor_id === null
+    ) {
       console.log("RANGO DE FECHAS Y ESTADO");
       const filteredEvents = data.filter(
         ({ fechaSorter, estado }) =>
@@ -383,11 +433,17 @@ const DataTable_viajes_ant = (props) => {
 
       setRangoLabel(true);
       setEstadoLabel(true);
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setFilterData(finalFilter);
     }
 
-    if (rango_fechas !== null && conductor_id === null && filter_empresa !== null && filter_estado !== null
+    if (
+      rango_fechas !== null &&
+      conductor_id === null &&
+      filter_empresa !== null &&
+      filter_estado !== null
     ) {
       console.log("RANGO DE FECHAS Y FILTRO EMPRESA  Y ESTADO");
       const filteredEvents = data.filter(
@@ -405,18 +461,27 @@ const DataTable_viajes_ant = (props) => {
       setRangoLabel(true);
       setEmpresaLabel(true);
       setEstadoLabel(true);
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setFilterData(finalFilter);
     }
 
-    if (rango_fechas !== null && conductor_id !== null && filter_empresa !== null && filter_estado === null) {
+    if (
+      rango_fechas !== null &&
+      conductor_id !== null &&
+      filter_empresa !== null &&
+      filter_estado === null
+    ) {
       console.log("CONDUCTOR Y , RANGO DE FECHAS Y FILTRO EMPRESA ");
-      console.log(dayjs("30 Abril 2021 21:04 PM").isBetween(
-        rango_fechas[0],
-        rango_fechas[1],
-        "month",
-        "[]"
-      ));
+      console.log(
+        dayjs("30 Abril 2021 21:04 PM").isBetween(
+          rango_fechas[0],
+          rango_fechas[1],
+          "month",
+          "[]"
+        )
+      );
       const filteredEvents = data.filter(
         ({ empresa_id, fechaSorter, id_user }) =>
           id_user === conductor_id &&
@@ -432,11 +497,18 @@ const DataTable_viajes_ant = (props) => {
       setRangoLabel(true);
       setEmpresaLabel(true);
       setConductorLabel(true);
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setFilterData(finalFilter);
     }
 
-    if (rango_fechas !== null && conductor_id !== null && filter_empresa === null && filter_estado !== null) {
+    if (
+      rango_fechas !== null &&
+      conductor_id !== null &&
+      filter_empresa === null &&
+      filter_estado !== null
+    ) {
       console.log("CONDUCTOR Y , RANGO DE FECHAS Y FILTRO ESTADO ");
       const filteredEvents = data.filter(
         ({ estado, fechaSorter, id_user }) =>
@@ -453,7 +525,9 @@ const DataTable_viajes_ant = (props) => {
       setRangoLabel(true);
       setEstadoLabel(true);
       setConductorLabel(true);
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setFilterData(finalFilter);
     }
 
@@ -482,7 +556,9 @@ const DataTable_viajes_ant = (props) => {
       setEmpresaLabel(true);
       setConductorLabel(true);
       setEstadoLabel(true);
-      const finalFilter = filteredEvents.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
       setFilterData(finalFilter);
     }
 
@@ -627,8 +703,6 @@ const DataTable_viajes_ant = (props) => {
     }),
   };
 
-
-
   const get__viajes = async () => {
     let item__list = [];
     let data_camiones__list = [];
@@ -648,8 +722,8 @@ const DataTable_viajes_ant = (props) => {
           conductor_item = {
             id: doc.id,
             nombres: doc.data().nombres,
-            apellidos : doc.data().apellidos,
-            disabled : doc.data().disabled,
+            apellidos: doc.data().apellidos,
+            disabled: doc.data().disabled,
           };
           conductor_list.push(conductor_item);
 
@@ -670,62 +744,69 @@ const DataTable_viajes_ant = (props) => {
             }
 
             var empresaRef = db.collection("empresa").doc(x.destino);
-            var camionRef =  db.collection("camion").doc(x.id_camion);
-            let camion_info = '';
+            var camionRef = db.collection("camion").doc(x.id_camion);
+            let camion_info = "";
 
             await camionRef.get().then((doc) => {
               if (doc.exists) {
-                  camion_info = doc.data().modelo+" "+doc.data().patente;
+                camion_info = doc.data().modelo + " " + doc.data().patente;
               } else {
-                  // doc.data() will be undefined in this case
-                  console.log("No such document!");
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
               }
             });
 
-            let empresa_info = '';
-            let destino = '';
-            let idEmpresa = '';
+            let empresa_info = "";
+            let destino = "";
+            let idEmpresa = "";
+            let empresa_latitud;
+            let empresa_longitud;
+
             await empresaRef.get().then((doc) => {
               if (doc.exists) {
-                  idEmpresa = doc.id;
-                  empresa_info = doc.data().empresa;
-                  destino = doc.data().direccion;
+                idEmpresa = doc.id;
+                empresa_info = doc.data().empresa;
+                destino = doc.data().direccion;
+
+                empresa_latitud = doc.data().latitud;
+                empresa_longitud = doc.data().longitud;
               } else {
-                  // doc.data() will be undefined in this case
-                  console.log("No such document!");
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
               }
             });
 
-                item = {};
-                //console.log("!! 3");
+            item = {};
+            //console.log("!! 3");
 
-                
+            item = {
+              id: x.id,
+              fechaSorter: x.fecha.toDate(),
+              fecha: formatDate,
+              conductor: doc.data().nombres + " " + doc.data().apellidos,
+              camion: camion_info ? camion_info : x.id_camion,
+              origen: x.origen,
+              destino: destino,
+              empresa_id: idEmpresa ? idEmpresa : x.destino,
+              estado: estado,
+              id_user: doc.id,
+              id_camion: x.id_camion,
+              fecha_camion: formatDate2,
+              direccion: empresa_info ? empresa_info : "Empresa eliminada...",
 
-                item = {
-                  id: x.id,
-                  fechaSorter: x.fecha.toDate(),
-                  fecha: formatDate,
-                  conductor: doc.data().nombres + " " + doc.data().apellidos,
-                  camion: camion_info ? camion_info : x.id_camion,
-                  origen: x.origen,
-                  destino: destino,
-                  empresa_id: idEmpresa ? idEmpresa : x.destino,
-                  estado: estado,
-                  id_user: doc.id,
-                  id_camion: x.id_camion,
-                  fecha_camion: formatDate2,
-                  direccion: empresa_info ? empresa_info : "Empresa eliminada...",
-                };
+              empresa_latitud : empresa_latitud,
+              empresa_longitud : empresa_longitud,
+            };
 
-                data_camiones = {
-                  id_camion: x.id_camion,
-                  fecha: formatDate2,
-                };
+            data_camiones = {
+              id_camion: x.id_camion,
+              fecha: formatDate2,
+            };
 
-                //setFilterData([...filterData , item]);
+            //setFilterData([...filterData , item]);
 
-                item__list.push(item);
-                data_camiones__list.push(data_camiones);
+            item__list.push(item);
+            data_camiones__list.push(data_camiones);
 
             //console.log(doc.data().viajes.length);
           });
@@ -734,7 +815,9 @@ const DataTable_viajes_ant = (props) => {
           //console.log("!! 4");
           setDataCamionFecha(data_camiones__list);
           setData(item__list);
-          const finalFilter = item__list.sort((a, b) => dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1);
+          const finalFilter = item__list.sort((a, b) =>
+            dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+          );
           setFilterData(finalFilter);
           setFilterState(item__list);
           const filteredEvents = conductor_list.filter(
@@ -817,31 +900,44 @@ const DataTable_viajes_ant = (props) => {
   }, [selectedItem]);
 
   useEffect(async () => {
-    
-    if(removeFilter === true){
+    if (removeFilter === true) {
       console.log("USE EFFECT REMOVE");
-      
 
       filter_general();
-
-      
     }
     setRemoveFilter(false);
 
     console.log(removeFilter);
-
   }, [removeFilter]);
 
   const classes = useStyles();
 
-   function onDeleteConductor(){
+  function onDeleteConductor() {
     console.log("Remover filtro conductor");
     setConductorLabel(null);
     setConductorId(null);
     setRemoveFilter(true);
-    
-    
-    
+  }
+
+  function onDeleteRango() {
+    console.log("Remover filtro rango de fechas");
+    setRangoFechas(null);
+    setRangoLabel(null);
+    setRemoveFilter(true);
+  }
+
+  function onDeleteEmpresa() {
+    console.log("Remover filtro empresa");
+    setFilterEmpresa(null);
+    setEmpresaLabel(null);
+    setRemoveFilter(true);
+  }
+
+  function onDeleteEstado() {
+    console.log("Remover filtro estado");
+    setFilterEstado(null);
+    setEstadoLabel(null);
+    setRemoveFilter(true);
   }
 
   return (
@@ -876,7 +972,7 @@ const DataTable_viajes_ant = (props) => {
               label="rango de fechas"
               color="secondary"
               size="medium"
-              onDelete={handleDelete}
+              onDelete={onDeleteRango}
               clickable
             />
           ) : (
@@ -887,7 +983,7 @@ const DataTable_viajes_ant = (props) => {
               label="empresa"
               color="secondary"
               size="medium"
-              onDelete={handleDelete}
+              onDelete={onDeleteEmpresa}
               clickable
             />
           ) : (
@@ -898,7 +994,7 @@ const DataTable_viajes_ant = (props) => {
               label="estado"
               color="secondary"
               size="medium"
-              onDelete={handleDelete}
+              onDelete={onDeleteEstado}
             />
           ) : (
             ""
@@ -920,7 +1016,9 @@ const DataTable_viajes_ant = (props) => {
               }
             >
               {conductores_list.map((x) => {
-                return <Option value={x.id}>{x.nombres +" "+x.apellidos}</Option>;
+                return (
+                  <Option value={x.id}>{x.nombres + " " + x.apellidos}</Option>
+                );
               })}
             </Select>
           </div>
@@ -935,53 +1033,54 @@ const DataTable_viajes_ant = (props) => {
             />
           </div>
           <div className={classes.filter}>
-                <span className={classes.filter__title}>Por Empresa :</span>
-                <Select
-                  showSearch
-                  placeholder="Seleccione Empresa"
-                  optionFilterProp="children"
-                  onChange={onChange}
-                  onSearch={onSearch}
-                  onSelect={onSelectEmpresa}
-                  value={filter_empresa}
-                  filterOption={(input, option) =>
-                    option.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  {empresaList.map((x) => {
-                    return <Option value={x.id}>{x.empresa}</Option>;
-                  })}
-                </Select>
+            <span className={classes.filter__title}>Por Empresa :</span>
+            <Select
+              showSearch
+              placeholder="Seleccione Empresa"
+              optionFilterProp="children"
+              onChange={onChange}
+              onSearch={onSearch}
+              onSelect={onSelectEmpresa}
+              value={filter_empresa}
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              {empresaList.map((x) => {
+                return <Option value={x.id}>{x.empresa}</Option>;
+              })}
+            </Select>
           </div>
           <div className={classes.filter}>
-                <span className={classes.filter__title}>Por Estado :</span>
-                <Select
-                  showSearch
-                  placeholder="Seleccione Estado"
-                  optionFilterProp="children"
-                  onSelect={onSelectEstado}
-                  value={filter_estado}
-                  filterOption={(input, option) =>
-                    option.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                    <Option value={true}>Completado</Option>
-                    <Option value={false}>Programado</Option>
-                </Select>
+            <span className={classes.filter__title}>Por Estado :</span>
+            <Select
+              showSearch
+              placeholder="Seleccione Estado"
+              optionFilterProp="children"
+              onSelect={onSelectEstado}
+              value={filter_estado}
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              <Option value={true}>Completado</Option>
+              <Option value={false}>Programado</Option>
+            </Select>
           </div>
-          
         </div>
         <div className={classes.button__container}>
-            <button onClick={filter_general} className={classes.button}><i class="bi bi-filter"></i> Filtrar</button>
-            <button onClick={clear_filter} className={classes.button}>Limpiar Filtros</button>
-            <button onClick={create_pdf} className={classes.button}><i class="bi bi-file-earmark-plus-fill"></i> Generar PDF</button>
+          <button onClick={filter_general} className={classes.button}>
+            <i class="bi bi-filter"></i> Filtrar
+          </button>
+          <button onClick={clear_filter} className={classes.button}>
+            Limpiar Filtros
+          </button>
+          <button onClick={create_pdf} className={classes.button}>
+            <i class="bi bi-file-earmark-plus-fill"></i> Generar PDF
+          </button>
         </div>
       </div>
-
+      <MAP_ONLYVIEW openModalMap={openModalMap} setOpenModalMap={setOpenModalMap} empresa_cor={empresa_cor}/>
       <Table
         rowKey="id"
         rowSelection={{
@@ -999,7 +1098,7 @@ const DataTable_viajes_ant = (props) => {
         loading={false}
       />
 
-      <ModalReporte open={open} setOpen={setOpen} data={filterData}/>
+      <ModalReporte open={open} setOpen={setOpen} data={filterData} />
     </div>
   );
 };

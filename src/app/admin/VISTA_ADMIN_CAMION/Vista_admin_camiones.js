@@ -198,11 +198,13 @@ const Admin_conductores = () => {
           setOpenModalCamion={setOpenModalCamion}
           setSelectedItem={setSelectedItem}
           selectedItem={selectedItem}
+          closeSlideMenu={closeSlideMenu}
         >
           <FormCamion
             selectedItem={selectedItem}
             setOpenModalCamion={setOpenModalCamion}
             setSelectedItem={setSelectedItem}
+            closeSlideMenu={closeSlideMenu}
           />
         </ModalCamion>
         <ConfirmAlert

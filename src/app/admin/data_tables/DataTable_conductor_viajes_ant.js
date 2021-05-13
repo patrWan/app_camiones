@@ -8,6 +8,8 @@ import { StatusFilter } from "../../../components/StatusFilter";
 import { DateFilter } from "../../../components/DateFilter";
 import { StatusTag } from "../../../components/StatusTag";
 
+import MAP_ONLYVIEW from "../../../components/google-maps/Modal-map-onlyView";
+
 import * as dayjs from "dayjs";
 
 var locale_de = require("dayjs/locale/es");
@@ -40,37 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const columns = [
-  {
-    title: "Fecha",
-    dataIndex: "fecha",
-    key: "fecha",
-    render: (text) => <a>{text}</a>,
-    sorter: (a, b) =>
-      dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? 1 : -1,
-    defaultSortOrder: "descend",
-  },
-  {
-    title: "Region/Comuna",
-    dataIndex: "destino",
-    key: "marca",
-  },
-  {
-    title: "Empresa",
-    dataIndex: "direccion",
-    key: "marca",
-  },
-  {
-    title: "Camion",
-    dataIndex: "camion",
-    key: "patente",
-  },
-  {
-    title: "Estado",
-    key: "disponible",
-    render: (text, record) => <StatusTag status={record.estado} />,
-  },
-];
+
 
 const DataTable_conductor_viajes_ant = (props) => {
   const { setIsSelected, setSelectedItem, selectedItem, setViajes } = props;
@@ -87,6 +59,54 @@ const DataTable_conductor_viajes_ant = (props) => {
   const [isLoaded, setIsLoaded] = useState(true);
   const [data, setData] = useState([]);
   const [filterData, setFilterData] = useState([]);
+
+  const [empresa_cor, setEmpresaCor] = useState({});
+  const [openModalMap, setOpenModalMap] = useState(false);
+
+  const columns = [
+    {
+      title: "Fecha",
+      dataIndex: "fecha",
+      key: "fecha",
+      render: (text) => <a>{text}</a>,
+      sorter: (a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? 1 : -1,
+      defaultSortOrder: "descend",
+    },
+    {
+      title: "Region/Comuna",
+      dataIndex: "destino",
+      key: "marca",
+    },
+    {
+      title: "Empresa",
+      dataIndex: "direccion",
+      key: "marca",
+      render: (text, empresa) => <a className="text-primary" onClick={() => ver_empresa_map(empresa.empresa_latitud, empresa.empresa_longitud)}><strong>{text}</strong></a>,
+    },
+    {
+      title: "Camion",
+      dataIndex: "camion",
+      key: "patente",
+    },
+    {
+      title: "Estado",
+      key: "disponible",
+      render: (text, record) => <StatusTag status={record.estado} />,
+    },
+  ];
+
+  async function ver_empresa_map(lat, lon){
+    //console.log("Ver empresa", empresa);
+    // abrir modal
+    //entregar lat y lng
+
+    await setEmpresaCor({lat : lat, lng : lon  });
+
+    console.log(empresa_cor);
+
+    setOpenModalMap(true);
+  }
 
   const query = db.collection("camion");
   const observerCamion = query.onSnapshot(
@@ -146,7 +166,7 @@ const DataTable_conductor_viajes_ant = (props) => {
         if (doc.exists) {
           //console.log("Document data:", doc.data());
 
-          doc.data().viajes.forEach((x) => {
+          doc.data().viajes.forEach(async (x) => {
             let viaje = {};
 
             var formatDate = dayjs(x.fecha.toDate())
@@ -163,26 +183,38 @@ const DataTable_conductor_viajes_ant = (props) => {
               estado = false;
             }
 
+            var camionRef = db.collection("camion").doc(x.id_camion);
+            let camion_info = "";
+
+            await camionRef.get().then((doc) => {
+              if (doc.exists) {
+                camion_info = doc.data().modelo + " " + doc.data().patente;
+              } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+              }
+            });
+
+            let empresa_latitud;
+            let empresa_longitud;
             var empresaRef = db.collection("empresa").doc(x.destino);
             empresaRef.get().then((empresa) => {
               if (empresa.exists) {
                 item = {};
                 //console.log("!! 3");
 
-                let destino =
-                  empresa.data().region +
-                  ", " +
-                  empresa.data().comuna +
-                  ", " +
-                  empresa.data().direccion;
+                let destino = empresa.data().direccion;
                 let empresa_name = empresa.data().empresa;
+
+                empresa_latitud = empresa.data().latitud;
+                empresa_longitud = empresa.data().longitud;
 
                 item = {
                   id: x.id,
                   fechaSorter: x.fecha.toDate(),
                   fecha: formatDate,
                   conductor: doc.data().nombres,
-                  camion: x.camion,
+                  camion: camion_info,
                   origen: x.origen,
                   destino: destino,
                   empresa_id: empresa.id,
@@ -191,6 +223,9 @@ const DataTable_conductor_viajes_ant = (props) => {
                   id_camion: x.id_camion,
                   fecha_camion: formatDate2,
                   direccion: empresa_name,
+
+                  empresa_latitud : empresa_latitud,
+                  empresa_longitud : empresa_longitud,
                 };
 
                 data_camiones = {
@@ -316,7 +351,7 @@ const DataTable_conductor_viajes_ant = (props) => {
     <div className={classes.root}>
       <StatusFilter filterBy={handleFilter} />
       <DateFilter filterBy={handleDateFilter} />
-
+      <MAP_ONLYVIEW openModalMap={openModalMap} setOpenModalMap={setOpenModalMap} empresa_cor={empresa_cor}/>
       <Table
         rowKey="id"
         rowSelection={{
