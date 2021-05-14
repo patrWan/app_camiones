@@ -275,7 +275,7 @@ const DataTable_viajes_ant = (props) => {
         dayjs(fechaSorter).isBetween(
           rango_fechas[0],
           rango_fechas[1],
-          "month",
+          "date",
           "[]"
         )
       );
@@ -356,7 +356,7 @@ const DataTable_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -401,7 +401,7 @@ const DataTable_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -446,7 +446,7 @@ const DataTable_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -473,7 +473,7 @@ const DataTable_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -498,7 +498,7 @@ const DataTable_viajes_ant = (props) => {
         dayjs("30 Abril 2021 21:04 PM").isBetween(
           rango_fechas[0],
           rango_fechas[1],
-          "month",
+          "date",
           "[]"
         )
       );
@@ -509,7 +509,7 @@ const DataTable_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -537,7 +537,7 @@ const DataTable_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -590,7 +590,7 @@ const DataTable_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -1071,7 +1071,6 @@ const DataTable_viajes_ant = (props) => {
             <span className={classes.filter__title}>Por rango de fechas :</span>
             <RangePicker
               onChange={rangeOnChange}
-              picker="month"
               locale={locale}
               value={rango_fechas}
             />

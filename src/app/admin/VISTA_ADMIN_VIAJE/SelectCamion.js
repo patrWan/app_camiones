@@ -59,7 +59,7 @@ function SelectCamion(props) {
         value={camionId ? camionId : null}
       >
         {camion.map((x) => {
-          return <Option value={x.id} key={x.id} hidden={x.estado === "true" ?true:false}>{x.patente}</Option>;
+          return <Option value={x.id} key={x.id} hidden={x.estado === "true" ?true:false}>{x.marca +" "+x.modelo+" "+x.patente}</Option>;
         })}
       </Select>
   );

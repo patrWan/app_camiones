@@ -62,6 +62,7 @@ export default function ConfirmAlert(props) {
           onClick={() => {
             setSelectedItem(null);
             setOpenAlert(false);
+            closeSlideMenu();
             
           }}
         >

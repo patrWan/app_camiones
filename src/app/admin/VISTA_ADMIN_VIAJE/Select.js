@@ -42,6 +42,10 @@ function SelectUsuario(props) {
 
       });
 
+      if(selectedItem){
+        setConductor(user__id);
+      }
+
   }, []);
 
   return (
@@ -58,7 +62,7 @@ function SelectUsuario(props) {
         value={conductor ? conductor : null}
       >
         {usuario.map((x) => {
-          return <Option value={x.id} key={x.email} email={x.email}>{x.nombres}</Option>;
+          return <Option value={x.id} key={x.email} email={x.email}>{x.nombres + " "+ x.apellidos}</Option>;
         })}
       </Select>
   );

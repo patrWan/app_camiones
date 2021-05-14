@@ -221,6 +221,7 @@ const Admin_conductores = () => {
           men={selectedItem ? selectedItem.patente : null}
           selectedItem={selectedItem}
           setSelectedItem={setSelectedItem}
+          closeSlideMenu={closeSlideMenu}
         ></ConfirmAlert>
       </div>
     </div>

@@ -214,6 +214,7 @@ const Admin_empresas = () => {
           action={delete__empresa}
           selectedItem={selectedItem}
           setSelectedItem={setSelectedItem}
+          closeSlideMenu={closeSlideMenu}
         ></ConfirmAlert>
       </div>
     </div>

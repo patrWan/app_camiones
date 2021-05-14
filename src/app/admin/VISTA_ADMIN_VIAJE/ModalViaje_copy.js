@@ -50,7 +50,7 @@ export default function ModalCamionDos(props) {
 
     direccion,
     setDireccion,
-    closeSlideMenu
+    closeSlideMenu,
   } = props;
 
   useEffect(() => {
@@ -141,7 +141,7 @@ export default function ModalCamionDos(props) {
             setOpenModalViaje={setOpenModalViaje}
           />
           */}
-          <FORM_VIAJES selectedItem={selectedItem} user__id={user__id} closeSlideMenu={closeSlideMenu} setOpenModalViaje={setOpenModalViaje}/>
+          <FORM_VIAJES selectedItem={selectedItem} user__id={user__id} closeSlideMenu={closeSlideMenu} setOpenModalViaje={setOpenModalViaje} user__id={user__id}/>
         </DialogContent>
         <DialogActions>
           <Button

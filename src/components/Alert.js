@@ -22,6 +22,7 @@ export default function AlertDialogSlide(props) {
     setOpenAlert,
     selectedUser,
     setSelectedUser,
+    closeSlideMenu,
   } = props;
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -74,6 +75,7 @@ export default function AlertDialogSlide(props) {
           onClick={() => {
             setOpenAlert(false);
             setSelectedUser(null);
+            closeSlideMenu();
           }}
         >
           Cancelar
@@ -86,6 +88,7 @@ export default function AlertDialogSlide(props) {
 
             setOpenAlert(false);
             setSelectedUser(null);
+            closeSlideMenu();
           }}
           color="secondary"
           variant="contained"

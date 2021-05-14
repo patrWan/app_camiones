@@ -184,6 +184,7 @@ const Admin_conductores = () => {
         setOpenAlert={setOpen}
         selectedUser={selectedUser}
         setSelectedUser={setSelectedUser}
+        closeSlideMenu={closeSlideMenu}
       ></Alert_cerrar>
 
       <ModalConductor

@@ -199,6 +199,7 @@ const FormConductor = (props) => {
         enqueueSnackbar(men, {
           variant: "info",
           preventDuplicate: true,
+          autoHideDuration: 3000,
         });
       });
   };
@@ -220,6 +221,7 @@ const FormConductor = (props) => {
         //var men = "Usuario " + response.email + " creado exitosamente.";
         enqueueSnackbar(error, {
           variant: "success",
+          autoHideDuration: 3000,
         });
       })
       .then((response) => {
@@ -241,11 +243,13 @@ const FormConductor = (props) => {
           enqueueSnackbar(men, {
             variant: variant,
             preventDuplicate: true,
+            autoHideDuration: 3000,
           });
         } else {
           var men = "Usuario " + response.email + " creado exitosamente.";
           enqueueSnackbar(men, {
             variant: "success",
+            autoHideDuration: 3000,
           });
         }
       });

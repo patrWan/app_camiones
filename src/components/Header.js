@@ -22,7 +22,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { cerrar__sesion } from "../db/auth";
 import { useHistory } from "react-router-dom";
 
-import {HEADER_BG_COLOR} from "../variables";
+import { HEADER_BG_COLOR } from "../variables";
 
 const useStyles = makeStyles((theme) => ({
   /**         4A051C       */
@@ -38,8 +38,8 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "4px 4px 10px 10px rgba(0,0,0,0.1)",
     paddingLeft: 15,
     paddingRight: 15,
-    position : "sticky",
-    top : 0
+    position: "sticky",
+    top: 0,
     //borderLeft: "1px #ccc solid",
     //minHeight: '100vh',
   },
@@ -57,6 +57,12 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       justifyContent: "center",
     },
+  },
+
+  cnt_avatar_dos: {
+    //backgroundColor: "blue",
+    width: "50px",
+    height: "50px",
   },
 
   cnt_links: {
@@ -170,8 +176,9 @@ const useStyles = makeStyles((theme) => ({
   },
 
   avatar: {
-    width: 45,
-    height: 45,
+    width: "100%",
+    height: "100%",
+    borderRadius: 50,
   },
 
   username: {
@@ -247,17 +254,24 @@ const Header = (props) => {
     setAnchorEl(null);
   };
 
-  useEffect(() => {
+  const [refresh, setRefresh] = useState(false);
+  useEffect(async () => {
     let user = localStorage.getItem("user");
     console.log("usuario => ", user);
     var docRef = db.collection("usuario").doc(user);
 
-    docRef
+    await docRef
       .get()
       .then((doc) => {
         if (doc.exists) {
           //console.log("Document data:", doc.data());
           setUsuario(doc.data());
+          db.collection("usuario")
+            .doc(doc.id)
+            .onSnapshot((doc) => {
+              console.log("Current data: ", doc.data());
+              setUsuario(doc.data());
+            });
         } else {
           // doc.data() will be undefined in this case
           //console.log("No such document!");
@@ -395,19 +409,19 @@ const Header = (props) => {
       <Box className={classes.cnt_avatar}>
         <Box className={classes.displayName} elevation={3}>
           {/** Cambiar dependiendo del usuario que inició sesión */}
-          <Avatar
-            alt="user_avatar"
-            src={usuario ? usuario.photoURL : ""}
-            className={classes.avatar}
-          />
+          <div className={classes.cnt_avatar_dos}>
+            <img
+              alt="user_avatar"
+              src={usuario ? usuario.photoURL : "/favicon.ico"}
+              className={classes.avatar}
+            />
+          </div>
+
           <span className={classes.username}>
             {usuario ? usuario.nombres.toUpperCase() : ""}
           </span>
-
-         
         </Box>
       </Box>
-      
     </div>
   );
 };

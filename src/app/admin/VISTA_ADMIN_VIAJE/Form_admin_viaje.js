@@ -89,7 +89,7 @@ const DatePicker = (props) => {
 };
 
 function Form_admin_viaje(props) {
-  const { selectedItem, user__id, closeSlideMenu, setOpenModalViaje } = props;
+  const { selectedItem, user__id, closeSlideMenu, setOpenModalViaje, } = props;
 
   const [fecha_hora, setFechaHora] = useState('');
   const [conductor, setConductor] = useState('');
@@ -241,7 +241,7 @@ function Form_admin_viaje(props) {
             </div>
             <div className="Form-input-select">
               <span className="Label">Usuario</span>
-              <SELECT_USUARIO conductor={conductor} setConductor={setConductor} user__id={user__id} selectedItem={selectedItem} setEmailName={setEmailName} setEmailCorreo={setEmailCorreo}/>
+              <SELECT_USUARIO conductor={conductor} setConductor={setConductor} user__id={user__id} selectedItem={selectedItem} setEmailName={setEmailName} setEmailCorreo={setEmailCorreo} user__id={user__id}/>
               
             </div>
 
@@ -269,8 +269,10 @@ function Form_admin_viaje(props) {
                 <input type="hidden" value={"Estimado, "+email_name} name="name" required></input>
                 <input type="hidden" 
                   value = {
-                    selectedItem ? selectedItem.fecha !== fecha_hora ? "Su viaje del día " + dayjs(selectedItem.fecha).locale("es").format("DD MMMM YYYY HH:mm A") + " ha sido cambiado a la siguiente fecha => "+dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:mm A") :null
-                    : selectedItem ? "Su viaje para el día "+ dayjs(selectedItem.fecha).locale("es").format("DD MMMM YYYY HH:mm A") + " ha sido modificado" : "Se le ha programado un nuevo viaje para el día "+ dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:mm A")
+                    selectedItem ? 
+                    selectedItem.fecha !== fecha_hora ? "Su viaje del día " + dayjs(selectedItem.fecha).locale("es").format("DD MMMM YYYY HH:mm A") + " ha sido cambiado a la siguiente fecha => "+dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:mm A") 
+                    :  "Su viaje para el día "+ dayjs(selectedItem.fecha).locale("es").format("DD MMMM YYYY HH:mm A") + " ha sido modificado" 
+                    : "Se le ha programado un nuevo viaje para el día "+ dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:mm A")
                   } name="fecha" required></input>
                 <input type="hidden" value={"Empresa: "+email_destino} name="empresa" required></input>
                 <input type="hidden" value={"Dirección: "+email_direccion} name="direccion" required></input>

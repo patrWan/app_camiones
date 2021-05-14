@@ -14,7 +14,7 @@ import MAP_ONLYVIEW from "../../../components/google-maps/Modal-map-onlyView";
 import {DATATABLE_BG_COLOR, DATATABLE_TEXT_COLOR} from "../../../variables";
 import * as dayjs from "dayjs";
 import { Chip } from "@material-ui/core";
-
+import ModalReporte from "../../../components/modals/ModalReporte";
 var locale = require("dayjs/locale/es");
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DataTable_conductor_viajes_ant = (props) => {
   const { setIsSelected, setSelectedItem, selectedItem, setViajes } = props;
-
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
 
   const [size, setSize] = useState(null);
@@ -518,7 +518,7 @@ const DataTable_conductor_viajes_ant = (props) => {
         dayjs(fechaSorter).isBetween(
           rango_fechas[0],
           rango_fechas[1],
-          "month",
+          "date",
           "[]"
         )
       );
@@ -599,7 +599,7 @@ const DataTable_conductor_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -663,7 +663,7 @@ const DataTable_conductor_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -689,7 +689,7 @@ const DataTable_conductor_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -716,7 +716,7 @@ const DataTable_conductor_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -741,7 +741,7 @@ const DataTable_conductor_viajes_ant = (props) => {
         dayjs("30 Abril 2021 21:04 PM").isBetween(
           rango_fechas[0],
           rango_fechas[1],
-          "month",
+          "date",
           "[]"
         )
       );
@@ -752,7 +752,7 @@ const DataTable_conductor_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -780,7 +780,7 @@ const DataTable_conductor_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -833,7 +833,7 @@ const DataTable_conductor_viajes_ant = (props) => {
           dayjs(fechaSorter).isBetween(
             rango_fechas[0],
             rango_fechas[1],
-            "month",
+            "date",
             "[]"
           )
       );
@@ -866,6 +866,11 @@ const DataTable_conductor_viajes_ant = (props) => {
     setEstadoLabel(false);
 
     setFilterData(data);
+  }
+
+  function create_pdf() {
+    console.log("CREAR PDF");
+    setOpen(true);
   }
 
   useEffect(() => {
@@ -945,6 +950,7 @@ const DataTable_conductor_viajes_ant = (props) => {
 
   return (
     <div className={classes.root}>
+      <ModalReporte open={open} setOpen={setOpen} data={filterData} />
       <div className={classes.filter__section}>
         <div className={classes.label__container}>
           <span className={classes.filter__title}>Filtrando por : </span>
@@ -998,7 +1004,6 @@ const DataTable_conductor_viajes_ant = (props) => {
             <span className={classes.filter__title}>Por rango de fechas :</span>
             <RangePicker
               onChange={rangeOnChange}
-              picker="month"
               locale={locale}
               value={rango_fechas}
             />
@@ -1046,6 +1051,9 @@ const DataTable_conductor_viajes_ant = (props) => {
           </button>
           <button onClick={clear_filter} className={classes.button}>
             Limpiar Filtros
+          </button>
+          <button onClick={create_pdf} className={classes.button}>
+            <i className="bi bi-file-earmark-plus-fill"></i> Generar PDF
           </button>
         </div>
       </div>
