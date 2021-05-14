@@ -3,17 +3,21 @@ import { Table, Typography, Button } from "antd";
 import { db } from "../../../db/firebase";
 
 import { makeStyles } from "@material-ui/core/styles";
-
+import { DatePicker } from "antd";
 import { StatusFilter } from "../../../components/StatusFilter";
 import { DateFilter } from "../../../components/DateFilter";
 import { StatusTag } from "../../../components/StatusTag";
 
+import { Select } from "antd";
+
 import MAP_ONLYVIEW from "../../../components/google-maps/Modal-map-onlyView";
 import {DATATABLE_BG_COLOR, DATATABLE_TEXT_COLOR} from "../../../variables";
 import * as dayjs from "dayjs";
+import { Chip } from "@material-ui/core";
 
-var locale_de = require("dayjs/locale/es");
-
+var locale = require("dayjs/locale/es");
+const { Option } = Select;
+const { RangePicker } = DatePicker;
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -40,6 +44,71 @@ const useStyles = makeStyles((theme) => ({
    boxShadow : '4px 4px 10px 10px rgba(0,0,0,0.1)',
    backgroundColor: "#fff",
   },
+
+  filter__section: {
+    display: "flex",
+    flexDirection: "column",
+    height: "20%",
+    backgroundColor: "#1D1D34",
+    borderRadius: "16px 16px 0 0",
+    padding: 5,
+  },
+
+  label__container: {},
+
+  filter__container: {
+    display: "flex",
+    marginTop: 10,
+    justifyContent: "center",
+    padding: 10,
+
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+  },
+
+  button__container: {
+    display: "flex",
+    marginTop: 10,
+    marginBottom: 10,
+    justifyContent: "center",
+
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      alignItems: "center",
+    },
+  },
+
+  button: {
+    width: "20%",
+    marginRight: 10,
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      alignItems: "center",
+      width: "80%",
+      marginRight: 0,
+    },
+  },
+
+  filter: {
+    display: "flex",
+    flexDirection: "column",
+    marginRight: 20,
+    [theme.breakpoints.down("sm")]: {
+      marginBottom: "10px",
+      marginRight: 0,
+    },
+  },
+
+  filter__title: {
+    color: "#fff",
+    fontSize: 16,
+    marginRight: 5,
+    fontWeight: "600",
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
 }));
 
 
@@ -57,11 +126,37 @@ const DataTable_conductor_viajes_ant = (props) => {
   const [rowClassname, setRowClassname] = useState("");
 
   const [isLoaded, setIsLoaded] = useState(true);
+
   const [data, setData] = useState([]);
   const [filterData, setFilterData] = useState([]);
 
   const [empresa_cor, setEmpresaCor] = useState({});
   const [openModalMap, setOpenModalMap] = useState(false);
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const [conductor_id, setConductorId] = useState(null);
+  const [rango_fechas, setRangoFechas] = useState(null);
+  //const [fecha, setFecha] = useState(null);
+
+  const [filter_empresa, setFilterEmpresa] = useState(null);
+  const [filter_estado, setFilterEstado] = useState(null);
+
+  const [empresaList, setEmpresaList] = useState([]);
+
+  const [conductores_list, setConductoresList] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [empresa, setEmpresa] = useState("");
+  /** LABELS STATE */
+
+  const [conductorLabel, setConductorLabel] = useState(false);
+  const [rangoLabel, setRangoLabel] = useState(false);
+  const [empresaLabel, setEmpresaLabel] = useState(false);
+  const [estadoLabel, setEstadoLabel] = useState(false);
+  const [removeFilter, setRemoveFilter] = useState(false);
+  const [fecha, setFecha] = useState(null);
+  const [filterState, setFilterState] = useState([]);
+
+  //const [empresa_cor, setEmpresaCor] = useState({});
+  //const [openModalMap, setOpenModalMap] = useState(false);
 
   const columns = [
     {
@@ -155,7 +250,6 @@ const DataTable_conductor_viajes_ant = (props) => {
 
     let item__list = [];
     let data_camiones__list = [];
-    let conductor_list = [];
 
     let user = localStorage.getItem("user");
     var docRef = db.collection("usuario").doc(user);
@@ -198,6 +292,7 @@ const DataTable_conductor_viajes_ant = (props) => {
             let empresa_latitud;
             let empresa_longitud;
             var empresaRef = db.collection("empresa").doc(x.destino);
+
             empresaRef.get().then((empresa) => {
               if (empresa.exists) {
                 item = {};
@@ -332,8 +427,502 @@ const DataTable_conductor_viajes_ant = (props) => {
     }
   };
 
+  const handleDelete = () => {
+    console.log("Quitar filtro");
+    setFilterState(data);
+  };
+
+  /** Select Section */
+  function onChange(value) {
+    console.log(`selected ${value}`);
+  }
+
+  function onSearch(val) {
+    console.log("search:", val);
+  }
+
+  function onSelect(val) {
+    setConductorId(val);
+  }
+
+  function onSelectEmpresa(val) {
+    setFilterEmpresa(val);
+  }
+
+  function onSelectEstado(val) {
+    console.log("oin select estado => ", val);
+    setFilterEstado(val);
+  }
+
+  function onDeleteConductor() {
+    console.log("Remover filtro conductor");
+    setConductorLabel(null);
+    setConductorId(null);
+    setRemoveFilter(true);
+  }
+
+  function onDeleteRango() {
+    console.log("Remover filtro rango de fechas");
+    setRangoFechas(null);
+    setRangoLabel(null);
+    setRemoveFilter(true);
+  }
+
+  function onDeleteEmpresa() {
+    console.log("Remover filtro empresa");
+    setFilterEmpresa(null);
+    setEmpresaLabel(null);
+    setRemoveFilter(true);
+  }
+
+  function onDeleteEstado() {
+    console.log("Remover filtro estado");
+    setFilterEstado(null);
+    setEstadoLabel(null);
+    setRemoveFilter(true);
+  }
+
+  function filter_general() {
+    console.log("APLICANDO FILTRO ...");
+    setFilterData(data);
+    console.log("filtered data => ", filterData);
+
+    if (
+      conductor_id !== null &&
+      rango_fechas === null &&
+      filter_empresa === null &&
+      filter_estado === null
+    ) {
+      console.log("FILTRO POR CONDCUTOR");
+
+      const filteredEvents = data.filter(
+        ({ id_user }) => id_user === conductor_id
+      );
+
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+
+      setConductorLabel(true);
+    }
+
+    if (
+      rango_fechas !== null &&
+      conductor_id === null &&
+      filter_empresa === null &&
+      filter_estado === null
+    ) {
+      console.log("FILTRO POR RANGO DE FECHAS");
+      const filteredEvents = data.filter(({ fechaSorter }) =>
+        dayjs(fechaSorter).isBetween(
+          rango_fechas[0],
+          rango_fechas[1],
+          "month",
+          "[]"
+        )
+      );
+      setRangoLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
+      (filter_empresa !== null) & (rango_fechas === null) &&
+      conductor_id === null &&
+      filter_estado === null
+    ) {
+      console.log("FILTRO EMPRESA");
+      const filteredEvents = data.filter(
+        ({ empresa_id }) => empresa_id === filter_empresa
+      );
+
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setEmpresaLabel(true);
+
+      setFilterData(finalFilter);
+    }
+
+    if (
+      (filter_estado !== null) & (rango_fechas === null) &&
+      conductor_id === null &&
+      filter_empresa === null
+    ) {
+      console.log("FILTRO ESTADO");
+      const filteredEvents = data.filter(
+        ({ estado }) => estado === filter_estado
+      );
+
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setEstadoLabel(true);
+
+      setFilterData(finalFilter);
+    }
+
+    if (
+      conductor_id !== null &&
+      filter_estado !== null &&
+      rango_fechas === null &&
+      filter_empresa === null
+    ) {
+      console.log("FILTRO CONDUCTOR Y ESTADO");
+
+      const filteredEvents = data.filter(
+        ({ estado, id_user }) =>
+          estado === filter_estado && id_user === conductor_id
+      );
+
+      setConductorLabel(true);
+      setEstadoLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
+      rango_fechas !== null &&
+      conductor_id !== null &&
+      filter_empresa === null &&
+      filter_estado === null
+    ) {
+      console.log("FILTRO POR CONDCUTOR Y RANGO DE FECHAS");
+      const filteredEvents = data.filter(
+        ({ id_user, fechaSorter }) =>
+          id_user === conductor_id &&
+          dayjs(fechaSorter).isBetween(
+            rango_fechas[0],
+            rango_fechas[1],
+            "month",
+            "[]"
+          )
+      );
+
+      setRangoLabel(true);
+      setConductorLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
+      conductor_id === null &&
+      filter_empresa !== null &&
+      rango_fechas === null &&
+      filter_estado !== null
+    ) {
+      console.log("FILTRO ESTADO Y EMPRESA");
+      const filteredEvents = data.filter(
+        ({ empresa_id, estado }) =>
+          empresa_id === filter_empresa && estado === filter_estado
+      );
+      setEmpresaLabel(true);
+      setEstadoLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
+      conductor_id !== null &&
+      filter_empresa !== null &&
+      rango_fechas === null &&
+      filter_estado === null
+    ) {
+      console.log("FILTRO CONDUCTOR Y EMPRESA");
+      const filteredEvents = data.filter(
+        ({ empresa_id, id_user }) =>
+          empresa_id === filter_empresa && id_user === conductor_id
+      );
+      setEmpresaLabel(true);
+      setConductorLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
+      rango_fechas !== null &&
+      filter_empresa !== null &&
+      conductor_id === null &&
+      filter_estado === null
+    ) {
+      console.log("RANGO DE FECHAS Y FILTRO EMPRESA");
+      const filteredEvents = data.filter(
+        ({ empresa_id, fechaSorter }) =>
+          empresa_id === filter_empresa &&
+          dayjs(fechaSorter).isBetween(
+            rango_fechas[0],
+            rango_fechas[1],
+            "month",
+            "[]"
+          )
+      );
+
+      setRangoLabel(true);
+      setEmpresaLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
+      rango_fechas !== null &&
+      filter_estado !== null &&
+      filter_empresa === null &&
+      conductor_id === null
+    ) {
+      console.log("RANGO DE FECHAS Y ESTADO");
+      const filteredEvents = data.filter(
+        ({ fechaSorter, estado }) =>
+          estado === filter_estado &&
+          dayjs(fechaSorter).isBetween(
+            rango_fechas[0],
+            rango_fechas[1],
+            "month",
+            "[]"
+          )
+      );
+
+      setRangoLabel(true);
+      setEstadoLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
+      rango_fechas !== null &&
+      conductor_id === null &&
+      filter_empresa !== null &&
+      filter_estado !== null
+    ) {
+      console.log("RANGO DE FECHAS Y FILTRO EMPRESA  Y ESTADO");
+      const filteredEvents = data.filter(
+        ({ empresa_id, fechaSorter, estado }) =>
+          empresa_id === filter_empresa &&
+          estado === filter_estado &&
+          dayjs(fechaSorter).isBetween(
+            rango_fechas[0],
+            rango_fechas[1],
+            "month",
+            "[]"
+          )
+      );
+
+      setRangoLabel(true);
+      setEmpresaLabel(true);
+      setEstadoLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
+      rango_fechas !== null &&
+      conductor_id !== null &&
+      filter_empresa !== null &&
+      filter_estado === null
+    ) {
+      console.log("CONDUCTOR Y , RANGO DE FECHAS Y FILTRO EMPRESA ");
+      console.log(
+        dayjs("30 Abril 2021 21:04 PM").isBetween(
+          rango_fechas[0],
+          rango_fechas[1],
+          "month",
+          "[]"
+        )
+      );
+      const filteredEvents = data.filter(
+        ({ empresa_id, fechaSorter, id_user }) =>
+          id_user === conductor_id &&
+          empresa_id === filter_empresa &&
+          dayjs(fechaSorter).isBetween(
+            rango_fechas[0],
+            rango_fechas[1],
+            "month",
+            "[]"
+          )
+      );
+
+      setRangoLabel(true);
+      setEmpresaLabel(true);
+      setConductorLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
+      rango_fechas !== null &&
+      conductor_id !== null &&
+      filter_empresa === null &&
+      filter_estado !== null
+    ) {
+      console.log("CONDUCTOR Y , RANGO DE FECHAS Y FILTRO ESTADO ");
+      const filteredEvents = data.filter(
+        ({ estado, fechaSorter, id_user }) =>
+          id_user === conductor_id &&
+          estado === filter_estado &&
+          dayjs(fechaSorter).isBetween(
+            rango_fechas[0],
+            rango_fechas[1],
+            "month",
+            "[]"
+          )
+      );
+
+      setRangoLabel(true);
+      setEstadoLabel(true);
+      setConductorLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
+      rango_fechas === null &&
+      conductor_id !== null &&
+      filter_empresa !== null &&
+      filter_estado !== null
+    ) {
+      console.log("CONDUCTOR Y , EMPRESA Y FILTRO ESTADO ");
+      const filteredEvents = data.filter(
+        ({ empresa_id, estado, id_user }) =>
+          id_user === conductor_id &&
+          estado === filter_estado &&
+          empresa_id === filter_empresa
+      );
+
+      setEmpresaLabel(true);
+      setEstadoLabel(true);
+      setConductorLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
+      rango_fechas !== null &&
+      conductor_id !== null &&
+      filter_empresa !== null &&
+      filter_estado !== null
+    ) {
+      console.log("FILTRO EMPRESA Y RANGO DE FECHAS Y ESTADO Y CONDUCTOR");
+      const filteredEvents = data.filter(
+        ({ empresa_id, fechaSorter, estado, id_user }) =>
+          empresa_id === filter_empresa &&
+          estado === filter_estado &&
+          id_user === conductor_id &&
+          estado === filter_estado &&
+          dayjs(fechaSorter).isBetween(
+            rango_fechas[0],
+            rango_fechas[1],
+            "month",
+            "[]"
+          )
+      );
+
+      setRangoLabel(true);
+      setEmpresaLabel(true);
+      setConductorLabel(true);
+      setEstadoLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+  }
+
+  function rangeOnChange(date, dateString) {
+    setRangoFechas(date);
+  }
+
+  function clear_filter() {
+    setConductorId(null);
+    setRangoFechas(null);
+    setFecha(null);
+    setFilterEmpresa(null);
+    setFilterEstado(null);
+
+    setConductorLabel(false);
+    setRangoLabel(false);
+    setEmpresaLabel(false);
+    setEstadoLabel(false);
+
+    setFilterData(data);
+  }
+
   useEffect(() => {
     get__viajes();
+    let list__empresas = [];
+    db.collection("empresa")
+      .get()
+      .then((querySnapshot) => {
+        let e;
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          e = {
+            id: doc.id,
+            empresa: doc.data().empresa,
+            region: doc.data().region,
+            comuna: doc.data().comuna,
+            direccion: doc.data().direccion,
+          };
+
+          list__empresas.push(e);
+        });
+        //console.log(list__empresas);
+
+        setEmpresaList(list__empresas);
+
+        //console.log(empresaList);
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
+
+      let conductor_list = [];
+      db.collection("usuario")
+      .get()
+      .then((querySnapshot) => {
+        let conductor_item;
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          conductor_item = {
+            id: doc.id,
+            nombres: doc.data().nombres,
+            apellidos: doc.data().apellidos,
+            disabled: doc.data().disabled,
+          };
+          conductor_list.push(conductor_list);
+        });
+        //console.log(list__empresas);
+
+        setConductoresList(conductor_list);
+
+        console.log(conductor_list);
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
+
+      
   }, [size, edit]);
 
   useEffect(() => {
@@ -349,6 +938,109 @@ const DataTable_conductor_viajes_ant = (props) => {
 
   return (
     <div className={classes.root}>
+      <div className={classes.filter__section}>
+        <div className={classes.label__container}>
+          <span className={classes.filter__title}>Filtrando por : </span>
+          {conductorLabel || rangoLabel || estadoLabel || empresaLabel ? (
+            ""
+          ) : (
+            <Chip
+              label="No hay filtros activos"
+              color="primary"
+              size="medium"
+              onDelete={handleDelete}
+              clickable
+            />
+          )}
+          {rangoLabel ? (
+            <Chip
+              label="rango de fechas"
+              color="secondary"
+              size="medium"
+              onDelete={onDeleteRango}
+              clickable
+            />
+          ) : (
+            ""
+          )}
+          {empresaLabel ? (
+            <Chip
+              label="empresa"
+              color="secondary"
+              size="medium"
+              onDelete={onDeleteEmpresa}
+              clickable
+            />
+          ) : (
+            ""
+          )}
+          {estadoLabel ? (
+            <Chip
+              label="estado"
+              color="secondary"
+              size="medium"
+              onDelete={onDeleteEstado}
+            />
+          ) : (
+            ""
+          )}
+        </div>
+        <div className={classes.filter__container}>
+
+          <div className={classes.filter}>
+            <span className={classes.filter__title}>Por rango de fechas :</span>
+            <RangePicker
+              onChange={rangeOnChange}
+              picker="month"
+              locale={locale}
+              value={rango_fechas}
+            />
+          </div>
+          <div className={classes.filter}>
+            <span className={classes.filter__title}>Por Empresa :</span>
+            <Select
+              showSearch
+              placeholder="Seleccione Empresa"
+              optionFilterProp="children"
+              onChange={onChange}
+              onSearch={onSearch}
+              onSelect={onSelectEmpresa}
+              value={filter_empresa}
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              {empresaList.map((x) => {
+                return <Option value={x.id} key={x.id}>{x.empresa}</Option>;
+              })}
+            </Select>
+          </div>
+          <div className={classes.filter}>
+            <span className={classes.filter__title}>Por Estado :</span>
+            <Select
+              showSearch
+              placeholder="Seleccione Estado"
+              optionFilterProp="children"
+              onSelect={onSelectEstado}
+              value={filter_estado}
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              <Option value={true} key="1">Completado</Option>
+              <Option value={false} key="2">Programado</Option>
+            </Select>
+          </div>
+        </div>
+        <div className={classes.button__container}>
+          <button onClick={filter_general} className={classes.button}>
+            <i className="bi bi-filter"></i> Filtrar
+          </button>
+          <button onClick={clear_filter} className={classes.button}>
+            Limpiar Filtros
+          </button>
+        </div>
+      </div>
       <MAP_ONLYVIEW openModalMap={openModalMap} setOpenModalMap={setOpenModalMap} empresa_cor={empresa_cor}/>
       <Table
         rowKey="id"

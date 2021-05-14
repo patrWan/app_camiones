@@ -414,6 +414,25 @@ const DataTable_viajes_ant = (props) => {
     }
 
     if (
+      conductor_id === null &&
+      filter_empresa !== null &&
+      rango_fechas === null &&
+      filter_estado !== null
+    ) {
+      console.log("FILTRO ESTADO Y EMPRESA");
+      const filteredEvents = data.filter(
+        ({ empresa_id, estado }) =>
+          empresa_id === filter_empresa && estado === filter_estado
+      );
+      setEmpresaLabel(true);
+      setEstadoLabel(true);
+      const finalFilter = filteredEvents.sort((a, b) =>
+        dayjs(a.fechaSorter).isAfter(dayjs(b.fechaSorter)) ? -1 : 1
+      );
+      setFilterData(finalFilter);
+    }
+
+    if (
       rango_fechas !== null &&
       filter_estado !== null &&
       filter_empresa === null &&
