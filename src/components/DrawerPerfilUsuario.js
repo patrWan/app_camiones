@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 import "./estilos_drawer_usuario.css"
 
 const DrawerPerfilUsuario = (props) => {
-  const { visible, setVisible, usuario } = props;
+  const { visible, setVisible, usuario, closeSlideMenu } = props;
 
   const [newPass, setNewPass] = useState("");
   const [actualPass, setActualPass] = useState("");
@@ -28,6 +28,10 @@ const DrawerPerfilUsuario = (props) => {
 
   const onClose = () => {
     setVisible(false);
+    closeSlideMenu();
+
+    setNewPass('');
+    setActualPass('');
   };
 
   const passActual = async (e) => {
@@ -146,13 +150,14 @@ const DrawerPerfilUsuario = (props) => {
               <i class="bi bi-lock-fill"></i>
             </span>
             <input
-              type="text"
+              type="password"
               className="form-control"
               placeholder="Contraseña actual"
-              aria-label="Contraseña"
+              aria-label="Contraseña1"
               aria-describedby="basic-addon1"
               onChange={(e) => passActual(e)}
               minLength="6"
+              autocomplete="new-password"
             />
           </div>
           <span id="passwordHelpInline" className="form-text">
@@ -164,13 +169,14 @@ const DrawerPerfilUsuario = (props) => {
               <i class="bi bi-lock-fill"></i>
             </span>
             <input
-              type="text"
+              type="password"
               className="form-control"
               placeholder="Contraseña nueva"
-              aria-label="Contraseña"
-              aria-describedby="basic-addon1"
+              aria-label="Contraseña2"
+              aria-describedby="basic-addon2"
               onKeyUp ={(e) => passListener(e)}
               minLength="6"
+              autocomplete="new-password"
             />
           </div>
           <button className="btn btn-danger mt-3" onClick={changePassword} disabled={disabled}>Cambiar Contraseña</button>

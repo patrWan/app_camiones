@@ -29,6 +29,8 @@ import {
   cerrar__sesion,
 } from "../db/auth.js";
 
+import {db} from "../db/firebase";
+
 import { useHistory } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 
@@ -77,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 
   cnt_form: {
     backgroundColor: "#ffffff",
-    height: "70%",
+    height: "80%",
 
     border: "1px #dbdbdb solid",
     borderRadius: 5,
@@ -114,8 +116,8 @@ const useStyles = makeStyles((theme) => ({
   },
 
   form__text: {
-    width : "100%",
-    paddingBottom : 15
+    width: "100%",
+    paddingBottom: 15,
   },
 
   form__button: {
@@ -125,13 +127,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Index = (props) => {
-  //const auth = useAuth();
-
   const classes = useStyles();
-  const { register, handleSubmit, errors } = useForm();
-  const [codeError, setCodeError] = useState("");
-  let history = useHistory();
+  const [email_recover, setEmailRecover] = useState('');
+  const [email_not_exist, setEmailNotExist] = useState(true);
+  const [email_exist, setEmailExist] = useState(false);
 
+  const [codeError, setCodeError] = useState("");
+
+  let history = useHistory();
+  const { register, handleSubmit, errors } = useForm();
   const [values, setValues] = useState({
     amount: "",
     password: "",
@@ -140,12 +144,37 @@ const Index = (props) => {
     showPassword: false,
   });
 
+  async function recover_password(){
+    let exist = false;
+    console.log("Recover password para => ", email_recover);
+    await db.collection("usuario").where("email", "==", email_recover)
+    .get()
+    .then((querySnapshot) => {
+      
+        querySnapshot.forEach((doc) => exist = true);
+    })
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });
+
+    if(exist === false){
+      setEmailNotExist(false);
+    }else{
+      setEmailNotExist(true);
+      setEmailExist(true);
+    }
+    
+  }
+
+  function handleInputEmail(e){
+    setEmailRecover(e.target.value);
+  }
+
   const onSubmit = (data) => {
     console.log("onSubmit");
     console.log(data.txtCorreo);
     console.log(data.txtPassword);
     iniciar__sesion(data.txtCorreo, data.txtPassword)
-   
       .then((cred) => {
         localStorage.removeItem("isAdmin");
         localStorage.removeItem("user");
@@ -187,14 +216,6 @@ const Index = (props) => {
         setCodeError(error.code);
       });
       */
-  };
-  /*
-  const login = () => {
-    registrar__usuario("test1@gmail.com", "123456");
-  };
-*/
-  const logOut = () => {
-    cerrar__sesion();
   };
 
   const handleChange = (prop) => (event) => {
@@ -284,19 +305,73 @@ const Index = (props) => {
                   marginTop: 15,
                 }}
               >
-                <Button type="primary" htmlType="submit">
+                <button
+                  type="primary"
+                  htmlType="submit"
+                  className="btn btn-primary"
+                >
                   Iniciar Sesión
-                </Button>
+                </button>
+                <button
+                  className="btn btn-warning"
+                  type="button"
+                  style={{ marginTop: 10 }}
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                >
+                  Recuperar Contraseña
+                </button>
               </div>
             </form>
           </div>
         </Box>
-        <div>
-         © 2021 - Trudistics
+        <div>© 2021 - Trudistics</div>
+      </div>
+
+      <FlashMessage child={props} codeError={codeError} />
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">
+                Recuperación de contraseña
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div style={{display : "flex", flexDirection : "column"}}>
+                <input type="email" placeholder="Ingrese email..." onChange={e => handleInputEmail(e)}></input>
+                {email_not_exist ? null : <strong className="text-danger" style={{marginLeft : 5}}>Email no se encuentra en nuestros registros.</strong>}
+                {email_exist ? <strong className="text-success" style={{marginLeft : 5}}>Su contraseña ha sido enviada a su correo.</strong> : null}
+              </div>
+              
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
+              <button type="button" class="btn btn-primary" onClick={() => recover_password()}>
+                Enviar
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <FlashMessage child={props} codeError={codeError} />
     </div>
   );
 };

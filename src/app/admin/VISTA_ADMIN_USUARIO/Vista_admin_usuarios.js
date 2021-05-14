@@ -178,7 +178,7 @@ const Admin_conductores = () => {
           />
         </div>
       </div>
-      <DRAWER_SETTINGS visible ={visible} setVisible={setVisible}/>
+      <DRAWER_SETTINGS visible ={visible} setVisible={setVisible} closeSlideMenu={closeSlideMenu}/>
       <Alert_cerrar
         openAlert={open}
         setOpenAlert={setOpen}

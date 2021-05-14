@@ -20,6 +20,13 @@ const useStyles = makeStyles((theme) => ({
   inputs: {
     marginBottom: 15,
   },
+
+  input_estado : {
+    fontSize : 16,
+    width : "100%",
+    height : 30,
+    marginBottom: 15,
+  },
 }));
 
 const FormConductor = (props) => {
@@ -110,13 +117,15 @@ const FormConductor = (props) => {
           name="estado"
           ref={register({ required: true })}
           defaultValue={selectedItem ? selectedItem.estado : null}
+          className={classes.input_estado}
+
         >
-          <option value="false">Activo</option>
-          <option value="true">Inactivo</option>
+          <option value="false" className={classes.option_text}>Activo</option>
+          <option value="true" className={classes.option_text}>Inactivo</option>
         </select>
-        <Button type="submit" color="primary">
+        <button type="submit" className={selectedItem ? "btn btn-outline-warning" : "btn btn-outline-primary"}>
           {selectedItem ? "Editar Camión" : "Registrar Camión"}
-        </Button>
+        </button>
       </form>
     </div>
   );

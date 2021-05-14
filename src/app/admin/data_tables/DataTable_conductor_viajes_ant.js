@@ -932,9 +932,16 @@ const DataTable_conductor_viajes_ant = (props) => {
     }
   }, [selectedItem]);
 
-  useEffect(() => {
-    //get__viajes();
-  }, []);
+  useEffect(async () => {
+    if (removeFilter === true) {
+      console.log("USE EFFECT REMOVE");
+
+      filter_general();
+    }
+    setRemoveFilter(false);
+
+    console.log(removeFilter);
+  }, [removeFilter]);
 
   return (
     <div className={classes.root}>
@@ -1018,6 +1025,7 @@ const DataTable_conductor_viajes_ant = (props) => {
           <div className={classes.filter}>
             <span className={classes.filter__title}>Por Estado :</span>
             <Select
+              id="state"
               showSearch
               placeholder="Seleccione Estado"
               optionFilterProp="children"
@@ -1044,10 +1052,6 @@ const DataTable_conductor_viajes_ant = (props) => {
       <MAP_ONLYVIEW openModalMap={openModalMap} setOpenModalMap={setOpenModalMap} empresa_cor={empresa_cor}/>
       <Table
         rowKey="id"
-        rowSelection={{
-          type: "radio",
-          ...rowSelection,
-        }}
         columns={columns}
         dataSource={filterData}
         scroll={{ x: "max-content" }}

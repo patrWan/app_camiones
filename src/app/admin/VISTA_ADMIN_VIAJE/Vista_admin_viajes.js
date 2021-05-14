@@ -58,6 +58,7 @@ const Admin_viajes = () => {
   const [mensaje_accion, setMensajeAccion] = useState(null);
 
   const [conductor, setConductor] = useState("");
+  const [email_destino, setEmailDestino] = useState("");
 
   const[selectRows, setSelectRows]  = useState([]);
 
@@ -90,6 +91,7 @@ const Admin_viajes = () => {
       enqueueSnackbar(men, {
         variant: "error",
         preventDuplicate: true,
+        autoHideDuration: 3000,
       });
   };
 
@@ -230,9 +232,10 @@ const Admin_viajes = () => {
             selectRows = {selectRows} /**!!!!!! */
             setSelectRows={setSelectRows}
             openSlideMenu={openSlideMenu}
+            setEmailDestino={setEmailDestino}
           />
         </div>
-        <DRAWER_SETTINGS visible ={visible} setVisible={setVisible}/>
+        <DRAWER_SETTINGS visible ={visible} setVisible={setVisible} closeSlideMenu={closeSlideMenu}/>
         <ModalViaje_copy
           title={"Viaje"}
           description={"Descripción de la accion a realizar"}
@@ -263,6 +266,8 @@ const Admin_viajes = () => {
           selectedItem={selectedItem}
           setSelectedItem={setSelectedItem}
           men={selectedItem ? selectedItem.direccion : null}
+          email_destino={email_destino}
+          closeSlideMenu={closeSlideMenu}
         />
       </div>
     </div>

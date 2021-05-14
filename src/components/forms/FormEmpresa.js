@@ -28,6 +28,13 @@ const useStyles = makeStyles((theme) => ({
   inputs: {
     marginBottom: 15,
   },
+
+  input_estado : {
+    fontSize : 16,
+    width : "100%",
+    height : 30,
+    marginBottom: 15,
+  },
 }));
 
 const FormEmpresa = (props) => {
@@ -147,7 +154,6 @@ const FormEmpresa = (props) => {
   return (
     <div className={classes.root}>
       <form onSubmit={handleSubmit(onSubmit)} className={classes.root}>
-        <button type="button" onClick={handleMap}>Mapa</button>
         <TextField
           id="direccion"
           name="direccion"
@@ -181,6 +187,7 @@ const FormEmpresa = (props) => {
           name="estado"
           ref={register({ required: true })}
           defaultValue={selectedItem ? selectedItem.estado : null}
+          className={classes.input_estado}
         >
           <option value="false">Activo</option>
           <option value="true">Inactivo</option>

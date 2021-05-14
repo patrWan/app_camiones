@@ -136,6 +136,7 @@ const DataTable_viajes_ant = (props) => {
     selectRows,
     setSelectRows,
     openSlideMenu,
+    setEmailDestino,
   } = props;
 
   const { RangePicker } = DatePicker;
@@ -703,7 +704,7 @@ const DataTable_viajes_ant = (props) => {
     onChange: (selectedRowKeys, selectedRows) => {
       setSelectRows(selectedRowKeys);
       openSlideMenu();
-
+      setEmailDestino(selectedRows[0].email);
       var selected__viaje = {
         id: selectedRows[0].id,
         fecha: selectedRows[0].fechaSorter,
@@ -823,6 +824,7 @@ const DataTable_viajes_ant = (props) => {
 
             item = {
               id: x.id,
+              email : doc.data().email,
               fechaSorter: x.fecha.toDate(),
               fecha: formatDate,
               conductor: doc.data().nombres + " " + doc.data().apellidos,
@@ -865,7 +867,7 @@ const DataTable_viajes_ant = (props) => {
           const filteredEvents = conductor_list.filter(
             ({ disabled }) => disabled !== "true"
           );
-          setConductoresList(filteredEvents);
+          setConductoresList(conductor_list);
         }, 500);
       });
     //console.log("conductores list =>",conductores_list)

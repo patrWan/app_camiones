@@ -35,8 +35,8 @@ const Admin_home = (props) => {
 
   const ADMIN_HOME_ITEMS = [
     {
-      text: "Dashboard",
-      icon: <HomeIcon />,
+      text: "Trudistics",
+      isDisabled: true,
     },
   ];
 
@@ -340,8 +340,7 @@ const Admin_home = (props) => {
             </div>
           </div>
         </div>
-        <div className="grafico_container">INFO ADICIONAL.</div>
-        <DRAWER_SETTINGS visible={visible} setVisible={setVisible} />
+        <DRAWER_SETTINGS visible ={visible} setVisible={setVisible} closeSlideMenu={closeSlideMenu}/>
       </div>
     </div>
   );

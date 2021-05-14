@@ -99,9 +99,8 @@ const Conductor_viajes = (props) => {
               .get()
               .then((doc) => {
                 if (doc.exists) {
-                  ultimo
-                    ? (ultimo.destino = doc.data().empresa)
-                    : console.log("nada");
+                  ultimo.destino = doc.data().empresa;
+                  ultimo.direccion = doc.data().direccion;
                 } else {
                   console.log("No such document!");
                 }
@@ -118,6 +117,7 @@ const Conductor_viajes = (props) => {
               .then((doc) => {
                 if (doc.exists) {
                   actual.destino = doc.data().empresa;
+                  actual.direccion = doc.data().direccion;
                 } else {
                   console.log("No such document!");
                 }
@@ -134,6 +134,7 @@ const Conductor_viajes = (props) => {
               .then((doc) => {
                 if (doc.exists) {
                   proximo.destino = doc.data().empresa;
+                  proximo.direccion = doc.data().direccion;
                 } else {
                   console.log("No such document!");
                 }
@@ -323,6 +324,7 @@ const Conductor_viajes = (props) => {
         visible={visible}
         setVisible={setVisible}
         usuario={usuario}
+        closeSlideMenu={closeSlideMenu}
       />
       </div>
     </div>

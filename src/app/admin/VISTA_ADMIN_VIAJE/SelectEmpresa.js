@@ -75,6 +75,14 @@ function SelectEmpresa(props) {
       value={destino ? destino : null}
     >
       {empresa.map((x) => {
+        if(destino){
+          if(x.id === destino){
+            setEmailDestino(x.empresa);
+            setEmailDireccion(x.direccion);
+          }
+        }
+        
+          
           return (
             <Option value={x.id} key={x.id} direccion={x.direccion} hidden={x.estado === "true" ?true:false}>{x.empresa}</Option>
           );

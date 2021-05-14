@@ -8,7 +8,7 @@ import {cerrar__sesion} from "./../db/auth";
 import { useHistory } from "react-router-dom";
 
 const DrawerSettings = (props) => {
-  const { visible, setVisible } = props;
+  const { visible, setVisible, closeSlideMenu } = props;
 
   const [disabled, setDisabled] = useState(true);
   const [actualPass, setActualPass] = useState("");
@@ -26,6 +26,7 @@ const DrawerSettings = (props) => {
 
   const onClose = () => {
     setVisible(false);
+    closeSlideMenu();
   };
 
   const onChangeNewPass = async (e) => {
@@ -124,6 +125,7 @@ const DrawerSettings = (props) => {
             aria-label="Contraseña"
             aria-describedby="basic-addon1"
             onKeyUp={(e) => setActualPass(e.target.value)}
+            autocomplete="new-password"
           />
         </div>
         <p>Contraseña nueva:</p>
@@ -139,6 +141,7 @@ const DrawerSettings = (props) => {
             aria-describedby="basic-addon1"
             onKeyUp={(e) => onChangeNewPass(e)}
             minLength="6"
+            autocomplete="new-password"
           />
         </div>
         <p>

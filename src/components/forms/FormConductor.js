@@ -70,7 +70,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 15,
     marginBottom: 10,
     display: "flex",
-    justifyContent: "space-between",
     columnGap: 20,
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
@@ -134,6 +133,15 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
   },
+
+  estado_input :{
+    height : 30,
+    width : "50%",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      marginTop : 10
+    },
+  }
 }));
 
 const FormConductor = (props) => {
@@ -475,7 +483,7 @@ const FormConductor = (props) => {
                   uploadPhoto();
                 }}
               />
-              <select name="estado" ref={register({ required: true })} defaultValue={selectedUser ? selectedUser.estado : null}>
+              <select name="estado" ref={register({ required: true })} defaultValue={selectedUser ? selectedUser.estado : null} className={classes.estado_input}>
                 <option value="false">Activo</option>
                 <option value="true">Inactivo</option>
               </select>

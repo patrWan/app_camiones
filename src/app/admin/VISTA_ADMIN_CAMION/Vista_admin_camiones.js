@@ -193,7 +193,7 @@ const Admin_conductores = () => {
             openSlideMenu={openSlideMenu}
           />
         </div>
-        <DRAWER_SETTINGS visible ={visible} setVisible={setVisible}/>
+        <DRAWER_SETTINGS visible ={visible} setVisible={setVisible} closeSlideMenu={closeSlideMenu}/>
         <ModalCamion
           title={"Camion"}
           description={"Descripción de la accion a realizar"}

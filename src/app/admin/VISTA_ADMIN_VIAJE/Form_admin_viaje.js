@@ -149,6 +149,7 @@ function Form_admin_viaje(props) {
         enqueueSnackbar(men, {
           variant: "warning",
           preventDuplicate: true,
+          autoHideDuration: 3000,
         });
       });
 
@@ -188,6 +189,7 @@ function Form_admin_viaje(props) {
         enqueueSnackbar(men, {
           variant: "success",
           preventDuplicate: true,
+          autoHideDuration: 3000,
         });
   
         //setOpenModalViaje(false);
@@ -257,17 +259,21 @@ function Form_admin_viaje(props) {
               <SELECT_EMPRESA selectedItem={selectedItem} destino={destino} setDestino={setDestino} setEmailDestino={setEmailDestino} setEmailDireccion={setEmailDireccion}/>
             </div>
             <div className="Form-checkbox">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1" onChange={(e) => isChecked(e)} checked={notificar}/>
-              <label class="form-check-label" for="exampleCheck1">Notificar por correo</label>
+              <input type="checkbox" classNames="form-check-input" id="exampleCheck1" onChange={(e) => isChecked(e)} checked={notificar}/>
+              <label className="form-check-label" for="exampleCheck1">Notificar por correo</label>
             </div>
             <div className="Form-input-select">
               <form onSubmit={submit}> 
                 <input type="hidden" value={email_correo} name="email" required></input>
                 <input type="hidden" value={selectedItem ? "Viaje Modificado o Reprogramado" : "Nuevo Viaje Programado"}  name="subject" required></input>
-                <input type="hidden" value={email_name} name="name" required></input>
-                <input type="hidden" value={ dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:mm A")} name="fecha" required></input>
-                <input type="hidden" value={email_destino} name="empresa" required></input>
-                <input type="hidden" value={email_direccion} name="direccion" required></input>
+                <input type="hidden" value={"Estimado, "+email_name} name="name" required></input>
+                <input type="hidden" 
+                  value = {
+                    selectedItem ? selectedItem.fecha !== fecha_hora ? "Su viaje del día " + dayjs(selectedItem.fecha).locale("es").format("DD MMMM YYYY HH:mm A") + " ha sido cambiado a la siguiente fecha => "+dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:mm A") :null
+                    : selectedItem ? "Su viaje para el día "+ dayjs(selectedItem.fecha).locale("es").format("DD MMMM YYYY HH:mm A") + " ha sido modificado" : "Se le ha programado un nuevo viaje para el día "+ dayjs(fecha_hora).locale("es").format("DD MMMM YYYY HH:mm A")
+                  } name="fecha" required></input>
+                <input type="hidden" value={"Empresa: "+email_destino} name="empresa" required></input>
+                <input type="hidden" value={"Dirección: "+email_direccion} name="direccion" required></input>
                 <input type="hidden" value="Para mas detalles visite trudistics.cl" name="mensaje" required></input>
                 <button type="submit" className={selectedItem ? "btn btn-warning" : "btn btn-primary"} required>{selectedItem ? "Modificar Viaje" : "Agregar Viaje"}</button>
                 

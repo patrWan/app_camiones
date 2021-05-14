@@ -187,7 +187,7 @@ const Admin_empresas = () => {
             openSlideMenu={openSlideMenu}
           />
         </div>
-        <DRAWER_SETTINGS visible ={visible} setVisible={setVisible}/>
+        <DRAWER_SETTINGS visible ={visible} setVisible={setVisible} closeSlideMenu={closeSlideMenu}/>
         <ModalEmpresa
           title={"Empresa"}
           description={"Descripción de la accion a realizar"}
