@@ -247,9 +247,7 @@ const DataTable_conductor_viajes_ant = (props) => {
     let user = localStorage.getItem("user");
     var docRef = db.collection("usuario").doc(user);
     const viajes = [];
-    docRef
-      .get()
-      .then((doc) => {
+    await docRef.get().then((doc) => {
         if (doc.exists) {
           //console.log("Document data:", doc.data());
 
@@ -330,32 +328,6 @@ const DataTable_conductor_viajes_ant = (props) => {
                 console.log("No such document!");
               }
             });
-
-            /** antes de */
-            if (dayjs(x.fecha.toDate()).isBefore(dayjs()) == true) {
-              console.log(
-                "Viajes Anteriores => ",
-                dayjs(x.fecha.toDate())
-                  .locale("es")
-                  .format("DD MMMM YYYY hh:mm A")
-              );
-            } else if (
-              dayjs(x.fecha.toDate()).isSame(dayjs(), "date") == true
-            ) {
-              console.log(
-                "Posee un viaje hoy => ",
-                dayjs(x.fecha.toDate())
-                  .locale("es")
-                  .format("DD MMMM YYYY hh:mm A")
-              );
-            } else if (dayjs(x.fecha.toDate()).isAfter(dayjs()) == true) {
-              console.log(
-                "Proximos viajes => ",
-                dayjs(x.fecha.toDate())
-                  .locale("es")
-                  .format("DD MMMM YYYY hh:mm A")
-              );
-            }
           });
         } else {
           // doc.data() will be undefined in this case
@@ -848,8 +820,8 @@ const DataTable_conductor_viajes_ant = (props) => {
     setOpen(true);
   }
 
-  useEffect(() => {
-    get__viajes();
+  useEffect(async() => {
+    await get__viajes();
     let list__empresas = [];
     db.collection("empresa")
       .get()

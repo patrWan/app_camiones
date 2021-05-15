@@ -63,22 +63,18 @@ const Conductor_viajes = (props) => {
           const filtro_ultimo = doc
             .data()
             .viajes.filter((x) => dayjs(x.fecha.toDate()).isBefore(dayjs()));
-          console.log(" FILTRO ULTIMO => ", filtro_ultimo);
 
           const filtro_proximo = doc
             .data()
             .viajes.filter((x) => dayjs(x.fecha.toDate()).isAfter(dayjs()));
-          console.log(" FILTRO PROXIMO => ", filtro_proximo);
 
           const sorted_filtro_ultimo = filtro_ultimo.sort(
             (a, b) => b.fecha - a.fecha
           );
-          console.log(" SORTED FILTRO ULTIMO => ", sorted_filtro_ultimo);
 
           const sorted_filtro_proximo = filtro_proximo.sort(
             (a, b) => a.fecha - b.fecha
           );
-          console.log(" SORTED FILTRO PROXIMO => ", sorted_filtro_proximo);
 
           const ultimo = sorted_filtro_ultimo.find((element) =>
             dayjs(element.fecha.toDate()).isBefore(dayjs(), "date")
@@ -91,7 +87,6 @@ const Conductor_viajes = (props) => {
             .viajes.find((element) =>
               dayjs(element.fecha.toDate()).isSame(dayjs(), "date")
             );
-          console.log(actual);
 
           if (ultimo) {
             var ultimoRef = db.collection("empresa").doc(ultimo.destino);

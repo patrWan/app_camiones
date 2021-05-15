@@ -172,7 +172,7 @@ const DrawerPerfilUsuario = (props) => {
               uploadPhoto();
             }}
           />
-          <button onClick={() => cambiar_foto()}>Cambiar foto</button>
+          <button onClick={() => cambiar_foto()}>Cambiar Foto de Perfil</button>
           <div className="p-2 bg-light border">
             {usuario ? usuario.rut : ""}
           </div>

@@ -162,6 +162,13 @@ const Index = (props) => {
     }else{
       setEmailNotExist(true);
       setEmailExist(true);
+      var emailAddress = email_recover;
+
+      auth.sendPasswordResetEmail(emailAddress).then(function() {
+        // Email sent.
+      }).catch(function(error) {
+        // An error happened.
+      });
     }
     
   }
