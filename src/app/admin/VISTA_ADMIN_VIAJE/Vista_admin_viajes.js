@@ -13,7 +13,6 @@ import { NavLink, useHistory } from "react-router-dom";
 import { MenuTest } from "../../../components/items/Menu_items";
 import { cerrar__sesion } from "../../../db/auth";
 
-import HomeIcon from "@material-ui/icons/Home";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
@@ -23,7 +22,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 
 import ConfirmAlert from "../../../components/ConfirmAlert";
 
-import ModalViaje from "./ModalViaje";
+//import ModalViaje from "./ModalViaje";
 import ModalViaje_copy from "./ModalViaje_copy";
 
 import { db, fire } from "../../../db/firebase";
@@ -32,7 +31,7 @@ import { useSnackbar } from "notistack";
 
 import "./estilos_admin_viaje.css";
 import {INFO_BG_COLOR, INFO_TEXT_COLOR} from "../../../variables";
-
+import * as dayjs from "dayjs";
 const Admin_viajes = () => {
 
   /** hook drawer admin */
@@ -87,7 +86,9 @@ const Admin_viajes = () => {
       disp : fire.firestore.FieldValue.arrayRemove(disp)
     })
 
-    var men = "VIAJE ID: => "+selectedItem.id+" ELIMINADO.";
+    var men = "VIAJE con FECHA: => "+dayjs(selectedItem.fecha)
+    .locale("es")
+    .format("DD MMMM YYYY HH:m A").toLowerCase()+" ELIMINADO.";
       enqueueSnackbar(men, {
         variant: "error",
         preventDuplicate: true,
@@ -266,7 +267,9 @@ const Admin_viajes = () => {
           action={delete__viaje}
           selectedItem={selectedItem}
           setSelectedItem={setSelectedItem}
-          men={selectedItem ? selectedItem.direccion : null}
+          men={selectedItem ? dayjs(selectedItem.fecha)
+            .locale("es")
+            .format("DD MMMM YYYY HH:m A").toLowerCase() : null}
           email_destino={email_destino}
           closeSlideMenu={closeSlideMenu}
         />

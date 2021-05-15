@@ -355,7 +355,8 @@ const FormConductor = (props) => {
         <Box className={classes.container_wrap}>
           <Box>
             <Box className={classes.container__avatar}>
-              <Box className={classes.avatar}>
+              {selectedUser ? 
+                <Box className={classes.avatar}>
                 <Avatar
                   alt="user_avatar"
                   src={
@@ -369,6 +370,8 @@ const FormConductor = (props) => {
                   className={classes.avatar}
                 />
               </Box>
+              : null}
+              
             </Box>
           </Box>
 
@@ -477,6 +480,7 @@ const FormConductor = (props) => {
               </Box>
             </Box>
             <Box className={classes.container__inputFile}>
+              {selectedUser ? 
               <input
                 name="photoUrl"
                 id="id_photoUrl"
@@ -486,7 +490,9 @@ const FormConductor = (props) => {
                 onChange={(e) => {
                   uploadPhoto();
                 }}
-              />
+            />
+              : null}
+              
               <select name="estado" ref={register({ required: true })} defaultValue={selectedUser ? selectedUser.estado : null} className={classes.estado_input}>
                 <option value="false">Activo</option>
                 <option value="true">Inactivo</option>

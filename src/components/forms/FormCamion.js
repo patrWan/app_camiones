@@ -66,7 +66,7 @@ const FormConductor = (props) => {
   const onSubmit = (data) => {
     console.log(data);
     if (selectedItem) {
-      var men = "Camion ID: " + selectedItem.id + " editado exitosamente.";
+      var men = "Camion PATENTE: " + selectedItem.patente + " editado exitosamente.";
       edit__camion(data);
       setOpenModalCamion(false);
       setSelectedItem(null);

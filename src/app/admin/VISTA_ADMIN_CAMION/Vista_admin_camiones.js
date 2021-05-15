@@ -56,7 +56,7 @@ const Admin_conductores = () => {
 
   const delete__camion = async () => {
     const res = await db.collection("camion").doc(selectedItem.id).delete();
-    var men = "Camion ID: " + selectedItem.id + " ha sido eliminado.";
+    var men = "Camion PATENTE: " + selectedItem.patente + " ha sido eliminado.";
     enqueueSnackbar(men, {
       variant: "error",
       autoHideDuration: 3000,

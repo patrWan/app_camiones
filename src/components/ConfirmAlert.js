@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -36,6 +36,17 @@ export default function ConfirmAlert(props) {
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+  function compare(e){
+    console.log(e.target.value)
+    if(e.target.value === men){
+      setButtonDisabled(false);
+    }else{
+      setButtonDisabled(true);
+    }
+
+  }
+
   return (
     <Dialog
       open={openAlert}
@@ -47,13 +58,19 @@ export default function ConfirmAlert(props) {
       <DialogTitle id="alert-dialog-slide-title">
         {title}
       </DialogTitle>
-      <DialogContent>
+      <DialogContent style={{display : "flex", flexDirection : "column"}}>
         
         <Alert
           message={<div><strong>{men}</strong> (Esta acción no se puede revertir.)</div>}
           description={<DialogContentText id="alert-dialog-slide-description" color="secondary">{description}</DialogContentText>}
           type="error"
         />
+
+        <DialogContentText>
+          <span>Para confirmar que deseas borrar esta colección, escribe su "------"</span>
+          
+        </DialogContentText>
+        <input type="text" placeholder="Ingrese correo" className="form-control" onChange={e => compare(e)} style={{justifySelf : "center"}}></input>
         
       </DialogContent>
       <DialogActions>
@@ -90,6 +107,7 @@ export default function ConfirmAlert(props) {
             }}
             color="secondary"
             variant="contained"
+            disabled={buttonDisabled}
           >
             Eliminar
           </Button>

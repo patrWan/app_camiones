@@ -64,6 +64,11 @@
   margin-left: 10px;
 }
 
+.Backdrop {
+  z-index: 5;
+  color: "#fff";
+}
+
 @media (max-width: 1199.98px) {
 }
 

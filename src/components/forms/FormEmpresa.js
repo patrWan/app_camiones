@@ -111,7 +111,7 @@ const FormEmpresa = (props) => {
     console.log(empresaMarker);
     
     if (selectedItem) {
-      var men = "Empresa ID: " + selectedItem.id + " editado exitosamente.";
+      var men = "Empresa NOMBRE: " + selectedItem.empresa + " editada exitosamente.";
       edit__empresa(data);
       setOpenModalEmpresa(false);
       setSelectedItem(null);
@@ -123,7 +123,7 @@ const FormEmpresa = (props) => {
       });
     } else {
       register__empresa(data);
-      var men = "Empresa NOMBRE: " + data.empresa + " creado exitosamente.";
+      var men = "Empresa NOMBRE: " + data.empresa + " creada exitosamente.";
       setOpenModalEmpresa(false);
       enqueueSnackbar(men, {
         variant: "success",

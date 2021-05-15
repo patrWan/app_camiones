@@ -1,7 +1,5 @@
 import React, { useRef, useState } from "react";
 
-import { makeStyles } from "@material-ui/core/styles";
-
 /** Components import */
 import HEADER from "../../../components/Header";
 import MENU_LATERAL from "../../../components/Side_menu";
@@ -51,7 +49,7 @@ const Admin_empresas = () => {
 
   const delete__empresa = async () => {
     const res = await db.collection("empresa").doc(selectedItem.id).delete();
-    var men = "Empresa ID: " + selectedItem.id + " ha sido eliminado.";
+    var men = "Empresa NOMBRE: " + selectedItem.empresa + " ha sido eliminada.";
     enqueueSnackbar(men, {
       variant: "error",
       autoHideDuration: 3000,

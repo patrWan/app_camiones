@@ -4,8 +4,6 @@ import { db } from "../../../db/firebase";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { DatePicker } from "antd";
-import { StatusFilter } from "../../../components/StatusFilter";
-import { DateFilter } from "../../../components/DateFilter";
 import { StatusTag } from "../../../components/StatusTag";
 
 import { Select } from "antd";
@@ -15,7 +13,10 @@ import {DATATABLE_BG_COLOR, DATATABLE_TEXT_COLOR} from "../../../variables";
 import * as dayjs from "dayjs";
 import { Chip } from "@material-ui/core";
 import ModalReporte from "../../../components/modals/ModalReporte";
+import locale_ from "antd/es/date-picker/locale/es_ES";
+
 var locale = require("dayjs/locale/es");
+
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const useStyles = makeStyles((theme) => ({
@@ -946,7 +947,7 @@ const DataTable_conductor_viajes_ant = (props) => {
             <span className={classes.filter__title}>Por rango de fechas :</span>
             <RangePicker
               onChange={rangeOnChange}
-              locale={locale}
+              locale={locale_}
               value={rango_fechas}
             />
           </div>

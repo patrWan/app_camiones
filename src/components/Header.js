@@ -36,8 +36,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "space-between",
     boxShadow: "4px 4px 10px 10px rgba(0,0,0,0.1)",
-    paddingLeft: 15,
-    paddingRight: 15,
     position: "sticky",
     top: 0,
     //borderLeft: "1px #ccc solid",
@@ -54,8 +52,8 @@ const useStyles = makeStyles((theme) => ({
     //paddingLeft : 15,
     justifyContent: "flex-end",
     //paddingLeft : 50,
+    paddingRight : 10,
     [theme.breakpoints.down("sm")]: {
-      justifyContent: "center",
     },
   },
 
@@ -97,9 +95,10 @@ const useStyles = makeStyles((theme) => ({
     //backgroundColor: "green",
     width: "25%",
     justifyContent: "flex-start",
+    paddingLeft : 10,
     [theme.breakpoints.down("sm")]: {
       display: "flex",
-      width: "50%",
+      width: "25%",
       height: "100%",
       padding: 5,
     },
@@ -116,9 +115,10 @@ const useStyles = makeStyles((theme) => ({
   icon_mobile: {
     display: "none",
     [theme.breakpoints.down("sm")]: {
+      //backgroundColor : "red",
       display: "flex",
       width: "50%",
-      justifyContent: "flex-start",
+      justifyContent: "center",
     },
   },
 
@@ -393,8 +393,8 @@ const Header = (props) => {
               onClick={openNavigationMobileMenu}
             >
               <i
-                class="bi bi-arrow-down-circle-fill"
-                style={{ fontSize: 42 }}
+                className="bi bi-caret-down-fill"
+                style={{ fontSize: 40 }}
               ></i>
             </a>
           </span>
@@ -412,7 +412,7 @@ const Header = (props) => {
           <div className={classes.cnt_avatar_dos}>
             <img
               alt="user_avatar"
-              src={usuario ? usuario.photoURL : "/favicon.ico"}
+              src={usuario ? usuario.photoURL === '' ? "/default_avatar.png" : usuario.photoURL : "/default_avatar.png"}
               className={classes.avatar}
             />
           </div>

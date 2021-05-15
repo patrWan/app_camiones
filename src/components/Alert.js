@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -26,9 +26,10 @@ export default function AlertDialogSlide(props) {
   } = props;
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
   const delete__user = async (uid) => {
-    const url = "http://localhost:4000/api/admin/delete/";
+    const url = "https://trudistics-admin-server.vercel.app/api/admin/delete";
     var data = {
       id: uid,
     };
@@ -50,6 +51,16 @@ export default function AlertDialogSlide(props) {
       });
   };
 
+  function compare(e){
+    console.log(e.target.value)
+    if(e.target.value === selectedUser.email){
+      setButtonDisabled(false);
+    }else{
+      setButtonDisabled(true);
+    }
+
+  }
+
   return (
     <Dialog
       open={openAlert}
@@ -63,10 +74,14 @@ export default function AlertDialogSlide(props) {
       </DialogTitle>
       <DialogContent>
         <Alert
-          message="ID : "
+          message="Esta acción no se puede revertir"
           description={<DialogContentText id="alert-dialog-slide-description" color="secondary">Cuenta de usuario:{selectedUser ? " "+selectedUser.email : " No hay un usuario seleccionado"}</DialogContentText>}
           type="error"
         />
+        <DialogContentText>
+        <span>Para confirmar que deseas borrar esta colección, escribe su Correo</span>
+        <input type="text" placeholder="Ingrese correo" onChange={e => compare(e)}></input>
+        </DialogContentText>
         
       </DialogContent>
       <DialogActions>
@@ -92,6 +107,7 @@ export default function AlertDialogSlide(props) {
           }}
           color="secondary"
           variant="contained"
+          disabled={buttonDisabled}
         >
           Eliminar
         </Button>
