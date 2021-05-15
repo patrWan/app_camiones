@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "antd/dist/antd.css";
 import { Drawer } from "antd";
 
-import { auth, db } from "./../db/firebase";
+import { auth, db, storage } from "./../db/firebase";
 import { cerrar__sesion } from "./../db/auth";
 
 import { useHistory } from "react-router-dom";
@@ -119,23 +119,35 @@ const DrawerPerfilUsuario = (props) => {
   const cambiar_foto = () => {
     console.log("Cambiar foto");
     var userRef = db.collection("usuario").doc(usuario.id);
+    var metadata = {
+      contentType: "image/jpeg",
+    };
+    var storageRef = storage.ref();
+    var pathName = "avatars/" + usuario.email + ".profilePhoto";
+    var avatarRef = storageRef.child(pathName);
 
-    // Set the "capital" field of the city 'DC'
-    return userRef
-      .update({
-        photoURL: photoUrl,
-      })
-      .then(() => {
-        console.log("Document successfully updated!");
-        setFotoError(true);
-        setTimeout(() => {
-          setFotoError(false);
-        }, 1500);
-      })
-      .catch((error) => {
-        // The document probably doesn't exist.
-        console.error("Error updating document: ", error);
+    avatarRef.put(file.current.files[0], metadata).then(function (snapshot) {
+      avatarRef.getDownloadURL().then((x) => {
+        console.log(x);
+        // Set the "capital" field of the city 'DC'
+        return userRef
+          .update({
+            photoURL: x,
+          })
+          .then(() => {
+            console.log("Document successfully updated!");
+            setFotoError(true);
+            setTimeout(() => {
+              setFotoError(false);
+            }, 1500);
+          })
+          .catch((error) => {
+            // The document probably doesn't exist.
+            console.error("Error updating document: ", error);
+          });
       });
+      console.log("Uploaded a blob or file!");
+    });
   };
 
   useEffect(() => {
@@ -162,7 +174,9 @@ const DrawerPerfilUsuario = (props) => {
               className="Image-perfil"
             ></img>
           </div>
-          {foto_error ? <strong className="text-success">Foto actualizada</strong> : null}
+          {foto_error ? (
+            <strong className="text-success">Foto actualizada</strong>
+          ) : null}
           <input
             name="photoUrl"
             id="id_photoUrl"
