@@ -157,7 +157,7 @@ const DataTable_conductor_ant = (props) => {
   );
 
   const get__usuario = () => {
-    const url = "http://localhost:4000/api/admin/";
+    const url = "https://trudistics-admin-server.vercel.app/api/admin";
     fetch(url, {
       method: "GET",
       mode: "cors",
