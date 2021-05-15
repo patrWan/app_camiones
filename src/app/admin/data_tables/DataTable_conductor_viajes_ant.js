@@ -192,13 +192,7 @@ const DataTable_conductor_viajes_ant = (props) => {
   ];
 
   async function ver_empresa_map(lat, lon){
-    //console.log("Ver empresa", empresa);
-    // abrir modal
-    //entregar lat y lng
-
     await setEmpresaCor({lat : lat, lng : lon  });
-
-    console.log(empresa_cor);
 
     setOpenModalMap(true);
   }
@@ -234,7 +228,6 @@ const DataTable_conductor_viajes_ant = (props) => {
       const dateString = "Wed, 31 Mar 2021 02:12:39 GMT";
       var formatDate = dayjs(dateString).locale("es").format("DD MMM. YYYY");
 
-      console.log(formatDate);
     },
     getCheckboxProps: (record) => ({
       disabled: record.name === "Disabled User",
@@ -331,7 +324,6 @@ const DataTable_conductor_viajes_ant = (props) => {
                 //setFilterData([...filterData , item]);
 
                 item__list.push(item);
-                console.log("aaa => ",item__list);
                 data_camiones__list.push(data_camiones);
               } else {
                 // doc.data() will be undefined in this case
@@ -391,7 +383,6 @@ const DataTable_conductor_viajes_ant = (props) => {
       const filteredEvents = data.filter(({ fechaSorter }) =>
         dayjs(fechaSorter).isBefore(dayjs())
       );
-      console.log("DATA FILTER => ", filteredEvents);
       return setFilterData(filteredEvents);
     }
 
@@ -399,7 +390,6 @@ const DataTable_conductor_viajes_ant = (props) => {
       const filteredEvents = data.filter(({ fechaSorter }) =>
         dayjs(fechaSorter).isAfter(dayjs())
       );
-      console.log("DATA FILTER => ", filteredEvents);
       return setFilterData(filteredEvents);
     }
   };
@@ -414,7 +404,6 @@ const DataTable_conductor_viajes_ant = (props) => {
       const filteredEvents = data.filter(({ fechaSorter }) =>
         dayjs(fechaSorter).isBefore(dayjs())
       );
-      console.log("DATA FILTER => ", filteredEvents);
       return setFilterData(filteredEvents);
     }
 
@@ -422,7 +411,6 @@ const DataTable_conductor_viajes_ant = (props) => {
       const filteredEvents = data.filter(({ fechaSorter }) =>
         dayjs(fechaSorter).isAfter(dayjs())
       );
-      console.log("DATA FILTER => ", filteredEvents);
       return setFilterData(filteredEvents);
     }
   };
@@ -450,33 +438,22 @@ const DataTable_conductor_viajes_ant = (props) => {
   }
 
   function onSelectEstado(val) {
-    console.log("oin select estado => ", val);
     setFilterEstado(val);
   }
 
-  function onDeleteConductor() {
-    console.log("Remover filtro conductor");
-    setConductorLabel(null);
-    setConductorId(null);
-    setRemoveFilter(true);
-  }
-
   function onDeleteRango() {
-    console.log("Remover filtro rango de fechas");
     setRangoFechas(null);
     setRangoLabel(null);
     setRemoveFilter(true);
   }
 
   function onDeleteEmpresa() {
-    console.log("Remover filtro empresa");
     setFilterEmpresa(null);
     setEmpresaLabel(null);
     setRemoveFilter(true);
   }
 
   function onDeleteEstado() {
-    console.log("Remover filtro estado");
     setFilterEstado(null);
     setEstadoLabel(null);
     setRemoveFilter(true);
@@ -485,7 +462,6 @@ const DataTable_conductor_viajes_ant = (props) => {
   function filter_general() {
     console.log("APLICANDO FILTRO ...");
     setFilterData(data);
-    console.log("filtered data => ", filterData);
 
     if (
       conductor_id !== null &&
@@ -869,7 +845,6 @@ const DataTable_conductor_viajes_ant = (props) => {
   }
 
   function create_pdf() {
-    console.log("CREAR PDF");
     setOpen(true);
   }
 
@@ -892,11 +867,9 @@ const DataTable_conductor_viajes_ant = (props) => {
 
           list__empresas.push(e);
         });
-        //console.log(list__empresas);
 
         setEmpresaList(list__empresas);
 
-        //console.log(empresaList);
       })
       .catch((error) => {
         console.log("Error getting documents: ", error);
@@ -917,11 +890,8 @@ const DataTable_conductor_viajes_ant = (props) => {
           };
           conductor_list.push(conductor_list);
         });
-        //console.log(list__empresas);
 
         setConductoresList(conductor_list);
-
-        console.log(conductor_list);
       })
       .catch((error) => {
         console.log("Error getting documents: ", error);
