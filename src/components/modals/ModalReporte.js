@@ -13,9 +13,18 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 
+import * as dayjs from "dayjs";
+
 /** imports de pdf */
 import ReactPDF from "@react-pdf/renderer";
-import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  Image,
+} from "@react-pdf/renderer";
 import { PDFViewer } from "@react-pdf/renderer";
 
 import { Table } from "antd";
@@ -38,68 +47,80 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: "#fff",
   },
-  header : {
-      backgroundColor : "#fff",
-      display :"flex",
-      flexDirection : "row",
-      borderTopWidth : 1,
-      borderLeftWidth : 1,
-      borderRightWidth : 1,
-      borderBottom : 1,
-      marginHorizontal: 10,
-      padding: 15,
+  header: {
+    backgroundColor: "#fff",
+    display: "flex",
+    flexDirection: "row",
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottom: 1,
+    marginHorizontal: 10,
+    padding: 10,
   },
   row: {
     marginHorizontal: 10,
-    borderBottomWidth : 1,
-    display : 'flex',
-    flexDirection : "row"
+    borderBottomWidth: 1,
+    display: "flex",
+    flexDirection: "row",
   },
 
-  cell : {
-    width : "20%",
-    height : '100%',
+  cell: {
+    width: "20%",
+    height: "100%",
     //backgroundColor : "skyblue",
-    display : "flex",
-    justifyContent : 'center',
-    padding : 3 ,
-    borderRight : "1px #ccc solid",
-    borderLeft : "1px #ccc solid"
+    display: "flex",
+    justifyContent: "center",
+    padding: 3,
+    borderLeft: "1px #ccc solid",
   },
 
-  cell_2 : {
-    width : "10%",
-    height : '100%',
+  cell_2: {
+    width: "10%",
+    height: "100%",
     //backgroundColor : "skyblue",
-    display : "flex",
-    justifyContent : 'center',
-    padding : 3 ,
+    display: "flex",
+    justifyContent: "center",
+    padding: 3,
+    borderRight: "1px #ccc solid",
+    borderLeft: "1px #ccc solid",
   },
 
-  head_cell : {
-    width : "20%",
-    height : '100%',
+  head_cell: {
+    width: "20%",
+    height: "100%",
     //backgroundColor : "skyblue",
+    display: "flex",
+    justifyContent: "center",
+    padding: 3,
+  },
+
+  text: {
+    fontSize: 8,
+  },
+  head_text: {
+    fontSize: 10,
+    fontWeight: "600",
+  },
+
+  section: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  section_top : {
+    width: "100%",
     display : "flex",
-    justifyContent : 'center',
-    padding : 3 ,
+    flexDirection : "row",
+    justifyContent : "center"
   },
-
-  text : {
-    fontSize : 8,
+  text_description: {
+    fontSize: 12,
   },
-  head_text : {
-    fontSize : 10,
-    fontWeight : "900"
-  }
-
+  image: {
+    height: 110,
+    width: 110,
+  },
 });
-
-
-
-
-
-
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -122,51 +143,61 @@ export default function FullScreenDialog(props) {
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.section}>
-          <Text>Seccion</Text>
+          <View style={styles.section_top}> 
+            <Image style={styles.image} src="/logo_v6.jpg" />
+          </View>
+          <View style={styles.section_top}> 
+          <Text style={styles.text_description}>
+            {dayjs().locale("es").format("DD MMMM YYYY")}
+          </Text>
+          </View>
+
+          
         </View>
-  
+
         <View style={styles.header}>
-            <View style={styles.head_cell}>
-              <Text style={styles.head_text}>Fecha</Text>
-            </View>
-            <View style={styles.head_cell}>
-              <Text style={styles.head_text}>Nombre</Text>
-            </View>
-            <View style={styles.head_cell}>
-              <Text style={styles.head_text}>Camion</Text>
-            </View>
-            <View style={styles.head_cell}>
-              <Text style={styles.head_text}>Empresa</Text>
-            </View>
-            <View style={styles.head_cell}>
-              <Text style={styles.head_text}>Dirección</Text>
-            </View>
+          <View style={styles.head_cell}>
+            <Text style={styles.head_text}>Fecha</Text>
+          </View>
+          <View style={styles.head_cell}>
+            <Text style={styles.head_text}>Nombre</Text>
+          </View>
+          <View style={styles.head_cell}>
+            <Text style={styles.head_text}>Camion</Text>
+          </View>
+          <View style={styles.head_cell}>
+            <Text style={styles.head_text}>Empresa</Text>
+          </View>
+          <View style={styles.head_cell}>
+            <Text style={styles.head_text}>Dirección</Text>
+          </View>
         </View>
-          {data.map(x => {
-              return (
-              <View style={styles.row} key={x.fecha}>
-                  <View style={styles.cell}>
-                      <Text style={styles.text}>{x.fecha}</Text>
-                  </View>
-                  <View style={styles.cell}>
-                      <Text style={styles.text}>{x.conductor}</Text>
-                  </View>
-                  <View style={styles.cell}>
-                      <Text style={styles.text}>{x.camion}</Text>
-                  </View>
-                  <View style={styles.cell}>
-                    <Text style={styles.text}>{x.direccion}</Text>
-                  </View>
-                  <View style={styles.cell}>
-                    <Text style={styles.text}>{x.destino}</Text>
-                  </View>
-                  <View style={styles.cell_2}>
-                      <Text style={styles.text}>{x.estado ? "Completado" : "Programado"}</Text>
-                  </View>
+        {data.map((x) => {
+          return (
+            <View style={styles.row} key={x.fecha}>
+              <View style={styles.cell}>
+                <Text style={styles.text}>{x.fecha}</Text>
               </View>
-              )
-          })}
-        
+              <View style={styles.cell}>
+                <Text style={styles.text}>{x.conductor}</Text>
+              </View>
+              <View style={styles.cell}>
+                <Text style={styles.text}>{x.camion}</Text>
+              </View>
+              <View style={styles.cell}>
+                <Text style={styles.text}>{x.direccion}</Text>
+              </View>
+              <View style={styles.cell}>
+                <Text style={styles.text}>{x.destino}</Text>
+              </View>
+              <View style={styles.cell_2}>
+                <Text style={styles.text}>
+                  {x.estado ? "Completado" : "Programado"}
+                </Text>
+              </View>
+            </View>
+          );
+        })}
       </Page>
     </Document>
   );
@@ -198,7 +229,7 @@ export default function FullScreenDialog(props) {
           </Toolbar>
         </AppBar>
         <PDFViewer className={classes.viewer}>
-          <MyDocument data={data}/>
+          <MyDocument data={data} />
         </PDFViewer>
       </Dialog>
     </div>

@@ -161,7 +161,7 @@ function Form_admin_viaje(props) {
           enqueueSnackbar(men, {
             variant: "warning",
             preventDuplicate: true,
-            autoHideDuration: 3000,
+            autoHideDuration: 2000,
           });
         });
 
@@ -219,7 +219,7 @@ function Form_admin_viaje(props) {
         enqueueSnackbar(men, {
           variant: "success",
           preventDuplicate: true,
-          autoHideDuration: 3000,
+          autoHideDuration: 2000,
         });
 
         //setOpenModalViaje(false);

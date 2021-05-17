@@ -65,7 +65,7 @@ const Admin_home = (props) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const get__usuario = () => {
-    const url = "http://localhost:4000/api/admin/";
+    const url = "https://trudistics-admin-server.vercel.app/api/admin";
     fetch(url, {
       method: "GET",
       mode: "cors",

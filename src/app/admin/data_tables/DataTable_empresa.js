@@ -36,6 +36,13 @@ const useStyles = makeStyles((theme) => ({
    boxShadow : '4px 4px 10px 10px rgba(0,0,0,0.1)',
    backgroundColor: "#fff",
   },
+  buscador: {
+    width: "40%",
+    padding: 5,
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
 
   row: {},
 }));
@@ -181,6 +188,7 @@ const DataTable_empresa = (props) => {
     setTimeout(function () {
       const filteredEvents = empresas.sort((a, b) => a.estado.localeCompare(b.estado) || a.empresa.localeCompare(b.empresa)) 
       setData(filteredEvents);
+      setFilterData(filteredEvents);
       setIsLoaded(false);
     }, 1000);
   };
@@ -201,6 +209,21 @@ const DataTable_empresa = (props) => {
   const { Text, Link } = Typography;
   const classes = useStyles();
 
+  const [filteredData, setFilterData] = useState(null);
+  const [filter_nombres, setFilterNombres] = useState("");
+  function onChangeNombre(val) {
+    console.log("on change nombre => ", val.target.value);
+
+    setFilterNombres(val.target.value);
+
+    const filteredEvents = data.filter(({ empresa, direccion }) =>
+      empresa.toLowerCase().includes(val.target.value.toLowerCase()) ||
+      direccion.toLowerCase().includes(val.target.value.toLowerCase())
+    );
+    
+    setFilterData(filteredEvents);
+  }
+
   return (
     <div className={classes.root}>
       <MAP_ONLYVIEW openModalMap={openModalMap} setOpenModalMap={setOpenModalMap} empresa_cor={empresa_cor}/>
@@ -211,7 +234,7 @@ const DataTable_empresa = (props) => {
           ...rowSelection,
         }}
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         scroll={{ x: "max-content" }}
         size="middle"
         pagination={{ position: ["bottomCenter"] }}
@@ -228,6 +251,17 @@ const DataTable_empresa = (props) => {
 
           };
         }}
+        title={() => (
+          <div>
+            <input
+              type="text"
+              placeholder="Busqueda por Empresa o Dirección..."
+              onChange={(e) => onChangeNombre(e)}
+              value={filter_nombres}
+              className={classes.buscador}
+            />
+          </div>
+        )}
         
       />
     </div>

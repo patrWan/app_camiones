@@ -134,14 +134,14 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 
-  estado_input :{
-    height : 30,
-    width : "50%",
+  estado_input: {
+    height: 30,
+    width: "50%",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      marginTop : 10
+      marginTop: 10,
     },
-  }
+  },
 }));
 
 const FormConductor = (props) => {
@@ -178,7 +178,7 @@ const FormConductor = (props) => {
 
   const edit__user = async (edit_user) => {
     console.log("!!! API -> EDITARUSUARIO !!!");
-    const url = "http://localhost:4000/api/admin/edit/";
+    const url = "https://trudistics-admin-server.vercel.app/api/admin/edit/";
 
     fetch(url, {
       method: "PUT", // or 'PUT'
@@ -206,7 +206,7 @@ const FormConductor = (props) => {
 
   const register__user = async (new_user) => {
     console.log("!!! API -> REGISTRAR USUARIO !!!");
-    const url = "http://localhost:4000/api/admin/";
+    const url = "https://trudistics-admin-server.vercel.app/api/admin/";
 
     fetch(url, {
       method: "POST", // or 'PUT'
@@ -221,7 +221,7 @@ const FormConductor = (props) => {
         //var men = "Usuario " + response.email + " creado exitosamente.";
         enqueueSnackbar(error, {
           variant: "success",
-          autoHideDuration: 3000,
+          autoHideDuration: 1500,
         });
       })
       .then((response) => {
@@ -243,19 +243,19 @@ const FormConductor = (props) => {
           enqueueSnackbar(men, {
             variant: variant,
             preventDuplicate: true,
-            autoHideDuration: 3000,
+            autoHideDuration: 2000,
           });
         } else {
           var men = "Usuario " + response.email + " creado exitosamente.";
           enqueueSnackbar(men, {
             variant: "success",
-            autoHideDuration: 3000,
+            autoHideDuration: 2000,
           });
         }
       });
   };
 
-  const [random_pass, setRandomPass] = useState('');
+  const [random_pass, setRandomPass] = useState("");
   const onSubmit = (data, e) => {
     setLoading(true);
     if (selectedUser) {
@@ -279,7 +279,7 @@ const FormConductor = (props) => {
             rut: data.rut,
             telefono: data.telefono,
             photoUrl: photoUrl ? x : selectedUser.photoURL,
-            estado : data.estado,
+            estado: data.estado,
             //domicilio : data.domicilio
           };
 
@@ -291,40 +291,28 @@ const FormConductor = (props) => {
     } else {
       console.log("!!! REGISTRAR USUARIO NUEVO !!! ", data);
 
-      var metadata = {
-        contentType: "image/jpeg",
+      let email_split = data.email.split("@");
+      console.log(email_split[0]);
+      let random_pass = email_split[0] + data.rut.slice(-5);
+      console.log("password ====> ", random_pass);
+      setRandomPass(random_pass);
+
+      var new_user = {
+        email: data.email,
+        nombres: data.nombres,
+        apellidos: data.apellidos,
+        rut: data.rut,
+        telefono: data.telefono,
+        photoUrl: "https://firebasestorage.googleapis.com/v0/b/trudistics.appspot.com/o/avatars%2Fdefault_avatar.png?alt=media&token=9d64a85a-06ae-4fdc-b14b-a873665a9de5",
+        password: random_pass,
+        estado: data.estado,
+        //domicilio : data.domicilio
       };
-      var storageRef = storage.ref();
-      var pathName = "avatars/" + data.email + ".profilePhoto";
-      var avatarRef = storageRef.child(pathName);
 
-      avatarRef.put(file.current.files[0], metadata).then(function (snapshot) {
-        avatarRef.getDownloadURL().then((x) => {
-          setPhotoUrl(x);
+      //console.log(new_user);
 
-          console.log(data.email);
-          let email_split = data.email.split("@");
-          console.log(email_split[0]);
-          let random_pass = email_split[0] + data.rut.slice(-5);
-          console.log("password ====> ", random_pass);
-          setRandomPass(random_pass);
-
-          var new_user = {
-            email: data.email,
-            nombres: data.nombres,
-            apellidos: data.apellidos,
-            rut: data.rut,
-            telefono: data.telefono,
-            photoUrl: x,
-            password: random_pass,
-            estado : data.estado,
-            //domicilio : data.domicilio
-          };
-
-          //console.log(new_user);
-
-          register__user(new_user);
-          /*
+      register__user(new_user);
+      
           emailjs.sendForm("service_3t2jqug","template_cdbcycc",e.target,"user_CzJpNEaTEgmDCaNX3wWLO")
             .then(
               (result) => {
@@ -334,10 +322,7 @@ const FormConductor = (props) => {
                 console.log(error.text);
               }
             );
-            */
-        });
-        console.log("Uploaded a blob or file!");
-      });
+            
     }
   };
 
@@ -355,23 +340,22 @@ const FormConductor = (props) => {
         <Box className={classes.container_wrap}>
           <Box>
             <Box className={classes.container__avatar}>
-              {selectedUser ? 
+              {selectedUser ? (
                 <Box className={classes.avatar}>
-                <Avatar
-                  alt="user_avatar"
-                  src={
-                    photoUrl
-                      ? photoUrl
-                      : selectedUser
-                      ? selectedUser.photoURL
-                      : ""
-                  }
-                  variant="square"
-                  className={classes.avatar}
-                />
-              </Box>
-              : null}
-              
+                  <Avatar
+                    alt="user_avatar"
+                    src={
+                      photoUrl
+                        ? photoUrl
+                        : selectedUser
+                        ? selectedUser.photoURL
+                        : ""
+                    }
+                    variant="square"
+                    className={classes.avatar}
+                  />
+                </Box>
+              ) : null}
             </Box>
           </Box>
 
@@ -384,7 +368,8 @@ const FormConductor = (props) => {
                 fullWidth
                 inputRef={register({
                   required: true,
-                  pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                  pattern:
+                    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
                 })}
                 defaultValue={selectedUser ? selectedUser.email : ""}
               />
@@ -480,20 +465,25 @@ const FormConductor = (props) => {
               </Box>
             </Box>
             <Box className={classes.container__inputFile}>
-              {selectedUser ? 
-              <input
-                name="photoUrl"
-                id="id_photoUrl"
-                type="file"
-                className={classes.input__file}
-                ref={file}
-                onChange={(e) => {
-                  uploadPhoto();
-                }}
-            />
-              : null}
-              
-              <select name="estado" ref={register({ required: true })} defaultValue={selectedUser ? selectedUser.estado : null} className={classes.estado_input}>
+              {selectedUser ? (
+                <input
+                  name="photoUrl"
+                  id="id_photoUrl"
+                  type="file"
+                  className={classes.input__file}
+                  ref={file}
+                  onChange={(e) => {
+                    uploadPhoto();
+                  }}
+                />
+              ) : null}
+
+              <select
+                name="estado"
+                ref={register({ required: true })}
+                defaultValue={selectedUser ? selectedUser.estado : null}
+                className={classes.estado_input}
+              >
                 <option value="false">Activo</option>
                 <option value="true">Inactivo</option>
               </select>

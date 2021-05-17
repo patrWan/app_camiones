@@ -31,6 +31,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#ff",
     borderRadius: "16px 16px 0 0",
   },
+  buscador: {
+    width: "40%",
+    padding: 5,
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
 }));
 
 const columns = [
@@ -151,6 +158,7 @@ const DataTable_camion_ant = (props) => {
     setTimeout(function () {
       const filteredEvents = camiones.sort((a, b) => a.estado.localeCompare(b.estado) || a.modelo.localeCompare(b.modelo)) 
       setData(filteredEvents);
+      setFilterData(filteredEvents);
       setIsLoaded(false);
     }, 1000);
   };
@@ -169,6 +177,22 @@ const DataTable_camion_ant = (props) => {
   const { Text, Link } = Typography;
   const classes = useStyles();
 
+  const [filteredData, setFilterData] = useState(null);
+  const [filter_nombres, setFilterNombres] = useState("");
+  function onChangeNombre(val) {
+    console.log("on change nombre => ", val.target.value);
+
+    setFilterNombres(val.target.value);
+
+    const filteredEvents = data.filter(({ modelo, marca, patente }) =>
+      modelo.toLowerCase().includes(val.target.value.toLowerCase()) ||
+      patente.toLowerCase().includes(val.target.value.toLowerCase()) ||
+      marca.toLowerCase().includes(val.target.value.toLowerCase())
+    );
+    
+    setFilterData(filteredEvents);
+  }
+
   return (
     <div className={classes.root}>
       <Table
@@ -178,7 +202,7 @@ const DataTable_camion_ant = (props) => {
           ...rowSelection,
         }}
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         scroll={{ x: "max-content" }}
         size="small"
         pagination={{ position: ["bottom", "left"] }}
@@ -186,6 +210,17 @@ const DataTable_camion_ant = (props) => {
         className={classes.root}
         rowClassName={rowClassname}
         loading={isLoaded}
+        title={() => (
+          <div>
+            <input
+              type="text"
+              placeholder="Busqueda por Modelo, Marca o Patente..."
+              onChange={(e) => onChangeNombre(e)}
+              value={filter_nombres}
+              className={classes.buscador}
+            />
+          </div>
+        )}
       />
     </div>
   );

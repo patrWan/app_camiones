@@ -65,12 +65,12 @@ export default function ConfirmAlert(props) {
           description={<DialogContentText id="alert-dialog-slide-description" color="secondary">{description}</DialogContentText>}
           type="error"
         />
-
-        <DialogContentText>
-          <span>Para confirmar que deseas borrar esta colección, escribe su "------"</span>
-          
-        </DialogContentText>
-        <input type="text" placeholder="Ingrese correo" className="form-control" onChange={e => compare(e)} style={{justifySelf : "center"}}></input>
+        <div style={{display : "flex", flexDirection : "column", alignItems : "center", marginBottom : 10}}>
+          <span style={{fontSize : 16}}>Para confirmar que deseas borrar este dato, escriba lo siguiente: </span>
+          <strong style={{marginLeft : 10, fontSize : 16}}>{men}</strong>
+        </div>
+        
+        <input type="text" placeholder="Ingrese el texto..." className="form-control" onChange={e => compare(e)} style={{justifySelf : "center"}}></input>
         
       </DialogContent>
       <DialogActions>

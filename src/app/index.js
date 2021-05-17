@@ -332,7 +332,7 @@ const Index = (props) => {
             </form>
           </div>
         </Box>
-        <div>© 2021 - Trudistics</div>
+        <div>© 2021 - Trudistics - V.1</div>
       </div>
 
       <FlashMessage child={props} codeError={codeError} />

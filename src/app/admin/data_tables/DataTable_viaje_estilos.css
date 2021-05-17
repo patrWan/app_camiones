@@ -1,0 +1,12 @@
+.Button_filters {
+    width: 20%;
+    margin-right: 10px;
+}
+
+@media (max-width: 960px) {
+    .Button_filters {
+        width: 80%;
+        margin-right: 0px;
+        margin-bottom: 5px;
+    }
+}

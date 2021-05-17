@@ -74,7 +74,7 @@ const FormConductor = (props) => {
       enqueueSnackbar(men, {
         variant: "info",
         preventDuplicate: true,
-        autoHideDuration: 3000,
+        autoHideDuration: 2000,
       });
     } else {
       register__camion(data);
@@ -83,7 +83,7 @@ const FormConductor = (props) => {
       enqueueSnackbar(men, {
         variant: "success",
         preventDuplicate: true,
-        autoHideDuration: 3000,
+        autoHideDuration: 2000,
       });
     }
   };

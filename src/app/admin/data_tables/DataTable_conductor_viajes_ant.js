@@ -13,6 +13,7 @@ import {DATATABLE_BG_COLOR, DATATABLE_TEXT_COLOR} from "../../../variables";
 import * as dayjs from "dayjs";
 import { Chip } from "@material-ui/core";
 import ModalReporte from "../../../components/modals/ModalReporte";
+import "./DataTable_viaje_estilos.css";
 import locale_ from "antd/es/date-picker/locale/es_ES";
 
 var locale = require("dayjs/locale/es");
@@ -989,13 +990,13 @@ const DataTable_conductor_viajes_ant = (props) => {
           </div>
         </div>
         <div className={classes.button__container}>
-          <button onClick={filter_general} className={classes.button}>
+          <button onClick={filter_general} className={classes.button} className="btn btn-primary Button_filters">
             <i className="bi bi-filter"></i> Filtrar
           </button>
-          <button onClick={clear_filter} className={classes.button}>
+          <button onClick={clear_filter} className={classes.button} className="btn btn-primary Button_filters">
             Limpiar Filtros
           </button>
-          <button onClick={create_pdf} className={classes.button}>
+          <button onClick={create_pdf} className={classes.button} className="btn btn-primary Button_filters">
             <i className="bi bi-file-earmark-plus-fill"></i> Generar PDF
           </button>
         </div>

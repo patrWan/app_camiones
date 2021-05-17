@@ -78,10 +78,11 @@ export default function AlertDialogSlide(props) {
           description={<DialogContentText id="alert-dialog-slide-description" color="secondary">Cuenta de usuario:{selectedUser ? " "+selectedUser.email : " No hay un usuario seleccionado"}</DialogContentText>}
           type="error"
         />
-        <DialogContentText>
-        <span>Para confirmar que deseas borrar esta colección, escribe su Correo</span>
-        <input type="text" placeholder="Ingrese correo" onChange={e => compare(e)}></input>
-        </DialogContentText>
+        <div style={{display : "flex", flexDirection : "column", alignItems : "center", marginBottom : 10}}>
+          <span style={{fontSize : 16}}>Para confirmar que deseas borrar este dato, escriba lo siguinte: </span>
+          <strong style={{marginLeft : 10, fontSize : 16}}>{selectedUser ? selectedUser.email : null}</strong>
+        </div>
+        <input type="text" placeholder="Ingrese el texto..." className="form-control" onChange={e => compare(e)} style={{justifySelf : "center"}}></input>
         
       </DialogContent>
       <DialogActions>

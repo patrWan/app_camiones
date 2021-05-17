@@ -102,6 +102,8 @@ const DrawerPerfilUsuario = (props) => {
   const [photoUrl, setPhotoUrl] = useState("");
   const [foto_error, setFotoError] = useState(false);
 
+  const [disabledLoad, setDisabledLoad] = useState(true);
+
   const uploadPhoto = async () => {
     console.log("ON CHANGE FOTO");
     const file_img = file.current.files[0];
@@ -114,6 +116,7 @@ const DrawerPerfilUsuario = (props) => {
       };
       await reader.readAsDataURL(file_img);
     }
+    setDisabledLoad(false);
   };
 
   const cambiar_foto = () => {
@@ -139,6 +142,7 @@ const DrawerPerfilUsuario = (props) => {
             setFotoError(true);
             setTimeout(() => {
               setFotoError(false);
+              setDisabledLoad(true);
             }, 1500);
           })
           .catch((error) => {
@@ -186,7 +190,7 @@ const DrawerPerfilUsuario = (props) => {
               uploadPhoto();
             }}
           />
-          <button onClick={() => cambiar_foto()}>Cambiar Foto de Perfil</button>
+          <button onClick={() => cambiar_foto()} disabled={disabledLoad} className="btn btn-primary">Cambiar Foto de Perfil</button>
           <div className="p-2 bg-light border">
             {usuario ? usuario.rut : ""}
           </div>
@@ -240,7 +244,7 @@ const DrawerPerfilUsuario = (props) => {
             />
           </div>
           <span id="passwordHelpInline" className="form-text">
-            Nueva contraseña: (debe ser mayor a 7 caracteres y con una mayuscula
+            Nueva contraseña: (debe ser mayor a 7 caracteres y con una mayúscula
             al menos)
           </span>
           <div className="input-group mb-1 mx-auto">
